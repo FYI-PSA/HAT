@@ -16,7 +16,7 @@ _____
        - ```
          String  BaseString = ""
          Int     ChainLength = NUMBER   
-         Array   WORDLIST = {'Word1', 'Word2', 'Another thing', ...}
+         List    WORDLIST = {'Word1', 'Word2', 'Another thing', ...}
          
          
          Function CreateWordList(OriginalString, LengthVariable):
@@ -25,7 +25,7 @@ _____
              * It keeps the chain length the same on every loop of a recursion
              IndexFlag = FALSE
              
-             for each WORD in the WORDLIST:
+             for each WORD in the WORDLIST list:
              
                  NewString = OriginalString + WORD
              
