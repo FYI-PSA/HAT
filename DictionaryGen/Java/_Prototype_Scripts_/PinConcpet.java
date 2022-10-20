@@ -1,8 +1,9 @@
-import java.util.*;
-import java.io.*;
-import java.lang.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 
-public class Wordlist_Dictionary_Generator
+public class PinConcpet
 {
     static int DigitCounter(int input_number)
     {
