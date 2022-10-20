@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 import java.lang.*;
 
-public class Dictionary_Generator
+public class Wordlist_Dictionary_Generator
 {
     static int DigitCounter(int input_number)
     {
