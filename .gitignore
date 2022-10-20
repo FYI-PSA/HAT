@@ -1,4 +1,10 @@
+.idea
 DuckyScript
+Hackers-Toolbox.iml
+
 DictionaryGen/.idea
 DictionaryGen/DictionaryGen.iml
-DictionaryGen/Java/out/*
+
+DictionaryGen/Java/out
+
+DictionaryGen/Python/DictionaryGen.iml
