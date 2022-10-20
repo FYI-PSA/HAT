@@ -1,13 +1,6 @@
 .idea/
-DictionaryGen/.idea
-
 DuckyScript/
-
-Hackers-Toolbox.iml
-DictionaryGen/DictionaryGen.iml
-DictionaryGen/Python/DictionaryGen.iml
-
-DictionaryGen/Java/out/
-
-DictionaryGen/Python/_Prototype_Scripts_/Stringer/
 **/__pycache__/
+Hackers-Toolbox.iml
+DictionaryGen/Java/out/
+DictionaryGen/Python/_Prototype_Scripts_/Stringer/
