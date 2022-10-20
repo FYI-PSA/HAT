@@ -1,4 +1,4 @@
-def string_reduction(string1="", string2=""):
+def StringReduction(string1="", string2=""):
     #print(string1, "\n", string2)
     list_first_string = list(string1)
     list_second_string = list(string2)
