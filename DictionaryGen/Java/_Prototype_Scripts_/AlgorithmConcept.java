@@ -46,15 +46,16 @@ public class AlgorithmConcept
 
     public static void Starter() throws Exception
     {
-        debug_value = true;
+        debug_value = false;
         boolean defaulted_list = false;
+        //You can use this for testing, so you don't have to enter some items at the start of running the file every time.
         if (defaulted_list)
         {
             String[] items = {};
             for (String item : (Arrays.stream(items).toList()))
             {
                 word_list.add(item);
-                Printer(item);
+                if (debug_value) {Printer(item);}
             }
         }
         System.out.println("[!] Welcome\n[@] This is a prototype to test the wordlist generation algorithm in java");
@@ -109,15 +110,48 @@ public class AlgorithmConcept
                 Collector:
                     Name:
                         CreateAttempt:
-                            FileEXISTS:
-                                CANCEL:
-                                OVERRIDE:
-                                APPEND:
-                                VIEW:
-                            FileNOTFOUND:
+                            ?FileEXISTS:
+                                ReRe[v]
+                                    CANCEL:
+                                        EXIT?:NO
+                                            Name:
+                                                CreateAttempt:
+                                                    ...
+                                        EXIT?:YES
+                                            DONE
+                                    OVERRIDE:
+                                        DataReader:
+                                            Backup;
+                                        InitWriter:
+                                            Algorithm:
+                                                WLC:
+                                                    Writer:
+                                                        DONE
+                                    APPEND:
+                                        DataReader:
+                                            Backup;
+                                            InitWriter:
+                                                ReturnDataBack:
+                                                    Algorithm:
+                                                        WLC:
+                                                            Writer:
+                                                                DONE
+                                    VIEW:
+                                        DataReader:
+                                            ReRe[without v]:
+                                                CANCEL
+                                                    ...
+                                                OVERRIDE:
+                                                    ...
+                                                APPEND:
+                                                    ...
+                            ?FileNOTFOUND:
                                 FreshCreation:
-
-
+                                    InitWriter:
+                                        Algorithm:
+                                            WLC:
+                                                Writer:
+                                                    DONE
      */
 
 
