@@ -1,7 +1,5 @@
-import java.util.concurrent.*;
 import java.nio.file.*;
 import java.lang.*;
-import java.text.*;
 import java.util.*;
 import java.io.*;
 
@@ -49,10 +47,10 @@ public class AlgorithmConcept
     public static void Starter() throws Exception
     {
         debug_value = true;
-        boolean defaulted_list = true;
+        boolean defaulted_list = false;
         if (defaulted_list)
         {
-            String[] items = {"Mahan", "mahan", "MAHAN", "talebi", "TALEBI", "Talebi", "1383", "83", "2004", "04", "-", "_"};
+            String[] items = {};
             for (String item : (Arrays.stream(items).toList()))
             {
                 word_list.add(item);
