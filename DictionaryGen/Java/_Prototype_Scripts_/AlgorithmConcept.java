@@ -52,16 +52,10 @@ public class AlgorithmConcept
         System.out.println("[!] Welcome\n[@] This is a prototype to test the wordlist generation algorithm in java");
         InputCollector();
         NameCreator();
-        boolean file_existed = FileCreator();
-        if (file_existed)
-        {
-            FileExists();
-        }
-        else
-        {
-            Algorithm();
-        }
+        FileCreator();
+        Override();
     }
+
     public static void InputCollector()
     {
         word_list.add(Ask("[?] First input : "));
@@ -90,16 +84,69 @@ public class AlgorithmConcept
             }
         }
     }
+
     public static void NameCreator()
     {
         file_name = "temporary.txt";
         parent_path = System.getProperty("user.home") + "\\Documents\\Generated-Dictionaries\\Java-Version\\";
         file_path = parent_path + file_name;
     }
+
     /*
     TODO:
-     -FileWriter will reset data, so you need to confirm append/override before that, then initialize FileWriter
+     //this is just to find it with intellij easily
+     METHOD TREE:
+        Main:
+            Greeter:
+                Collector:
+                    Name:
+                        CreateAttempt:
+                            FileEXISTS:
+                                CANCEL:
+                                OVERRIDE:
+                                APPEND:
+                                VIEW:
+                            FileNOTFOUND:
+                                FreshCreation:
+
+
+     */
+
+
+    /*
+    TODO:
+     If file exists:
+     --[view mode is only enabled by a input bool for the function]
+     --Ask to view / override / append / cancel:
+     --if CANCEL:
+     ----Re-init The chain starting back from NameCreator
+     //THIS NEEDS a REVAMP FOR CAlLING METHODS FROM OTHERS
+     //WHILE WE'RE AT REVAMPING, TURN FOLDER CREATION INTO A METHOD THAT TAKES PARENT PATHS AS INPUT
+     --if VIEW:
+     ----Save file data using a sep method
+     ----Display that
+     ----Re-init this module with the view_bool set to FALSE
+     --if OVERRIDE:
+     ----Ask if BACKUP or NO:
+     ------Save file data
+     ------Check for dir at parent_path+"/backup"
+     ------Recreate file data there
+     ----Initialize FileWriter
+     ----CONTINUE
+     --if APPEND:
+     ----Save file data
+     ----Ask if BACKUP of original or NO:
+     ------Check for dir at parent_path+"/backup"
+     ------Recreate file data there
+     ----Initialize FileWriter
+     ----Write previous data
+     ----CONTINUE
     */
+
+
+
+
+
     public static boolean FileCreator() throws Exception {
         boolean return_value = false;
         try
@@ -207,18 +254,17 @@ public class AlgorithmConcept
     public static void Algorithm() throws Exception
     {
         String base_string = "";
-        int max_length = 3;
+        int max_length = 12;
         for (int available_length = 1; available_length <= max_length; available_length++)
         {
             WLC(base_string, available_length);
         }
-        for (String entry : wordlist_list)
-        {
-            Writer(entry);
-        }
         try
         {
-            writer_obj.close();
+            for (String entry : wordlist_list) {
+                Writer(entry);
+                writer_obj.close();
+            }
         }
         catch (IOException error_value)
         {
