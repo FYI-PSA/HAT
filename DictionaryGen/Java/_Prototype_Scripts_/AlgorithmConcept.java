@@ -49,10 +49,20 @@ public class AlgorithmConcept
     public static void Starter() throws Exception
     {
         debug_value = true;
+        boolean defaulted_list = true;
+        if (defaulted_list)
+        {
+            String[] items = {"Mahan", "mahan", "MAHAN", "talebi", "TALEBI", "Talebi", "1383", "83", "2004", "04", "-", "_"};
+            for (String item : (Arrays.stream(items).toList()))
+            {
+                word_list.add(item);
+                Printer(item);
+            }
+        }
         System.out.println("[!] Welcome\n[@] This is a prototype to test the wordlist generation algorithm in java");
         InputCollector();
         NameCreator();
-        FileCreator();
+        boolean file_exists = FileCreator();
         Override();
     }
 
@@ -153,6 +163,7 @@ public class AlgorithmConcept
         {
             Files.createDirectories(Paths.get(parent_path));
             file_obj = new File(file_path);
+            writer_obj = new FileWriter(file_path);
             if (file_obj.createNewFile())
             {
                 Printer("[$] File created successfully at '"+parent_path+"' ! named "+file_name);
@@ -254,17 +265,16 @@ public class AlgorithmConcept
     public static void Algorithm() throws Exception
     {
         String base_string = "";
-        int max_length = 12;
+        int max_length = 5;
         for (int available_length = 1; available_length <= max_length; available_length++)
         {
             WLC(base_string, available_length);
         }
         try
         {
-            for (String entry : wordlist_list) {
-                Writer(entry);
-                writer_obj.close();
-            }
+            MainCreator();
+
+            writer_obj.close();
         }
         catch (IOException error_value)
         {
@@ -296,7 +306,14 @@ public class AlgorithmConcept
             }
         }
     }
-
+    public static void MainCreator() throws Exception
+    {
+        for (String item : wordlist_list)
+        {
+            Writer(item);
+            Printer(item);
+        }
+    }
 
 
     public static void main(String [] args) throws Exception
