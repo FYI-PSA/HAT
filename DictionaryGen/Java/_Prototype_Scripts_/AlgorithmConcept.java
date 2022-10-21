@@ -98,8 +98,7 @@ public class AlgorithmConcept
     }
     /*
     TODO:
-     -FileWriter will reset data, so you need to confirm appand/override before that
-     then initialize filewriter
+     -FileWriter will reset data, so you need to confirm append/override before that, then initialize FileWriter
     */
     public static boolean FileCreator() throws Exception {
         boolean return_value = false;
