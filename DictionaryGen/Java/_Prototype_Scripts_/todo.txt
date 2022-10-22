@@ -68,8 +68,9 @@ TODO:
  --if CANCEL:
  ----Re-init The chain starting back from NameCreator
  //THIS NEEDS a REVAMP FOR CAlLING METHODS FROM OTHERS
- //WHILE WE'RE AT REVAMPING, TURN FOLDER CREATION INTO A METHOD THAT TAKES PARENT PATHS AS INPUT
- --if VIEW:
+~~ //WHILE WE'RE AT REVAMPING, TURN FOLDER CREATION INTO A METHOD THAT TAKES PARENT PATHS AS INPUT~~
+// ^ nope nevermind that it's literally done in only 2 functions, not worth it until the final product's super bug fixing and cleaning
+--if VIEW:
  ----Save file data using a sep method
  ----Display that
  ----Re-init this module with the view_bool set to FALSE
