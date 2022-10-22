@@ -22,7 +22,7 @@ TODO:
                                                 ...
                                     EXIT?:YES
                                         DONE
-                                OVERRIDE:
+                                OVERWRITE:
                                     DataReader:
                                         Backup;
                                     InitWriter:
@@ -46,7 +46,7 @@ TODO:
                                         ReRe[without v]:
                                             CANCEL
                                                 ...
-                                            OVERRIDE:
+                                            OVERWRITE:
                                                 ...
                                             APPEND:
                                                 ...
@@ -64,7 +64,7 @@ TODO:
 TODO:
  If file exists:
  --[view mode is only enabled by an input bool for the function]
- --Ask to view / override / append / cancel:
+ --Ask to view / overwrite / append / cancel:
  --if CANCEL:
  ----Re-init The chain starting back from NameCreator
  //THIS NEEDS a REVAMP FOR CAlLING METHODS FROM OTHERS
@@ -73,7 +73,7 @@ TODO:
  ----Save file data using a sep method
  ----Display that
  ----Re-init this module with the view_bool set to FALSE
- --if OVERRIDE:
+ --if OVERWRITE:
  ----Ask if BACKUP or NO:
  ------Save file data
  ------Check for dir at parent_path+"/backup"
