@@ -3,14 +3,95 @@ import java.lang.*;
 import java.util.*;
 import java.io.*;
 
-
 /*
 TODO:
  -Work with runtime args to make some things faster for experienced users
  -Add a man page for runtime args
  -(try to) Make into UI app
  -(try to) Make for mobile
+
+TODO:
+ METHOD TREE:
+    Main:
+        Greeter:
+            Collector:
+                Name:
+                    CreateAttempt:
+                        ?FileEXISTS:
+                            ReRe[v]
+                                CANCEL:
+                                    EXIT?:NO
+                                        Name:
+                                            CreateAttempt:
+                                                ...
+                                    EXIT?:YES
+                                        DONE
+                                OVERRIDE:
+                                    DataReader:
+                                        Backup;
+                                    InitWriter:
+                                        Algorithm:
+                                            WLC:
+                                                Writer:
+                                                    DONE
+                                APPEND:
+                                    DataReader:
+                                        Backup;
+                                        InitWriter:
+                                            ReturnDataBack:
+                                                Algorithm:
+                                                    WLC:
+                                                        Writer:
+                                                            DONE
+                                VIEW:
+                                    DataReader:
+                                        ReRe[without v]:
+                                            CANCEL
+                                                ...
+                                            OVERRIDE:
+                                                ...
+                                            APPEND:
+                                                ...
+                        ?FileNOTFOUND:
+                            FreshCreation:
+                                InitWriter:
+                                    Algorithm:
+                                        WLC:
+                                            Writer:
+                                                DONE
+
+
+TODO:
+ If file exists:
+ --[view mode is only enabled by a input bool for the function]
+ --Ask to view / override / append / cancel:
+ --if CANCEL:
+ ----Re-init The chain starting back from NameCreator
+ //THIS NEEDS a REVAMP FOR CAlLING METHODS FROM OTHERS
+ //WHILE WE'RE AT REVAMPING, TURN FOLDER CREATION INTO A METHOD THAT TAKES PARENT PATHS AS INPUT
+ --if VIEW:
+ ----Save file data using a sep method
+ ----Display that
+ ----Re-init this module with the view_bool set to FALSE
+ --if OVERRIDE:
+ ----Ask if BACKUP or NO:
+ ------Save file data
+ ------Check for dir at parent_path+"/backup"
+ ------Recreate file data there
+ ----Initialize FileWriter
+ ----CONTINUE
+ --if APPEND:
+ ----Save file data
+ ----Ask if BACKUP of original or NO:
+ ------Check for dir at parent_path+"/backup"
+ ------Recreate file data there
+ ----Initialize FileWriter
+ ----Write previous data
+ ----CONTINUE
 */
+
+
+
 
 public class AlgorithmConcept
 {
@@ -100,92 +181,6 @@ public class AlgorithmConcept
         parent_path = System.getProperty("user.home") + "\\Documents\\Generated-Dictionaries\\Java-Version\\";
         file_path = parent_path + file_name;
     }
-
-    /*
-    TODO:
-     //this is just to find it with intellij easily
-     METHOD TREE:
-        Main:
-            Greeter:
-                Collector:
-                    Name:
-                        CreateAttempt:
-                            ?FileEXISTS:
-                                ReRe[v]
-                                    CANCEL:
-                                        EXIT?:NO
-                                            Name:
-                                                CreateAttempt:
-                                                    ...
-                                        EXIT?:YES
-                                            DONE
-                                    OVERRIDE:
-                                        DataReader:
-                                            Backup;
-                                        InitWriter:
-                                            Algorithm:
-                                                WLC:
-                                                    Writer:
-                                                        DONE
-                                    APPEND:
-                                        DataReader:
-                                            Backup;
-                                            InitWriter:
-                                                ReturnDataBack:
-                                                    Algorithm:
-                                                        WLC:
-                                                            Writer:
-                                                                DONE
-                                    VIEW:
-                                        DataReader:
-                                            ReRe[without v]:
-                                                CANCEL
-                                                    ...
-                                                OVERRIDE:
-                                                    ...
-                                                APPEND:
-                                                    ...
-                            ?FileNOTFOUND:
-                                FreshCreation:
-                                    InitWriter:
-                                        Algorithm:
-                                            WLC:
-                                                Writer:
-                                                    DONE
-     */
-
-
-    /*
-    TODO:
-     If file exists:
-     --[view mode is only enabled by a input bool for the function]
-     --Ask to view / override / append / cancel:
-     --if CANCEL:
-     ----Re-init The chain starting back from NameCreator
-     //THIS NEEDS a REVAMP FOR CAlLING METHODS FROM OTHERS
-     //WHILE WE'RE AT REVAMPING, TURN FOLDER CREATION INTO A METHOD THAT TAKES PARENT PATHS AS INPUT
-     --if VIEW:
-     ----Save file data using a sep method
-     ----Display that
-     ----Re-init this module with the view_bool set to FALSE
-     --if OVERRIDE:
-     ----Ask if BACKUP or NO:
-     ------Save file data
-     ------Check for dir at parent_path+"/backup"
-     ------Recreate file data there
-     ----Initialize FileWriter
-     ----CONTINUE
-     --if APPEND:
-     ----Save file data
-     ----Ask if BACKUP of original or NO:
-     ------Check for dir at parent_path+"/backup"
-     ------Recreate file data there
-     ----Initialize FileWriter
-     ----Write previous data
-     ----CONTINUE
-    */
-
-
 
 
 
