@@ -27,18 +27,20 @@ TODO:
                                         Backup;
                                     InitWriter:
                                         Algorithm:
-                                            WLC:
-                                                Writer:
-                                                    DONE
+                                            ChainLength:
+                                                WLC:
+                                                    Writer:
+                                                        DONE
                                 APPEND:
                                     DataReader:
                                         Backup;
                                         InitWriter:
                                             ReturnDataBack:
                                                 Algorithm:
-                                                    WLC:
-                                                        Writer:
-                                                            DONE
+                                                    ChainLength:
+                                                        WLC:
+                                                            Writer:
+                                                                DONE
                                 VIEW:
                                     DataReader:
                                         ReRe[without v]:
@@ -52,9 +54,10 @@ TODO:
                             FreshCreation:
                                 InitWriter:
                                     Algorithm:
-                                        WLC:
-                                            Writer:
-                                                DONE
+                                        ChainLength:
+                                            WLC:
+                                                Writer:
+                                                    DONE
 
 
 
