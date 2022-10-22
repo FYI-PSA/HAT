@@ -3,115 +3,26 @@ import java.lang.*;
 import java.util.*;
 import java.io.*;
 
-/*
-TODO:
- -Work with runtime args to make some things faster for experienced users
- -Add a man page for runtime args
- -(try to) Make into UI app
- -(try to) Make for mobile
-
-TODO:
- METHOD TREE:
-    Main:
-        Greeter:
-            Collector:
-                Name:
-                    CreateAttempt:
-                        ?FileEXISTS:
-                            ReRe[v]
-                                CANCEL:
-                                    EXIT?:NO
-                                        Name:
-                                            CreateAttempt:
-                                                ...
-                                    EXIT?:YES
-                                        DONE
-                                OVERRIDE:
-                                    DataReader:
-                                        Backup;
-                                    InitWriter:
-                                        Algorithm:
-                                            WLC:
-                                                Writer:
-                                                    DONE
-                                APPEND:
-                                    DataReader:
-                                        Backup;
-                                        InitWriter:
-                                            ReturnDataBack:
-                                                Algorithm:
-                                                    WLC:
-                                                        Writer:
-                                                            DONE
-                                VIEW:
-                                    DataReader:
-                                        ReRe[without v]:
-                                            CANCEL
-                                                ...
-                                            OVERRIDE:
-                                                ...
-                                            APPEND:
-                                                ...
-                        ?FileNOTFOUND:
-                            FreshCreation:
-                                InitWriter:
-                                    Algorithm:
-                                        WLC:
-                                            Writer:
-                                                DONE
-
-
-TODO:
- If file exists:
- --[view mode is only enabled by a input bool for the function]
- --Ask to view / override / append / cancel:
- --if CANCEL:
- ----Re-init The chain starting back from NameCreator
- //THIS NEEDS a REVAMP FOR CAlLING METHODS FROM OTHERS
- //WHILE WE'RE AT REVAMPING, TURN FOLDER CREATION INTO A METHOD THAT TAKES PARENT PATHS AS INPUT
- --if VIEW:
- ----Save file data using a sep method
- ----Display that
- ----Re-init this module with the view_bool set to FALSE
- --if OVERRIDE:
- ----Ask if BACKUP or NO:
- ------Save file data
- ------Check for dir at parent_path+"/backup"
- ------Recreate file data there
- ----Initialize FileWriter
- ----CONTINUE
- --if APPEND:
- ----Save file data
- ----Ask if BACKUP of original or NO:
- ------Check for dir at parent_path+"/backup"
- ------Recreate file data there
- ----Initialize FileWriter
- ----Write previous data
- ----CONTINUE
-*/
-
-
-
-
 public class AlgorithmConcept
 {
-    //public static int maximum_chain_value, minimum_chain_value;
-    public static boolean debug_value;
-    public static String file_name, file_path, parent_path;
+    public static File file_obj;
+    public static FileWriter writer_obj;
+    public static boolean debug_value, file_exists;
+    public static Scanner scan_obj = new Scanner(System.in);
+    public static String file_name, file_path, parent_path, file_contents, backup_parent, backup_name, backup_path;
+    public static int maximum_chain_value, minimum_chain_value, default_chain_value;
     public static String error_message = "\n[!] Oops! Encountered an error! Here are the details: ";
     public static ArrayList<String> word_list = new ArrayList<>(), wordlist_list = new ArrayList<>();
-    public static List<String> file_data;
-    public static String file_contents;
-    public static Scanner scan_obj = new Scanner(System.in);
-    public static FileWriter writer_obj;
-    public static File file_obj;
-    //public static String Ask() {return Ask("");}
+
+
+
+    public static String Ask() {return Ask("");}
     public static String Ask(String prefix)
     {
         Printer(prefix, false);
         return scan_obj.nextLine();
     }
-    public static void Printer() { Printer(""); }
+    //public static void Printer() { Printer(""); }
     //public static void Printer(boolean new_line) { Printer("", new_line); }
     public static void Printer(String text)
     {
@@ -122,31 +33,24 @@ public class AlgorithmConcept
         if (new_line) {System.out.println(text);}
         else          {System.out.print(text);  }
     }
-
-
+    public static void Debugger(String debug_text, boolean new_line)
+    {if (debug_value) {Printer(debug_text, new_line);}}
+    public static void Debugger(String debug_text)
+    {if (debug_value) {Printer(debug_text, true);}}
 
     public static void Starter() throws Exception
     {
         debug_value = false;
-        boolean defaulted_list = false;
         //You can use this for testing, so you don't have to enter some items at the start of running the file every time.
-        if (defaulted_list)
-        {
-            String[] items = {};
-            for (String item : (Arrays.stream(items).toList()))
-            {
-                word_list.add(item);
-                if (debug_value) {Printer(item);}
-            }
-        }
+        /*
+        if (true){String[] items = {};
+            for (String item : (Arrays.stream(items).toList())){word_list.add(item);if (debug_value) {Printer(item);}}}
+        */
         System.out.println("[!] Welcome\n[@] This is a prototype to test the wordlist generation algorithm in java");
         InputCollector();
-        NameCreator();
-        boolean file_exists = FileCreator();
-        Override();
     }
 
-    public static void InputCollector()
+    public static void InputCollector() throws Exception
     {
         word_list.add(Ask("[?] First input : "));
         while (true)
@@ -173,16 +77,37 @@ public class AlgorithmConcept
                 Printer("[$] Successfully added "+temp_ask+" to word list.");
             }
         }
+        NameCreator();
     }
 
-    public static void NameCreator()
+    public static void NameCreator() throws Exception
     {
         file_name = "temporary.txt";
         parent_path = System.getProperty("user.home") + "\\Documents\\Generated-Dictionaries\\Java-Version\\";
         file_path = parent_path + file_name;
+        file_exists = FileCreator();
+        if (file_exists)
+        {
+            Printer("[#] File with matching name found! What would you like to do?");
+            FileExists(true);
+        }
+        else
+        {
+            Printer("[$] Created new file named "+file_name+" successfully!");
+            NewFileWriter();
+        }
     }
 
+    public static void WriterInit() throws Exception
+    {
+        writer_obj = new FileWriter(file_path);
+    }
 
+    public static void NewFileWriter() throws Exception
+    {
+        WriterInit();
+        Algorithm();
+    }
 
     public static boolean FileCreator() throws Exception {
         boolean return_value = false;
@@ -190,7 +115,6 @@ public class AlgorithmConcept
         {
             Files.createDirectories(Paths.get(parent_path));
             file_obj = new File(file_path);
-            writer_obj = new FileWriter(file_path);
             if (file_obj.createNewFile())
             {
                 Printer("[$] File created successfully at '"+parent_path+"' ! named "+file_name);
@@ -209,45 +133,126 @@ public class AlgorithmConcept
         }
         return return_value;
     }
-    public static void FileExists() throws Exception
+
+    public static void FileExists(boolean view_mode) throws Exception
     {
-        String default_mode = "Append";
-        String temp_mode = Ask
-        (
-            "[!] What would you like to do now?"
-            +"\n[@] Enter 'V' → View file contents"
-            +"\n[@] Enter 'A' → Append to end of file"
-            +"\n[@] Enter 'O' → Override contents of file"
-            +"\n[%] Leave empty or enter 'D' to default to "+default_mode+" mode"
-            +"\n\n[?] Enter :  "
-        );
-        //String[] append_entries = {"D","\"D\"","'D'","d","\"d\"","'d'","","''","\"\""," ","' '","\" \"","A","\"A\"","'A'","a","\"a\"","'a'"};
-        //if the input is not understandable, just use append. no need to check for that separately!
-        String[] view_entries = {"V","\"V\"","'V'","v","\"v\"","'v'"};
-        String[] override_entries = {"O","\"O\"","'O'","o","\"o\"","'v'"};
-        List<String> view = Arrays.asList(view_entries);
-        List<String> override = Arrays.asList(override_entries);
-        if (view.contains(temp_mode))
-        {//view mode
-            if (debug_value) {Printer("Reader");}
-            Reader();
+        String ask_entry, default_mode = "Append";
+        if (view_mode)
+        {
+            ask_entry =
+                "[!] What would you like to do now?"
+                + "\n[@] Enter 'V' → View file contents"
+                + "\n[@] Enter 'A' → Append to end of file"
+                + "\n[@] Enter 'O' → Override contents of file"
+                + "\n[@] Enter 'C' → Cancel this operation and choose to exit or save to another file"
+                + "\n[%] Leave empty or enter 'D' to default to " + default_mode + " mode"
+                + "\n\n[?] Enter :  ";
         }
-        else if (override.contains(temp_mode))
-        {//override mode
-            if (debug_value) {Printer("Override");}
-            Override();
+        else
+        {
+            ask_entry =
+                "[!] What would you like to do now?"
+                +"\n[@] Enter 'A' → Append to end of file"
+                +"\n[@] Enter 'O' → Override contents of file"
+                +"\n[@] Enter 'C' → Cancel this operation and choose to exit or save to another file"
+                +"\n[%] Leave empty or enter 'D' to default to " + default_mode + " mode"
+                +"\n\n[?] Enter :  ";
+        }
+        backup_parent = parent_path + "\\backups\\";
+        backup_name = file_name + ".backup";
+        backup_path = backup_parent+backup_name;
+        String temp_mode = Ask (ask_entry);
+        String[] view_entries     = {"V","\"V\"","'V'","v","\"v\"","'v'"};
+        String[] overwrite_entries = {"O","\"O\"","'O'","o","\"o\"","'v'"};
+        String[] cancel_entries   = {"C","\"C\"","'C'","c","\"c\"","'c'"};
+        List<String> viewList = Arrays.asList(view_entries);
+        List<String> overwriteList = Arrays.asList(overwrite_entries);
+        List<String> cancelList = Arrays.asList(cancel_entries);
+        if (view_mode && viewList.contains(temp_mode))
+        {//view mode
+            Debugger("View");
+            View();
+        }
+        else if (overwriteList.contains(temp_mode))
+        {//overwrite mode
+            Debugger("Overwrite");
+            Overwrite();
+        }
+        else if (cancelList.contains(temp_mode))
+        {//cancel
+            Debugger("Cancel");
+            Cancel();
         }
         else
         {//append mode
-            if (debug_value) {Printer("Append");}
-            Printer("A");
+            Debugger("Append");
+            Append();
         }
     }
-    public static void Override() throws Exception
+
+    public static void View() throws Exception
     {
+        Saviour();
+        Printer("Here's all of the data that was in the file:\n\n"+file_contents+"\n\n");
+        FileExists(false);
+    }
+
+    public static void Append() throws Exception
+    {
+        BackerUp();
+        Writer(file_contents);
         Algorithm();
     }
-    public static void Reader() throws Exception
+
+    public static void Cancel() throws Exception
+    {
+        Printer("[!] Cancelling...\n[?] Would you like to fully exit the program, or to just change the file name and location?");
+        Printer("[?] Enter 'EXIT' or 'CHANGE' (will default to CHANGE in case of undefined input)");
+        String exit_cond = Ask();
+        String[] change_list = {"EXIT","\"EXIT\"","'EXIT'","exit","\"exit\"","'exit'","e","quit","cancel"};
+        List<String> changeList = Arrays.asList(change_list);
+        if (changeList.contains(exit_cond))
+        {
+            Printer("[!] Thank you for your time! Hope to see you later!");
+            System.exit(0);
+        }
+        else
+        {
+            Printer("[@] Change your file name and path:\n");
+            NameCreator();
+        }
+    }
+
+    public static void Overwrite() throws Exception
+    {
+        BackerUp();
+        Algorithm();
+    }
+
+    public static void BackerUp() throws Exception
+    {
+        String backup_cond = Ask("[?] Do you want to save a backup of current existing file? Enter 'YES' or 'NO'\n" +
+                "[@] (Will default to 'YES' in case of undefined input)\n" +
+                "[@] (You can enter 'CANCEL' to cancel this operation and append instead.)\n" +
+                "[!] WARNING: THIS MAY DELETE ANY PRE-EXISTING BACKUPS IN FOLDER "+backup_parent+"   !\n" +
+                "[!] PLEASE USE WITH CAUTION!\n" +
+                "[?] >  ");
+        String[] no_list = {"NO", "\"NO\"", "'NO'", "No", "\"No\"", "'No'", "no", "\"no\"", "'no'", "N", "n"};
+        List<String> noList = Arrays.asList(no_list);
+        if (noList.contains(backup_cond))
+        {
+            Debugger("No to backup");
+        }
+        else
+        {
+            Printer("Saving backup to "+backup_path);
+            Saviour();
+            Backup();
+            WriterInit();
+        }
+    }
+
+    public static void Saviour() throws Exception
     {
         if (file_obj.exists())
         {
@@ -265,22 +270,46 @@ public class AlgorithmConcept
             throw new Exception("[FUN-ERROR 104] : Program stopped after meeting an error trying to read from a file that doesn't exist!");
         }
     }
+
+    public static void Backup() throws Exception
+    {
+        //File backup_exists_obj = new File(parent_path+"\\backups\\"+file_name+".backup");
+        try
+        {
+            Files.createDirectories(Paths.get(backup_parent));
+            File backup_file_obj = new File(backup_path);
+            if (backup_file_obj.createNewFile())
+            {Printer("[$] Successfully created new backup!");}
+            else
+            {Printer("[!] Overwriting previous backup...");}
+            FileWriter backup_writer_obj = new FileWriter(backup_path);
+            backup_writer_obj.write(file_contents);
+            backup_writer_obj.close();
+        }
+        catch (IOException error_value)
+        {
+            Printer(error_message);
+            error_value.printStackTrace();
+            throw new Exception("[FUN-ERROR 107] : Program stopped after meeting an issue trying to create a backup!");
+        }
+    }
+
     public static void Writer(String text) throws Exception
     {
         Writer(text, true);
     }
+
     public static void Writer(String text, boolean new_line) throws Exception
     {
         try
         {
             writer_obj.write(text);
-            if (debug_value){Printer(text,false);}
+            Debugger(text,false);
             if (new_line)
             {
                 writer_obj.write("\n");
-                if(debug_value){Printer();}
+                Debugger("", false);
             }
-
         }
         catch (IOException error_value)
         {
@@ -289,19 +318,48 @@ public class AlgorithmConcept
             throw new Exception("[FUN-ERROR 102] : Program stopped after meeting an error while writing to the file!");
         }
     }
+
+    public static void DjangoChained()
+    {//instead of working with pairs and hashmaps, just make the minimum_chain_value and maximum_chain_value public statics.
+        minimum_chain_value = Unchained("minimum");
+        maximum_chain_value = Unchained("maximum");
+    }
+
+    public static int Unchained(String chain_type)
+    {
+        int chain_value;
+        if (Objects.equals(chain_type, "minimum"))
+        {
+            default_chain_value = 1;
+        }
+        else
+        {
+            default_chain_value = 6;
+        }
+        String temp_chain_value = Ask("What is the "+chain_type+" chain length?");
+        try
+        {
+            chain_value = Integer.parseInt(temp_chain_value);
+        }
+        catch (NumberFormatException error_value)
+        {
+            Printer("Sorry, that input couldn't be understood as a number. defaulting to +"+default_chain_value);
+            chain_value = default_chain_value;
+        }
+        return chain_value;
+    }
+
     public static void Algorithm() throws Exception
     {
         String base_string = "";
-        int max_length = 5;
-        for (int available_length = 1; available_length <= max_length; available_length++)
+        DjangoChained();
+        for (int available_length = minimum_chain_value; available_length <= maximum_chain_value; available_length++)
         {
             WLC(base_string, available_length);
         }
         try
         {
             MainCreator();
-
-            writer_obj.close();
         }
         catch (IOException error_value)
         {
@@ -338,7 +396,7 @@ public class AlgorithmConcept
         for (String item : wordlist_list)
         {
             Writer(item);
-            Printer(item);
+            Debugger(item);
         }
     }
 
@@ -346,5 +404,6 @@ public class AlgorithmConcept
     public static void main(String [] args) throws Exception
     {
         Starter();
+        writer_obj.close();
     }
 }
