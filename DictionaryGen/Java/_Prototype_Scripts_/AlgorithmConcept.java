@@ -82,7 +82,15 @@ public class AlgorithmConcept
 
     public static void NameCreator() throws Exception
     {
-        file_name = "temporary.txt";
+        String mode = Ask("Mode: D/A/M");
+        if (Objects.equals(mode,"M"))
+        {
+            file_name = Ask();
+        }
+        else
+        {
+            file_name = "dictionary.txt";
+        }     
         parent_path = System.getProperty("user.home") + "\\Documents\\Generated-Dictionaries\\Java-Version\\";
         file_path = parent_path + file_name;
         file_exists = FileCreator();
