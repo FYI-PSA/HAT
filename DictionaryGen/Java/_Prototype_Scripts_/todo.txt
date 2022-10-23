@@ -5,7 +5,15 @@ TODO:
  -(try to) Make for mobile
 
 TODO:
- -Make a file naming system work
+ -To fix memory issue with crashing while making the list:
+ --Write all content of current list to file
+ --Clean up list to nothing
+ --Continue writing everything back to list
+ --Put in loop and ensure it gets done even if multiple memory issues occur
+ ALTERNATIVE
+ -Instead of writing to list, write directly to file to also lower writing time.
+
+TODO:
  -Clean up and polish for release v1
 
 
@@ -14,6 +22,9 @@ TODO:
 
 
 DONE:
+
+
+ -Make a file naming system work
 
 
  METHOD TREE:
@@ -79,7 +90,7 @@ Ask to view / overwrite / append / cancel:
  //THIS NEEDS a REVAMP FOR CAlLING METHODS FROM OTHERS
 
 ~~ //WHILE WE'RE AT REVAMPING, TURN FOLDER CREATION INTO A METHOD THAT TAKES PARENT PATHS AS INPUT~~
-// ^ nope nevermind that it's literally done in only 2 functions, not worth it until the final product's super bug fixing and cleaning
+// ^ nope never mind that it's literally done in only 2 functions, not worth it until the final product's super bug fixing and cleaning
 --if VIEW:
  ----Save file data using a sep method
  ----Display that

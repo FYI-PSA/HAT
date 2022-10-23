@@ -1,3 +1,4 @@
+import java.util.concurrent.TimeUnit;
 import java.nio.file.*;
 import java.lang.*;
 import java.util.*;
@@ -7,12 +8,13 @@ public class AlgorithmConcept
 {
     public static File file_obj;
     public static FileWriter writer_obj;
-    public static boolean debug_value, file_exists;
     public static Scanner scan_obj = new Scanner(System.in);
-    public static String file_name, file_path, parent_path, file_contents, backup_parent, backup_name, backup_path;
-    public static int maximum_chain_value, minimum_chain_value, default_chain_value;
-    public static String error_message = "\n[!] Oops! Encountered an error! Here are the details: ";
+    public static double starting_time, ending_time, delta_time;
+    public static boolean debug_value = false, pre_items = false, file_exists;
+    public static int maximum_chain_value, minimum_chain_value, default_chain_value, LLC_index;
+    public static String error_message = "\n[!] Oops! Encountered an error! Here are the details:";
     public static ArrayList<String> word_list = new ArrayList<>(), wordlist_list = new ArrayList<>();
+    public static String file_name, file_path, parent_path, file_contents, backup_parent, backup_name, backup_path;
 
 
 
@@ -22,8 +24,7 @@ public class AlgorithmConcept
         Printer(prefix, false);
         return scan_obj.nextLine();
     }
-    //public static void Printer() { Printer(""); }
-    //public static void Printer(boolean new_line) { Printer("", new_line); }
+    public static void Printer() { Printer(""); }
     public static void Printer(String text)
     {
         Printer(text, true);
@@ -38,14 +39,20 @@ public class AlgorithmConcept
     public static void Debugger(String debug_text)
     {if (debug_value) {Printer(debug_text, true);}}
 
+
+
     public static void Starter() throws Exception
     {
-        debug_value = false;
         //You can use this for testing, so you don't have to enter some items at the start of running the file every time.
-        /*
-        if (true){String[] items = {};
-            for (String item : (Arrays.stream(items).toList())){word_list.add(item);if (debug_value) {Printer(item);}}}
-        */
+        if (pre_items)
+        {
+            String[] items = {"-","_",".","@","!","?","(",")","[","]","{","}","$","%","&","*","\"","'"," "};
+            for (String item : (Arrays.stream(items).toList()))
+            {
+                word_list.add(item);
+                Debugger(item);
+            }
+        }
         System.out.println("[!] Welcome\n[@] This is a prototype to test the wordlist generation algorithm in java");
         InputCollector();
     }
@@ -86,7 +93,7 @@ public class AlgorithmConcept
         String mode = Ask("Mode: D/A/M");
         if (Objects.equals(mode,"M"))
         {
-            file_name = Ask();
+            file_name = Ask()+".txt";
         }
         else if (Objects.equals(mode, "A"))
         {
@@ -109,7 +116,7 @@ public class AlgorithmConcept
         }
         else
         {
-            Printer("Defaulting to "+default_name+" !");
+            Printer("[$] Defaulting to "+default_name+" !");
             file_name = default_name;
         }
 
@@ -223,7 +230,7 @@ public class AlgorithmConcept
     public static void View() throws Exception
     {
         Saviour();
-        Printer("Here's all of the data that was in the file:\n\n"+file_contents+"\n\n");
+        Printer("[@] Here's all of the data that was in the file:\n\n"+file_contents+"\n\n");
         FileExists(false);
     }
 
@@ -275,7 +282,7 @@ public class AlgorithmConcept
         }
         else
         {
-            Printer("Saving backup to "+backup_path);
+            Printer("[$] Saving backup to "+backup_path);
             Saviour();
             Backup();
             WriterInit();
@@ -366,14 +373,14 @@ public class AlgorithmConcept
         {
             default_chain_value = 6;
         }
-        String temp_chain_value = Ask("What is the "+chain_type+" chain length?");
+        String temp_chain_value = Ask("[?] What is the "+chain_type+" chain length?");
         try
         {
             chain_value = Integer.parseInt(temp_chain_value);
         }
         catch (NumberFormatException error_value)
         {
-            Printer("Sorry, that input couldn't be understood as a number. defaulting to +"+default_chain_value);
+            Printer("[#] Sorry, that input couldn't be understood as a number. defaulting to +"+default_chain_value);
             chain_value = default_chain_value;
         }
         return chain_value;
@@ -383,13 +390,48 @@ public class AlgorithmConcept
     {
         String base_string = "";
         DjangoChained();
+        Printer("[$] Creating! \n[!] This process may take a lot of time, please be patient...");
+        TimeUnit.MILLISECONDS.sleep(200);
+        Printer("[$] GENERATING",false);
+        for (int i = 0; i < 3; i ++)
+        {
+            TimeUnit.MILLISECONDS.sleep(100);
+            Printer(".",false);
+        }
+        Printer();
+        starting_time = System.nanoTime();
+        int gap = maximum_chain_value - minimum_chain_value;
+        int percentage_gap = 100/gap;
+        int general_percent = 0;
         for (int available_length = minimum_chain_value; available_length <= maximum_chain_value; available_length++)
         {
+            Printer("Progress : ["+general_percent+"%]");
             WLC(base_string, available_length);
+            general_percent = general_percent + percentage_gap;
+        }
+        if (general_percent != 100 || (general_percent - percentage_gap) == 100)
+        {
+            Printer("Progress : [100%] !");
         }
         try
         {
-            MainCreator();
+            LLC_index = 0;
+            while (LLC_index < wordlist_list.size())
+            {
+                try
+                {
+                    MainCreator(LLC_index);
+                }
+                catch (OutOfMemoryError memory_issue)
+                {
+                    Printer("[#!] Oops, there seems to be a memory issue, attempting to fix it and continuing...\nSee logs: ");
+                    memory_issue.printStackTrace();
+                    writer_obj.close();
+                    Saviour();
+                    Writer(file_contents);
+                    WriterInit();
+                }
+            }
         }
         catch (IOException error_value)
         {
@@ -397,6 +439,12 @@ public class AlgorithmConcept
             error_value.printStackTrace();
             throw new Exception("[FUN-ERROR 100] : Program stopped after meeting an error while closing the file!");
         }
+        ending_time = System.nanoTime();
+        delta_time = ending_time - starting_time;
+        // 1 nano second is 10^(-9) seconds, 1 minute is 60 seconds --> M = ((NS * (10^9)) / 60)
+        float minutes_took = (float) ( ( delta_time * ( Math.pow(10,9) ) ) / 60 );
+        Printer("[$] Finished! It took exactly "+minutes_took+" minutes to finish creating your dictionary!\n[@] Enjoy!");
+        Printer("[@] The file is saved at "+file_path);
     }
     //wordlist list creator
     public static void WLC(String text, int length)
@@ -421,12 +469,15 @@ public class AlgorithmConcept
             }
         }
     }
-    public static void MainCreator() throws Exception
+
+    public static void MainCreator(int starting_index) throws Exception
     {
-        for (String item : wordlist_list)
+        String item;
+        for (LLC_index = starting_index; LLC_index < wordlist_list.size(); LLC_index++)
         {
+            item = wordlist_list.get(LLC_index);
             Writer(item);
-            Debugger(item);
+            Debugger("Number: "+LLC_index+" | Item:  "+item);
         }
     }
 
