@@ -12,6 +12,8 @@ TODO:
  --Put in loop and ensure it gets done even if multiple memory issues occur
  ALTERNATIVE
  -Instead of writing to list, write directly to file to also lower writing time.
+ POTENTIAL SOLUTION
+ -Do both, on two different branches of development, see which one does better and is more preferable
 
 TODO:
  -Clean up and polish for release v1
