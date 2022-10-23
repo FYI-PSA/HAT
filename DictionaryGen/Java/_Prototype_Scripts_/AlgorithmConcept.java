@@ -82,15 +82,37 @@ public class AlgorithmConcept
 
     public static void NameCreator() throws Exception
     {
+        String default_name = "dictionary.txt";
         String mode = Ask("Mode: D/A/M");
         if (Objects.equals(mode,"M"))
         {
             file_name = Ask();
         }
+        else if (Objects.equals(mode, "A"))
+        {
+            if (word_list.size() >= 1)
+            {
+                if (word_list.size() >= 2)
+                {
+                    file_name = word_list.get(0)+"_"+word_list.get(1)+"_"+default_name;
+                }
+                else
+                {
+                    file_name = word_list.get(0)+"_"+default_name;
+                }
+            }
+            else
+            {
+                file_name = "_ERROR_EMPTY_"+default_name;
+                throw new Exception("[FUN-ERROR 107] : Program stopped after finding no input to create the automatic name with!");
+            }
+        }
         else
         {
-            file_name = "dictionary.txt";
-        }     
+            Printer("Defaulting to "+default_name+" !");
+            file_name = default_name;
+        }
+
         parent_path = System.getProperty("user.home") + "\\Documents\\Generated-Dictionaries\\Java-Version\\";
         file_path = parent_path + file_name;
         file_exists = FileCreator();
@@ -298,7 +320,7 @@ public class AlgorithmConcept
         {
             Printer(error_message);
             error_value.printStackTrace();
-            throw new Exception("[FUN-ERROR 107] : Program stopped after meeting an issue trying to create a backup!");
+            throw new Exception("[FUN-ERROR 106] : Program stopped after meeting an issue trying to create a backup!");
         }
     }
 
