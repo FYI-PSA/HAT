@@ -413,6 +413,7 @@ public class AlgorithmConcept
         {
             Printer("Progress : [100%] !");
         }
+        /*
         try
         {
             LLC_index = 0;
@@ -439,6 +440,7 @@ public class AlgorithmConcept
             error_value.printStackTrace();
             throw new Exception("[FUN-ERROR 100] : Program stopped after meeting an error while closing the file!");
         }
+        */
         ending_time = System.nanoTime();
         delta_time = ending_time - starting_time;
         // 1 nano second is 10^(-9) seconds, 1 minute is 60 seconds --> M = ((NS * (10^9)) / 60)
@@ -465,7 +467,8 @@ public class AlgorithmConcept
             }
             else
             {
-                wordlist_list.add(new_text);
+                Writer(new_text);
+                Debugger(new_text);
             }
         }
     }
