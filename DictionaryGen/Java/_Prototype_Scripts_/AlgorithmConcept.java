@@ -449,7 +449,7 @@ public class AlgorithmConcept
         Printer("[@] The file is saved at "+file_path);
     }
     //wordlist list creator
-    public static void WLC(String text, int length)
+    public static void WLC(String text, int length) throws Exception
     {
         boolean index_flag = false;
         String new_text;
