@@ -419,6 +419,7 @@ public class AlgorithmConcept
         delta_time = ending_time - starting_time;
         // 1 nano second is 10^(-9) seconds, 1 minute is 60 seconds --> M = ((NS / (10^9)) / 60)
         float minutes_took = (float) ( ( delta_time / ( Math.pow(10,9) ) ) / 60 );
+        minutes_took =  ((float)((int)(minutes_took * 100))) / 100 ;
         Printer("[$] Finished! It took exactly "+minutes_took+" minutes to finish creating your dictionary!\n[@] Enjoy!");
         Printer("[@] The file is saved at "+file_path);
     }
@@ -429,7 +430,7 @@ public class AlgorithmConcept
         String new_text;
         for (String word : word_list)
         {
-            if (garbage_truck >= 1500)
+            if (garbage_truck >= 104857)
             {
                 System.gc();
                 garbage_truck = 0;
