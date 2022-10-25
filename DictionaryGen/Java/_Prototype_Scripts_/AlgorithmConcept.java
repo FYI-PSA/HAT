@@ -10,10 +10,10 @@ public class AlgorithmConcept
     public static FileWriter writer_obj;
     public static Scanner scan_obj = new Scanner(System.in);
     public static double starting_time, ending_time, delta_time;
+    public static ArrayList<String> word_list = new ArrayList<>();
     public static boolean debug_value = false, pre_items = false, file_exists;
-    public static int maximum_chain_value, minimum_chain_value, default_chain_value, LLC_index;
-    public static String error_message = "\n[!] Oops! Encountered an error! Here are the details:";
-    public static ArrayList<String> word_list = new ArrayList<>(), wordlist_list = new ArrayList<>();
+    public static int maximum_chain_value, minimum_chain_value, default_chain_value, garbage_truck;
+    public static String error_message = "\n[!] Oops! Encountered an error! Here are the details:  ";
     public static String file_name, file_path, parent_path, file_contents, backup_parent, backup_name, backup_path;
 
 
@@ -120,7 +120,7 @@ public class AlgorithmConcept
             file_name = default_name;
         }
 
-        parent_path = System.getProperty("user.home") + "\\Documents\\Generated-Dictionaries\\Java-Version\\";
+        parent_path = System.getProperty("user.home").replaceAll("\\\\","/") + "/Documents/Generated-Dictionaries/Java-Version/";
         file_path = parent_path + file_name;
         file_exists = FileCreator();
         if (file_exists)
@@ -199,9 +199,9 @@ public class AlgorithmConcept
         backup_name = file_name + ".backup";
         backup_path = backup_parent+backup_name;
         String temp_mode = Ask (ask_entry);
-        String[] view_entries     = {"V","\"V\"","'V'","v","\"v\"","'v'"};
-        String[] overwrite_entries = {"O","\"O\"","'O'","o","\"o\"","'v'"};
-        String[] cancel_entries   = {"C","\"C\"","'C'","c","\"c\"","'c'"};
+        String[] view_entries     = {"V","\"V\"","'V'","v","\"v\"","'v'","view","VIEW","View"};
+        String[] overwrite_entries = {"O","\"O\"","'O'","o","\"o\"","'o'","overwrite","Overwrite","OverWrite","overWrite","OVERWRITE"};
+        String[] cancel_entries   = {"C","\"C\"","'C'","c","\"c\"","'c'","cancel","CANCEL","Cancel"};
         List<String> viewList = Arrays.asList(view_entries);
         List<String> overwriteList = Arrays.asList(overwrite_entries);
         List<String> cancelList = Arrays.asList(cancel_entries);
@@ -263,6 +263,7 @@ public class AlgorithmConcept
     public static void Overwrite() throws Exception
     {
         BackerUp();
+        WriterInit();
         Algorithm();
     }
 
@@ -359,7 +360,7 @@ public class AlgorithmConcept
     public static void DjangoChained()
     {//instead of working with pairs and hashmaps, just make the minimum_chain_value and maximum_chain_value public statics.
         minimum_chain_value = Unchained("minimum");
-        maximum_chain_value = Unchained("maximum");
+        maximum_chain_value = Unchained("maximum")+1;
     }
 
     public static int Unchained(String chain_type)
@@ -403,7 +404,8 @@ public class AlgorithmConcept
         int gap = maximum_chain_value - minimum_chain_value;
         int percentage_gap = 100/gap;
         int general_percent = 0;
-        for (int available_length = minimum_chain_value; available_length <= maximum_chain_value; available_length++)
+        garbage_truck = 0;
+        for (int available_length = minimum_chain_value; available_length < maximum_chain_value; available_length++)
         {
             Printer("Progress : ["+general_percent+"%]");
             WLC(base_string, available_length);
@@ -413,38 +415,10 @@ public class AlgorithmConcept
         {
             Printer("Progress : [100%] !");
         }
-        /*
-        try
-        {
-            LLC_index = 0;
-            while (LLC_index < wordlist_list.size())
-            {
-                try
-                {
-                    MainCreator(LLC_index);
-                }
-                catch (OutOfMemoryError memory_issue)
-                {
-                    Printer("[#!] Oops, there seems to be a memory issue, attempting to fix it and continuing...\nSee logs: ");
-                    memory_issue.printStackTrace();
-                    writer_obj.close();
-                    Saviour();
-                    Writer(file_contents);
-                    WriterInit();
-                }
-            }
-        }
-        catch (IOException error_value)
-        {
-            Printer(error_message);
-            error_value.printStackTrace();
-            throw new Exception("[FUN-ERROR 100] : Program stopped after meeting an error while closing the file!");
-        }
-        */
         ending_time = System.nanoTime();
         delta_time = ending_time - starting_time;
-        // 1 nano second is 10^(-9) seconds, 1 minute is 60 seconds --> M = ((NS * (10^9)) / 60)
-        float minutes_took = (float) ( ( delta_time * ( Math.pow(10,9) ) ) / 60 );
+        // 1 nano second is 10^(-9) seconds, 1 minute is 60 seconds --> M = ((NS / (10^9)) / 60)
+        float minutes_took = (float) ( ( delta_time / ( Math.pow(10,9) ) ) / 60 );
         Printer("[$] Finished! It took exactly "+minutes_took+" minutes to finish creating your dictionary!\n[@] Enjoy!");
         Printer("[@] The file is saved at "+file_path);
     }
@@ -455,6 +429,15 @@ public class AlgorithmConcept
         String new_text;
         for (String word : word_list)
         {
+            if (garbage_truck >= 1500)
+            {
+                System.gc();
+                garbage_truck = 0;
+            }
+            else
+            {
+                garbage_truck ++;
+            }
             new_text = text + word;
             if (!index_flag)
             {
@@ -472,18 +455,6 @@ public class AlgorithmConcept
             }
         }
     }
-
-    public static void MainCreator(int starting_index) throws Exception
-    {
-        String item;
-        for (LLC_index = starting_index; LLC_index < wordlist_list.size(); LLC_index++)
-        {
-            item = wordlist_list.get(LLC_index);
-            Writer(item);
-            Debugger("Number: "+LLC_index+" | Item:  "+item);
-        }
-    }
-
 
     public static void main(String [] args) throws Exception
     {
