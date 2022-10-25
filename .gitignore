@@ -1,6 +1,6 @@
-.idea/
+**/out/
+**/.idea/
 DuckyScript/
 **/__pycache__/
 Hackers-Toolbox.iml
-DictionaryGen/Java/out/
 DictionaryGen/Python/_Prototype_Scripts_/Stringer/
