@@ -4,7 +4,18 @@ TODO:
  -(try to) Make into UI app
  -(try to) Make for mobile
 
+
+
+
 TODO:
+ -Automatic memory management system / Input
+
+
+
+
+
+
+DONE:
  -To fix memory issue with crashing while making the list:
  --Write all content of current list to file
  --Clean up list to nothing
@@ -15,17 +26,8 @@ TODO:
  POTENTIAL SOLUTION
  -Do both, on two different branches of development, see which one does better and is more preferable
 
-TODO:
- -Clean up and polish for release v1
-
-
-
-
-
-
-DONE:
-
-
+ 
+ 
  -Make a file naming system work
 
 
