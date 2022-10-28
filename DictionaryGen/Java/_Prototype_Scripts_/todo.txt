@@ -7,15 +7,10 @@ TODO:
 
 
 
-TODO:
+DONE:
  -Automatic memory management system / Input
 
 
-
-
-
-
-DONE:
  -To fix memory issue with crashing while making the list:
  --Write all content of current list to file
  --Clean up list to nothing
