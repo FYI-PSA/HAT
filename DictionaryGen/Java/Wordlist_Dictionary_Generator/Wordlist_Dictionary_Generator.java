@@ -521,7 +521,7 @@ public class Wordlist_Dictionary_Generator
         long free_memory = Runtime.getRuntime().freeMemory();
         //will make this a slider in a UI version, not going to deal with percentages on terminal app at the moment
         //if you want me to add percentages, remind me by opening an issue on the GitHub page
-        if (free_memory < (1024*1024 / 750 ))
+        if (free_memory < (1024*1024 / 250 ))
         {
             System.gc();
         }
@@ -550,6 +550,7 @@ public class Wordlist_Dictionary_Generator
             WLC(base_string, available_length);
             general_percent = general_percent + percentage_gap;
         }
+        MemoryMan();
         Printer("Progress : [100%] !");
         ending_time = System.nanoTime();
         delta_time = ending_time - starting_time;
