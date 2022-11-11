@@ -1,6 +1,7 @@
 .idea/
-**/**.exe
 **/out/
+.vscode/
+**/**.exe
 Releases/
 DuckyScript/
 **/__pycache__/
