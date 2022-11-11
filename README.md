@@ -1,9 +1,8 @@
 # Hackers-Toolbox
 
+## **Currently included tools:**
 
-**Currently included tools:**
-
-* ## Wordlist Generator [Prototype](/DictionaryGen)
+* ### Wordlist Generator [Prototype](/DictionaryGen)
 
   * [See how it works](/DictionaryGen/Algorithm.md)
 
