@@ -1,11 +1,10 @@
 # Hackers-Toolbox
 
----
 
 **Currently included tools:**
 
-* #### A wordlist generator
+* ## Wordlist Generator [Prototype](/DictionaryGen)
 
   * [See how it works](/DictionaryGen/Algorithm.md)
-    `<br />`
-* **_*[More will soon be added, thank you for your patience]*_**
+
+* ***[More will soon be added, thank you for your patience]***
