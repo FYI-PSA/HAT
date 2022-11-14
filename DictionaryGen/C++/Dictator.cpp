@@ -13,53 +13,65 @@ using std::cout;
 using std::cin;
 
 void InputCollector(void);
-void Printer(string text);
-void Printer(string text, bool newLine);
-void WordListCreatino(string baseString, int lengthVar);
+void WordListCreation(string baseString, int lengthVar);
 
 class Word_List
 {
     public:
-        vector<string> list;
-        int size;
+        vector<string> wordList;
+        int wordListSize;
 };
 
 Word_List WordListObj;
 
 int main ()
 {
+    cout << "[#!] Dictator V0.1" << endl << endl;
     InputCollector();
+    cout << "[$!] Analyzing entries..." << endl << endl;
+    cout << "[$!] Creating word list..." << endl;
+    string based = "";
+    int maxLength = 3;
+    WordListCreation(based, maxLength);
+    cout << endl << "[$!$] Done!" << endl;
 }
 
 void InputCollector()
 {
-    cout << "Enter input:\nEnter nothing in the input to stop.\n| >> " ;
+    cout << "[@] Enter the first entry to the word list."
+    << endl << "[@] When you're done, just leave the input blank and hit enter again."
+    << endl << "[+] First entry: " ;
     string inputVar;
     while(getline(cin,inputVar) && inputVar != "")
     {
-        WordListObj.list.push_back(inputVar);
-        Printer("Successfully added "+inputVar+" to input list!");
+        WordListObj.wordList.push_back(inputVar);
+        cout << "[@] Successfully added " + inputVar + " to input list!"
+        << endl << "[+] Next entry : " ;
         inputVar = "";
     }
-    Printer("Stopped adding entries to list.");
-    WordListObj.size = WordListObj.list.size();
-    cout << WordListObj.size << endl;
-}
-
-
-void Printer(string text)
-{
-    Printer(text, true);
-}
-
-void Printer(string text, bool newLine)
-{
-    cout << text;
-    if(newLine)
-        cout << endl;
+    cout << "[/] Stopped adding entries to list." << endl;
+    WordListObj.wordListSize = WordListObj.wordList.size();
 }
 
 void WordListCreation(string baseString, int lengthVar)
 {
     bool flag = false;
+    string newString;
+    for (int listIndex = 0; listIndex < WordListObj.wordListSize; listIndex++)
+    {
+        newString = baseString + WordListObj.wordList.at(listIndex);
+        if (!flag)
+        {
+            lengthVar--;
+            flag = true;
+        }
+        if (lengthVar > 0)
+        {
+            WordListCreation(newString,lengthVar);
+        }
+        else
+        {
+            cout << newString << endl;
+        }
+    }
 }
