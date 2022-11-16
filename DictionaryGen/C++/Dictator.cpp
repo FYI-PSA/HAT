@@ -10,20 +10,26 @@
 #include <string>
 #include <vector>
 
-using std::exit;
-
-using std::vector;
-using std::string;
-
+using std::cin;
+using std::cout;
+using std::endl;
 using std::getline;
 
 using std::fstream;
 using std::ofstream;
 
-using std::endl;
-using std::cout;
-using std::cin;
+using std::stoi;
+using std::string;
+using std::to_string;
 
+using std::exit;
+
+using std::vector;
+
+using std::invalid_argument;
+
+void Unchained(void);
+void LengthGet(void);
 void PathFinder(void);
 void WriteToFile(void);
 void InputCollector(void);
@@ -39,6 +45,9 @@ class Word_List
 
         vector<string> finalWordList;
         int finalWordListSize;
+
+        int maxChainLen;
+        int minChainLen;
 };
 
 Word_List WordListObj;
@@ -46,17 +55,23 @@ Word_List WordListObj;
 int main ()
 {
     cout << "[*] Dictator V0.1" << endl << endl;
+    cout << "[!] Getting inputs for dictionary..." << endl << endl;
     InputCollector();
-    cout << "[!] Analyzing entries..." << endl << endl;
-    cout << "[!] Creating word list..." << endl;
+    cout << endl << endl << "[!] Creating file..." << endl << endl;
     PathFinder();
-    string based = "";
-    int maxLength = 4;
-    WordListCreation(based, maxLength);
-    cout << "[!] Writing to file..." << endl;
+    cout << endl << endl << "[!] Setting options for dictionary..." << endl << endl;
+    LengthGet();
+    cout << endl << endl << "[!] Creating dictionary..." << endl << endl;
+    Unchained();
     WordListObj.finalWordListSize = WordListObj.finalWordList.size();
+    cout << endl << endl << "[!] Writing dictionary to file..." << endl << endl;
     WriteToFile();
-    cout << endl << "[$] Done!" << endl;
+    cout << endl << endl << "[$] Done!" << endl << endl;
+
+    /*
+    TODO:
+    CALL WriteToFile IN EACH Unchained LOOP
+    */
 }
 
 void InputCollector()
@@ -99,6 +114,68 @@ void PathFinder(void)
         cout << "[#] ERR : COULDN'T CREATE FILE '" + WordListObj.filePath + "' !"
         << endl << "[!] ENDING PROGRAM [!]";
         exit(1);
+    }
+}
+
+void LengthGet(void)
+{
+    int defaultMin = 1;
+    string minInput;
+    cout << "[?] Minimum value for the amount of values chanied together in a single possible combination?"
+    << endl << "[@] (Example : 2 -> firstSecond, 3 -> firstSecondThird)"
+    << endl << "[@] Will default to " + to_string(defaultMin) + " in case of undefined input!"
+    << endl << "[?] Minimum chain length value: ";
+    getline(cin,minInput);
+    int minLength = defaultMin;
+    try
+    {
+        minLength = stoi(minInput);
+        cout << endl << minLength << endl;
+    }
+    catch (invalid_argument)
+    {
+        cout << "[!] Couldn't understand input, defaulting to " + to_string(defaultMin) + " for minimum value" << endl;
+    }
+    int defaultMax = 6;
+    string maxInput;
+    cout << endl << "[?] Maximum value for the amount of values chanied together in a single possible combination?"
+    << endl << "[@] Will default to " + to_string(defaultMax) + " in case of undefined input!"
+    << endl << "[?] Maximum chain length value: ";
+    getline(cin,maxInput);
+    int maxLength = defaultMax;
+    try
+    {
+        maxLength = stoi(maxInput);
+        cout << endl << maxLength << endl;
+    }
+    catch (invalid_argument)
+    {
+        cout << "[!] Couldn't understand input, defaulting to " + to_string(defaultMax) + " for maximum value" << endl;
+    }
+    WordListObj.minChainLen = minLength;
+    WordListObj.maxChainLen = maxLength;
+}
+
+void Unchained(void)
+{
+    int minL = WordListObj.minChainLen;
+    int maxL = WordListObj.maxChainLen;
+    int percent = 0;
+    int progressAmount = minL - maxL + 1;
+    int percentPart = 100/progressAmount;
+    for (int currentLength = minL; currentLength <= maxL; currentLength++)
+    {
+        string based = "";
+        WordListCreation(based, currentLength);
+        percent += percentPart;
+        if (percent < 100)
+        {
+            cout << "[!] Progress: " + to_string(percent) + "\%" << endl;
+        }
+        else
+        {
+            cout << "[$] 100% !";
+        }
     }
 }
 
