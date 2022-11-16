@@ -63,14 +63,15 @@ int main ()
     LengthGet();
     cout << endl << endl << "[!] Creating dictionary..." << endl << endl;
     Unchained();
-    WordListObj.finalWordListSize = WordListObj.finalWordList.size();
-    cout << endl << endl << "[!] Writing dictionary to file..." << endl << endl;
-    WriteToFile();
+
     cout << endl << endl << "[$] Done!" << endl << endl;
 
     /*
     TODO:
     CALL WriteToFile IN EACH Unchained LOOP
+    Fstream, can then Open that and write to it globally
+    OFstream, writes to file directly
+    read inputs from a file, just create dictionary
     */
 }
 
@@ -98,17 +99,26 @@ void PathFinder(void)
     GetUserName(userName, &userNameLength);
     string homePath = "C:/Users/" + (string)userName + "/Documents/Hackers-Toolbox/Dictionaries/";
     string fileName;
+    string inputName;
     cout << "[@] Name the file to save your dictionary as"
     << endl << "[!] (Files will be saved at '" + homePath + "' as a .txt file )"
+    << endl << "[@] Leave field blank to save your file name as the default dictionary.txt"
+    << endl << "[@] If the file already exists, new data will be added to the beggining leaving old data untouched."
     << endl << "[?] File name : ";
-    getline(cin,fileName);
-    if (fileName == "")
+    getline(cin,inputName);
+    if (inputName == "")
+    {
         fileName = "dictionary.txt";
+    }
     else
-        fileName = fileName+".txt";
+    {
+        fileName = inputName+".txt";
+    }
     WordListObj.filePath = homePath + fileName;
     if (CreateDirectory(homePath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
+    {
         cout << "[$] Successfully created file '" + WordListObj.filePath + "' !" << endl;
+    }
     else
     {
         cout << "[#] ERR : COULDN'T CREATE FILE '" + WordListObj.filePath + "' !"
@@ -161,21 +171,29 @@ void Unchained(void)
     int minL = WordListObj.minChainLen;
     int maxL = WordListObj.maxChainLen;
     int percent = 0;
-    int progressAmount = minL - maxL + 1;
-    int percentPart = 100/progressAmount;
+    int progressAmount = maxL - minL + 1;
+    int percentPart = 100 / progressAmount;
+    bool fullFlag = false;
     for (int currentLength = minL; currentLength <= maxL; currentLength++)
     {
         string based = "";
         WordListCreation(based, currentLength);
         percent += percentPart;
+        WordListObj.finalWordListSize = WordListObj.finalWordList.size();
+        WriteToFile();
         if (percent < 100)
         {
             cout << "[!] Progress: " + to_string(percent) + "\%" << endl;
         }
         else
         {
-            cout << "[$] 100% !";
+            cout << "[$] 100% !" << endl;
+            fullFlag = true;
         }
+    }
+    if (!fullFlag)
+    {
+        cout << "[$] 100% !" << endl;
     }
 }
 
@@ -204,7 +222,7 @@ void WordListCreation(string baseString, int lengthVar)
 
 void WriteToFile(void)
 {
-    fstream fileObj(WordListObj.filePath);
+    ofstream fileObj(WordListObj.filePath);
     string listItem;
     for (int finalIndex = 0; finalIndex < WordListObj.finalWordListSize; finalIndex++)
     {
@@ -212,4 +230,6 @@ void WriteToFile(void)
         fileObj << listItem;
     }
     fileObj.close();
+    WordListObj.finalWordList.clear();
+    WordListObj.finalWordListSize = 0;
 }
