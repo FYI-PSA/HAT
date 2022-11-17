@@ -49,7 +49,7 @@ Word_List WordListObj;
 
 int main ()
 {
-    cout << "[*] Dictator V0.99" << endl << endl;
+    cout << "[*] Dictator V0.98" << endl << endl;
     cout << "[!] Getting inputs for dictionary..." << endl << endl;
     InputCollector();
     cout << endl << endl << "[!] Creating file..." << endl << endl;
