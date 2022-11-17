@@ -32,24 +32,16 @@ void WriteToFile(void);
 void InputCollector(void);
 void WordListCreation(string baseString, int lengthVar);
 
-class Word_List
-{
-    public:
-        std::vector<string> wordList;
-        int wordListSize;
-
-        fstream fileObj;
-        string filePath;
-
-        int maxChainLen;
-        int minChainLen;
-};
-
-Word_List WordListObj;
+std::vector<string> L_wordList;
+int L_wordListSize;
+fstream L_fileObj;
+string L_filePath;
+int L_maxChainLen;
+int L_minChainLen;
 
 int main ()
 {
-    cout << "[*] Dictator V0.98" << endl << endl;
+    cout << "[*] Dictator V0.99" << endl << endl;
     cout << "[!] Getting inputs for dictionary..." << endl << endl;
     InputCollector();
     cout << endl << endl << "[!] Creating file..." << endl << endl;
@@ -58,24 +50,22 @@ int main ()
     LengthGet();
     clock_t creationStart = std::clock();
     cout << endl << endl << "[!] Creating dictionary..." << endl << endl;
-    WordListObj.fileObj.open(WordListObj.filePath);
+    L_fileObj.open(L_filePath);
     Unchained();
-    WordListObj.fileObj.close();
+    L_fileObj.close();
     clock_t creationStop = std::clock();
     clock_t deltaCTime = creationStop - creationStart;
     float minuteDCT = (double)deltaCTime / 60000;
     cout << endl << endl << "[$] Done!"
     << endl << "[$] It took " << std::setprecision(2) << minuteDCT << " minutes"
-    << endl << "[$] The dictionary is saved at '" + WordListObj.filePath + "' "
+    << endl << "[$] The dictionary is saved at '" + L_filePath + "' "
     << endl << endl << "[$] Goodbye!" << endl << endl;
-    /*
-    TODO:
-
-    maybe bring back the old system of overriding a file if it exists, instead of always appending to the start.
-    ^ could be an idea for the GUI version
-
-    read inputs from a file, just create dictionary
-    */
+/*
+TODO :
+- maybe bring back the old system of overriding a file if it exists, instead of always appending to the start.
+ ^ could be an idea for the GUI version
+- read inputs from a file, just create dictionary
+*/
 }
 
 void InputCollector()
@@ -86,13 +76,13 @@ void InputCollector()
     string inputVar;
     while(getline(cin,inputVar) && inputVar != "")
     {
-        WordListObj.wordList.push_back(inputVar);
+        L_wordList.push_back(inputVar);
         cout << "[@] Successfully added " + inputVar + " to input list!"
         << endl << "[+] Next entry : " ;
         inputVar = "";
     }
     cout << "[/] Stopped adding entries to list." << endl;
-    WordListObj.wordListSize = WordListObj.wordList.size();
+    L_wordListSize = L_wordList.size();
 }
 
 void PathFinder(void)
@@ -121,25 +111,25 @@ void PathFinder(void)
     {
         fileName = inputName+".txt";
     }
-    WordListObj.filePath = homePath + fileName;
+    L_filePath = homePath + fileName;
     //Creating the file and the folder :
     //there's a Hackers-Toolbox in DOCUMENTS, there's no Dictionaries folder.
     if (CreateDirectory(homePath.c_str(), NULL))
     {
         cout << "[!] Creating 'Dictionaries' folder..." << endl;
-        ofstream fileInitObj(WordListObj.filePath);
+        ofstream fileInitObj(L_filePath);
         fileInitObj << " \n \n ";
         fileInitObj.close();
-        cout << "[$] Successfully created file '" + WordListObj.filePath + "' !" << endl;
+        cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
     }
     //there's a Hackers-Toolbox in DOCUMENTS, there's also a Dictionaries folder.
     else if (GetLastError() == ERROR_ALREADY_EXISTS)
     {
         cout << "[!] Located pre-existing 'Dictionaries' folder..." << endl;
-        ofstream fileInitObj(WordListObj.filePath);
+        ofstream fileInitObj(L_filePath);
         fileInitObj << " \n \n ";
         fileInitObj.close();
-        cout << "[$] Successfully created file '" + WordListObj.filePath + "' !" << endl;
+        cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
     }
     //there's not a Hackers-Toolbox in DOCUMENTS
     else if (GetLastError() == ERROR_PATH_NOT_FOUND)
@@ -150,10 +140,10 @@ void PathFinder(void)
             cout << "[!] Creating the parent folder '" + parentAppPath + "'... " << endl;
             if (CreateDirectory(homePath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
             {
-                ofstream fileInitObj(WordListObj.filePath);
+                ofstream fileInitObj(L_filePath);
                 fileInitObj << " \n \n ";
                 fileInitObj.close();
-                cout << "[$] Successfully created file '" + WordListObj.filePath + "' !" << endl;
+                cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
             }
         }
         //there's not a Hackers-Toolbox in DOCUMENTs, but there's a Hackers-Toolbox in DOCUMENTS
@@ -176,10 +166,10 @@ void PathFinder(void)
                     cout << "[!] Creating the parent folder '" + parentAppPath + "'... " << endl;
                     if (CreateDirectory(homePath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
                     {
-                        ofstream fileInitObj(WordListObj.filePath);
+                        ofstream fileInitObj(L_filePath);
                         fileInitObj << " \n \n ";
                         fileInitObj.close();
-                        cout << "[$] Successfully created file '" + WordListObj.filePath + "' !" << endl;
+                        cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
                     }
                 }
             }
@@ -237,14 +227,14 @@ void LengthGet(void)
     {
         cout << "[!] Couldn't understand input, defaulting to " + to_string(defaultMax) + " for maximum value" << endl;
     }
-    WordListObj.minChainLen = minLength;
-    WordListObj.maxChainLen = maxLength;
+    L_minChainLen = minLength;
+    L_maxChainLen = maxLength;
 }
 
 void Unchained(void)
 {
-    int minL = WordListObj.minChainLen;
-    int maxL = WordListObj.maxChainLen;
+    int minL = L_minChainLen;
+    int maxL = L_maxChainLen;
     int percent = 0;
     int progressAmount = maxL - minL + 1;
     int percentPart = 100 / progressAmount;
@@ -274,9 +264,9 @@ void WordListCreation(string baseString, int lengthVar)
 {
     bool flag = false;
     string newString;
-    for (int listIndex = 0; listIndex < WordListObj.wordListSize; listIndex++)
+    for (int listIndex = 0; listIndex < L_wordListSize; listIndex++)
     {
-        newString = baseString + WordListObj.wordList.at(listIndex);
+        newString = baseString + L_wordList.at(listIndex);
         if (!flag)
         {
             lengthVar--;
@@ -289,7 +279,7 @@ void WordListCreation(string baseString, int lengthVar)
         else
         {
             string resultString = newString+"\n";
-            WordListObj.fileObj << resultString;
+            L_fileObj << resultString;
         }
     }
 }
