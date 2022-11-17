@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_NO_WARNINGS
 
 #include <Windows.h>
 #include <process.h>
@@ -7,8 +7,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fstream>
+#include <iomanip>
 #include <string>
 #include <vector>
+#include <time.h>
+#include <ctime>
 
 using std::cin;
 using std::cout;
@@ -22,12 +25,6 @@ using std::stoi;
 using std::string;
 using std::to_string;
 
-using std::exit;
-
-using std::vector;
-
-using std::invalid_argument;
-
 void Unchained(void);
 void LengthGet(void);
 void PathFinder(void);
@@ -38,13 +35,11 @@ void WordListCreation(string baseString, int lengthVar);
 class Word_List
 {
     public:
-        vector<string> wordList;
+        std::vector<string> wordList;
         int wordListSize;
 
+        fstream fileObj;
         string filePath;
-
-        vector<string> finalWordList;
-        int finalWordListSize;
 
         int maxChainLen;
         int minChainLen;
@@ -54,23 +49,31 @@ Word_List WordListObj;
 
 int main ()
 {
-    cout << "[*] Dictator V0.1" << endl << endl;
+    cout << "[*] Dictator V0.99" << endl << endl;
     cout << "[!] Getting inputs for dictionary..." << endl << endl;
     InputCollector();
     cout << endl << endl << "[!] Creating file..." << endl << endl;
     PathFinder();
     cout << endl << endl << "[!] Setting options for dictionary..." << endl << endl;
     LengthGet();
+    clock_t creationStart = std::clock();
     cout << endl << endl << "[!] Creating dictionary..." << endl << endl;
+    WordListObj.fileObj.open(WordListObj.filePath);
     Unchained();
-
-    cout << endl << endl << "[$] Done!" << endl << endl;
-
+    WordListObj.fileObj.close();
+    clock_t creationStop = std::clock();
+    clock_t deltaCTime = creationStop - creationStart;
+    float minuteDCT = (double)deltaCTime / 60000;
+    cout << endl << endl << "[$] Done!"
+    << endl << "[$] It took " << std::setprecision(2) << minuteDCT << " minutes"
+    << endl << "[$] The dictionary is saved at '" + WordListObj.filePath + "' "
+    << endl << endl << "[$] Goodbye!" << endl << endl;
     /*
     TODO:
-    CALL WriteToFile IN EACH Unchained LOOP
-    Fstream, can then Open that and write to it globally
-    OFstream, writes to file directly
+
+    maybe bring back the old system of overriding a file if it exists, instead of always appending to the start.
+    ^ could be an idea for the GUI version
+
     read inputs from a file, just create dictionary
     */
 }
@@ -97,7 +100,11 @@ void PathFinder(void)
     char userName[UNLEN+1];
     DWORD userNameLength = UNLEN+1;
     GetUserName(userName, &userNameLength);
-    string homePath = "C:/Users/" + (string)userName + "/Documents/Hackers-Toolbox/Dictionaries/";
+    string usrName = (string)userName;
+    string userHome = "C:\\Users\\" + usrName + "\\";
+    string userDocuments = userHome + "Documents\\";
+    string parentAppPath = userDocuments + "Hackers-Toolbox\\";
+    string homePath = parentAppPath + "Dictionaries\\";
     string fileName;
     string inputName;
     cout << "[@] Name the file to save your dictionary as"
@@ -115,15 +122,83 @@ void PathFinder(void)
         fileName = inputName+".txt";
     }
     WordListObj.filePath = homePath + fileName;
-    if (CreateDirectory(homePath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
+    //Creating the file and the folder :
+    //there's a Hackers-Toolbox in DOCUMENTS, there's no Dictionaries folder.
+    if (CreateDirectory(homePath.c_str(), NULL))
     {
+        cout << "[!] Creating 'Dictionaries' folder..." << endl;
+        ofstream fileInitObj(WordListObj.filePath);
+        fileInitObj << " \n \n ";
+        fileInitObj.close();
         cout << "[$] Successfully created file '" + WordListObj.filePath + "' !" << endl;
     }
-    else
+    //there's a Hackers-Toolbox in DOCUMENTS, there's also a Dictionaries folder.
+    else if (GetLastError() == ERROR_ALREADY_EXISTS)
     {
-        cout << "[#] ERR : COULDN'T CREATE FILE '" + WordListObj.filePath + "' !"
-        << endl << "[!] ENDING PROGRAM [!]";
-        exit(1);
+        cout << "[!] Located pre-existing 'Dictionaries' folder..." << endl;
+        ofstream fileInitObj(WordListObj.filePath);
+        fileInitObj << " \n \n ";
+        fileInitObj.close();
+        cout << "[$] Successfully created file '" + WordListObj.filePath + "' !" << endl;
+    }
+    //there's not a Hackers-Toolbox in DOCUMENTS
+    else if (GetLastError() == ERROR_PATH_NOT_FOUND)
+    {
+        //there's a DOCUMENTS in USER
+        if (CreateDirectory(parentAppPath.c_str(), NULL))
+        {
+            cout << "[!] Creating the parent folder '" + parentAppPath + "'... " << endl;
+            if (CreateDirectory(homePath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
+            {
+                ofstream fileInitObj(WordListObj.filePath);
+                fileInitObj << " \n \n ";
+                fileInitObj.close();
+                cout << "[$] Successfully created file '" + WordListObj.filePath + "' !" << endl;
+            }
+        }
+        //there's not a Hackers-Toolbox in DOCUMENTs, but there's a Hackers-Toolbox in DOCUMENTS
+        else if(GetLastError() == ERROR_ALREADY_EXISTS)
+        {
+            cout << "[#] ERR : CAN'T WORK WITH SHRODINGER'S FOLDER!"
+            << endl << "[!] ENDING PROGRAM [!]";
+            std::exit(1);
+        }
+        //there's not a DOCUMENTS at all
+        else if(GetLastError() == ERROR_PATH_NOT_FOUND)
+        {
+            cout << "[#] ERR : USER HAS NO DOCUMENTS FOLDER!";
+            //there's a USER
+            if (CreateDirectory(userDocuments.c_str(), NULL))
+            {
+                cout << "[!] Creating 'Documents' folder for " + usrName + "... " << endl;
+                if (CreateDirectory(parentAppPath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
+                {
+                    cout << "[!] Creating the parent folder '" + parentAppPath + "'... " << endl;
+                    if (CreateDirectory(homePath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
+                    {
+                        ofstream fileInitObj(WordListObj.filePath);
+                        fileInitObj << " \n \n ";
+                        fileInitObj.close();
+                        cout << "[$] Successfully created file '" + WordListObj.filePath + "' !" << endl;
+                    }
+                }
+            }
+            //there's not a DOCUMENTS at all, however, DOCUMENTS exists.
+            else if (GetLastError() == ERROR_ALREADY_EXISTS)
+            {
+                cout << "[#] ERR: CAN'T WORK WITH SHRODINGER'S DOCUMENTS!"
+                << endl << "[!] ENDING PROGRAM [!]";
+                std::exit(1);
+            }
+            //there is no USER
+            else if (GetLastError() == ERROR_PATH_NOT_FOUND)
+            {
+                cout << "[#] USER DOESN'T EXIST, WHICH MEANS THIS PROGRAM WAS NEVER RUN!"
+                << endl << "[#] [!] ERR : PARADOX DETECTED! [!] [#]"
+                << endl << "[#] [!] ENDING SIMULATION [!] [#]";
+                std::exit(1);
+            }
+        }
     }
 }
 
@@ -140,9 +215,9 @@ void LengthGet(void)
     try
     {
         minLength = stoi(minInput);
-        cout << endl << minLength << endl;
+        cout << "[$] Set minimum value to " + to_string(minLength) + " !" << endl;
     }
-    catch (invalid_argument)
+    catch (std::invalid_argument)
     {
         cout << "[!] Couldn't understand input, defaulting to " + to_string(defaultMin) + " for minimum value" << endl;
     }
@@ -156,9 +231,9 @@ void LengthGet(void)
     try
     {
         maxLength = stoi(maxInput);
-        cout << endl << maxLength << endl;
+        cout << "[$] Set maximum value to " + to_string(maxLength) + " !" << endl;
     }
-    catch (invalid_argument)
+    catch (std::invalid_argument)
     {
         cout << "[!] Couldn't understand input, defaulting to " + to_string(defaultMax) + " for maximum value" << endl;
     }
@@ -179,8 +254,6 @@ void Unchained(void)
         string based = "";
         WordListCreation(based, currentLength);
         percent += percentPart;
-        WordListObj.finalWordListSize = WordListObj.finalWordList.size();
-        WriteToFile();
         if (percent < 100)
         {
             cout << "[!] Progress: " + to_string(percent) + "\%" << endl;
@@ -215,21 +288,8 @@ void WordListCreation(string baseString, int lengthVar)
         }
         else
         {
-            WordListObj.finalWordList.push_back(newString+"\n");
+            string resultString = newString+"\n";
+            WordListObj.fileObj << resultString;
         }
     }
-}
-
-void WriteToFile(void)
-{
-    ofstream fileObj(WordListObj.filePath);
-    string listItem;
-    for (int finalIndex = 0; finalIndex < WordListObj.finalWordListSize; finalIndex++)
-    {
-        listItem = WordListObj.finalWordList.at(finalIndex);
-        fileObj << listItem;
-    }
-    fileObj.close();
-    WordListObj.finalWordList.clear();
-    WordListObj.finalWordListSize = 0;
 }
