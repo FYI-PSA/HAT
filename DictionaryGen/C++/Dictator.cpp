@@ -29,6 +29,7 @@ void Unchained(void);
 void LengthGet(void);
 void PathFinder(void);
 void WriteToFile(void);
+bool FConfigReader(void);
 void InputCollector(void);
 void WordListCreation(string baseString, int lengthVar);
 
@@ -39,7 +40,10 @@ string L_filePath;
 int L_maxChainLen;
 int L_minChainLen;
 
-int main ()
+string U_UserName;
+string U_HomePath;
+
+int main (void)
 {
     cout << "[*] Dictator V0.99" << endl << endl;
     cout << "[!] Getting inputs for dictionary..." << endl << endl;
@@ -68,7 +72,20 @@ TODO :
 */
 }
 
-void InputCollector()
+bool FConfigReader(void)
+{
+    //list out all files in ~/Documents/Hackers-Toolbox/PreConfigs/
+    //check for files that end in .fconfig and save them to an array
+    //if none exists, return false
+    //read the first line of first file in that array
+    //if the first line was --Dictator-Config-- , continue
+    //otherwise return false
+    //now read out each next line in a loop till file ends
+    //WIP - will continue this later
+    return false;
+}
+
+void InputCollector(void)
 {
     cout << "[@] Enter the first entry to the word list."
     << endl << "[@] When you're done, just leave the input blank and hit enter again."
@@ -90,15 +107,15 @@ void PathFinder(void)
     char userName[UNLEN+1];
     DWORD userNameLength = UNLEN+1;
     GetUserName(userName, &userNameLength);
-    string usrName = (string)userName;
-    string userHome = "C:\\Users\\" + usrName + "\\";
+    U_UserName = (string)userName;
+    string userHome = "C:\\Users\\" + U_UserName + "\\";
     string userDocuments = userHome + "Documents\\";
-    string parentAppPath = userDocuments + "Hackers-Toolbox\\";
-    string homePath = parentAppPath + "Dictionaries\\";
+    U_HomePath = userDocuments + "Hackers-Toolbox\\";
+    string dictionaryPath = U_HomePath + "Dictionaries\\";
     string fileName;
     string inputName;
     cout << "[@] Name the file to save your dictionary as"
-    << endl << "[!] (Files will be saved at '" + homePath + "' as a .txt file )"
+    << endl << "[!] (Files will be saved at '" + dictionaryPath + "' as a .txt file )"
     << endl << "[@] Leave field blank to save your file name as the default dictionary.txt"
     << endl << "[@] If the file already exists, new data will be added to the beggining leaving old data untouched."
     << endl << "[?] File name : ";
@@ -111,10 +128,10 @@ void PathFinder(void)
     {
         fileName = inputName+".txt";
     }
-    L_filePath = homePath + fileName;
+    L_filePath = dictionaryPath + fileName;
     //Creating the file and the folder :
     //there's a Hackers-Toolbox in DOCUMENTS, there's no Dictionaries folder.
-    if (CreateDirectory(homePath.c_str(), NULL))
+    if (CreateDirectory(dictionaryPath.c_str(), NULL))
     {
         cout << "[!] Creating 'Dictionaries' folder..." << endl;
         ofstream fileInitObj(L_filePath);
@@ -135,10 +152,10 @@ void PathFinder(void)
     else if (GetLastError() == ERROR_PATH_NOT_FOUND)
     {
         //there's a DOCUMENTS in USER
-        if (CreateDirectory(parentAppPath.c_str(), NULL))
+        if (CreateDirectory(U_HomePath.c_str(), NULL))
         {
-            cout << "[!] Creating the parent folder '" + parentAppPath + "'... " << endl;
-            if (CreateDirectory(homePath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
+            cout << "[!] Creating the parent folder '" + U_HomePath + "'... " << endl;
+            if (CreateDirectory(dictionaryPath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
             {
                 ofstream fileInitObj(L_filePath);
                 fileInitObj << " \n \n ";
@@ -160,11 +177,11 @@ void PathFinder(void)
             //there's a USER
             if (CreateDirectory(userDocuments.c_str(), NULL))
             {
-                cout << "[!] Creating 'Documents' folder for " + usrName + "... " << endl;
-                if (CreateDirectory(parentAppPath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
+                cout << "[!] Creating 'Documents' folder for " + U_UserName + "... " << endl;
+                if (CreateDirectory(U_HomePath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
                 {
-                    cout << "[!] Creating the parent folder '" + parentAppPath + "'... " << endl;
-                    if (CreateDirectory(homePath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
+                    cout << "[!] Creating the parent folder '" + U_HomePath + "'... " << endl;
+                    if (CreateDirectory(dictionaryPath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
                     {
                         ofstream fileInitObj(L_filePath);
                         fileInitObj << " \n \n ";
