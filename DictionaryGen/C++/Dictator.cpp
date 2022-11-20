@@ -1,5 +1,5 @@
 //#define _CRT_SECURE_NO_WARNINGS
-
+#include <filesystem>
 #include <Windows.h>
 #include <process.h>
 #include <Lmcons.h>
@@ -21,6 +21,11 @@ using std::getline;
 using std::fstream;
 using std::ofstream;
 
+using std::vector;
+
+namespace fs = std::filesystem;
+using fs::path;
+
 using std::stoi;
 using std::string;
 using std::to_string;
@@ -31,21 +36,37 @@ void PathFinder(void);
 void WriteToFile(void);
 bool FConfigReader(void);
 void InputCollector(void);
+void GlobalPathVars(void);
 void WordListCreation(string baseString, int lengthVar);
 
-std::vector<string> L_wordList;
-int L_wordListSize;
 fstream L_fileObj;
 string L_filePath;
 int L_maxChainLen;
 int L_minChainLen;
+int L_wordListSize;
+vector<string> L_wordList;
 
 string U_UserName;
+string U_UserPath;
 string U_HomePath;
+string U_DocumentsPath;
+
+string D_Name = "dictionary";
+string D_Extension = ".txt";
+int D_MinimumChain = 1;
+int D_MaximumChain = 6;
+
+bool A_Name;
+bool A_Entry;
+bool A_MinimumChain;
+bool A_MaximumChain;
 
 int main (void)
 {
     cout << "[*] Dictator V0.99" << endl << endl;
+    GlobalPathVars();
+    cout << "[!] Looking for fconfig files..." << endl << endl;
+    FConfigReader();
     cout << "[!] Getting inputs for dictionary..." << endl << endl;
     InputCollector();
     cout << endl << endl << "[!] Creating file..." << endl << endl;
@@ -68,20 +89,85 @@ int main (void)
 TODO :
 - maybe bring back the old system of overriding a file if it exists, instead of always appending to the start.
  ^ could be an idea for the GUI version
-- read inputs from a file, just create dictionary
 */
+}
+
+void GlobalPathVars(void)
+{
+    char userName[UNLEN+1];
+    DWORD userNameLength = UNLEN+1;
+    GetUserName(userName, &userNameLength);
+    U_UserName = (string)userName;
+    U_UserPath = "C:/Users/" + U_UserName + "/";
+    U_DocumentsPath = U_UserPath + "Documents/";
+    U_HomePath = U_DocumentsPath + "Hackers-Toolbox/";
 }
 
 bool FConfigReader(void)
 {
-    //list out all files in ~/Documents/Hackers-Toolbox/PreConfigs/
-    //check for files that end in .fconfig and save them to an array
-    //if none exists, return false
-    //read the first line of first file in that array
-    //if the first line was --Dictator-Config-- , continue
-    //otherwise return false
-    //now read out each next line in a loop till file ends
-    //WIP - will continue this later
+    //check for existenec of ~/Documents/Hackers-Toolbox/PreConfigs/
+    string fconfigPath = U_HomePath + "PreConfigs/";
+    if (CreateDirectory(fconfigPath.c_str(), NULL))
+    {
+        cout << "[!] No previous folder for pre configurations found." << endl;
+        return false;
+    }
+    else if (GetLastError() == ERROR_PATH_NOT_FOUND)
+    {
+        cout << "[!] Main folder for the Hackers-Toolbox app doesn't exist. No fconfig files found." << endl;
+        return false;
+    }
+    else if (GetLastError() == ERROR_ALREADY_EXISTS)
+    {
+        //list out all files in ~/Documents/Hackers-Toolbox/PreConfigs/
+        vector<path> pathVector;
+        vector<path> fileVector;
+        vector<path> nameVector;
+        vector<path> extVector;
+
+        vector<path> fconfigFiles;
+        bool fconfigExists = false;
+
+        for (auto &fileExistence : fs::directory_iterator(fconfigPath))
+        {
+            pathVector.push_back(fileExistence.path());
+        }
+        // check for files that end in .fconfig and save them to an array
+        for (int fileIndex = 0; fileIndex < pathVector.size(); fileIndex++)
+        {
+            path fullFile = pathVector.at(fileIndex);
+
+            fileVector.push_back(fullFile.filename());
+            nameVector.push_back(fullFile.stem());
+            extVector.push_back(fullFile.extension());
+
+            if (extVector.at(fileIndex).generic_string() == ".fconfig")
+            {
+                cout << "[@] Found configuration file '" + nameVector.at(fileIndex).generic_string() + "'! " << endl;
+                fconfigFiles.push_back(fileVector.at(fileIndex));
+                fconfigExists = true;
+            }
+        }
+        // if none exists, return false
+        if (!fconfigExists)
+        {
+            cout << "[!] No configuration file with the '.fcofnig' extension found at '" + fconfigPath + "'. " << endl << endl;
+            return false;
+        }
+        // read the first line of first file in that array
+        // if the first line was --Dictator-Config-- , continue, otherwise if there's another file, try reading that one*
+        // *continue until you either run out of invalid files and return false or find a valid file with the correct first line.
+        for (int fileIndex = 0; fileIndex < fconfigFiles.size(); fileIndex++)
+        {
+            // DO STUFF
+            cout << fconfigFiles.at(fileIndex) << endl;
+        }
+        // otherwise return false
+        // now read out each next line in a loop till file ends
+        // WIP - will continue this later
+        return true;
+    }
+    cout << "[!] Something went wrong doing that." << endl << endl;
     return false;
 }
 
@@ -104,14 +190,7 @@ void InputCollector(void)
 
 void PathFinder(void)
 {
-    char userName[UNLEN+1];
-    DWORD userNameLength = UNLEN+1;
-    GetUserName(userName, &userNameLength);
-    U_UserName = (string)userName;
-    string userHome = "C:\\Users\\" + U_UserName + "\\";
-    string userDocuments = userHome + "Documents\\";
-    U_HomePath = userDocuments + "Hackers-Toolbox\\";
-    string dictionaryPath = U_HomePath + "Dictionaries\\";
+    string dictionaryPath = U_HomePath + "Dictionaries/";
     string fileName;
     string inputName;
     cout << "[@] Name the file to save your dictionary as"
@@ -175,7 +254,7 @@ void PathFinder(void)
         {
             cout << "[#] ERR : USER HAS NO DOCUMENTS FOLDER!";
             //there's a USER
-            if (CreateDirectory(userDocuments.c_str(), NULL))
+            if (CreateDirectory(U_DocumentsPath.c_str(), NULL))
             {
                 cout << "[!] Creating 'Documents' folder for " + U_UserName + "... " << endl;
                 if (CreateDirectory(U_HomePath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
