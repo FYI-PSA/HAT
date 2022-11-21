@@ -215,6 +215,10 @@ bool FConfigReader(void)
                     break;
                 }
                 //-----
+                if (fileData == "")
+                {
+                    continue;
+                }
                 if (fileData == "--Entries--")
                 {
                     flag_EntryStart = true;
@@ -227,7 +231,8 @@ bool FConfigReader(void)
                 }
                 else if (flag_EntryStart && !flag_EntryEnd)
                 {
-                    customEntriesVector.push_back(fileData);
+                    if (fileData != "")
+                        customEntriesVector.push_back(fileData);
                     continue;
                 }
                 if (fileData == "--Still-Get-Entries--")
@@ -282,7 +287,7 @@ bool FConfigReader(void)
                     flag_Max_DONE = true;
                     continue;
                 }
-                if (fileData == "--Still-Ask-Max--")
+                if (fileData == "--Still-Ask-Max-Len--")
                 {
                     flag_AskMax = true;
                     continue;
@@ -299,7 +304,7 @@ bool FConfigReader(void)
                     flag_Min_DONE = true;
                     continue;
                 }
-                if (fileData == "--Still-Ask-Min--")
+                if (fileData == "--Still-Ask-Min-Len--")
                 {
                     flag_AskMin = true;
                     continue;
@@ -325,7 +330,11 @@ bool FConfigReader(void)
             {
                cout << customEntriesVector.at(itemIndex) << endl;
             }
-            cout << endl;
+            cout << endl << "[!] Custom File Name : " << endl << customName << endl
+            << endl << "[!] Custom File Extension : " << endl << customExt << endl
+            << endl << "[!] Custom Minimum Chain Value : " << endl << customMin << endl
+            << endl << "[!] Custom Maximum Chain Value : " << endl << customMax << endl
+            << endl;
         }
         return true;
     }
