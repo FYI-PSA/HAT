@@ -107,8 +107,8 @@ void GlobalPathVars(void)
 
 bool FConfigReader(void)
 {
-    //check for existenec of ~/Documents/Hackers-Toolbox/PreConfigs/
     string fconfigPath = U_HomePath + "PreConfigs/";
+
     if (CreateDirectory(fconfigPath.c_str(), NULL))
     {
         cout << "[!] No previous folder for pre configurations found." << endl;
@@ -121,7 +121,6 @@ bool FConfigReader(void)
     }
     else if (GetLastError() == ERROR_ALREADY_EXISTS)
     {
-        //list out all files in ~/Documents/Hackers-Toolbox/PreConfigs/
         vector<path> pathVector;
         vector<path> fileVector;
         vector<path> nameVector;
@@ -134,7 +133,7 @@ bool FConfigReader(void)
         {
             pathVector.push_back(fileExistence.path());
         }
-        // check for files that end in .fconfig and save them to an array
+
         for (int fileIndex = 0; fileIndex < pathVector.size(); fileIndex++)
         {
             path fullFile = pathVector.at(fileIndex);
@@ -150,54 +149,59 @@ bool FConfigReader(void)
             }
             cout << endl;
         }
-        // if none exists, return false
+
         if (!fconfigExists)
         {
             cout << "[!] No configuration file with the '.fcofnig' extension found at '" + fconfigPath + "'. " << endl << endl;
             return false;
         }
-        // read the first line of first file in that array
-        // if the first line was --Dictator-Config-- , continue, otherwise if there's another file, try reading that one*
-        // *continue until you either run out of invalid files and return false or find a valid file with the correct first line.
+
         bool validConfigFound = false;
         for (int fileIndex = 0; fileIndex < fconfigFiles.size(); fileIndex++)
         {
-            // DO STUFF
             if (validConfigFound)
             {
                 break;
             }
+
             string fconfigFilePath = fconfigFiles.at(fileIndex).generic_string();
             string fconfigFileName = fconfigFiles.at(fileIndex).filename().generic_string();
+
             ifstream fconfigFile(fconfigFilePath);
             string fileData;
+
             int lineNumber = 0;
 
             bool flag_EntryStart = false;
             bool flag_EntryEnd = false;
             bool flag_AskEntry = false;
+            bool flag_OverWrite = false;
+
             bool flag_Name = false;
             bool flag_Name_DONE = false;
             bool flag_AskName = false;
             bool flag_Ext = false;
             bool flag_Ext_DONE = false;
-            bool flag_OverWrite = false;
+
             bool flag_Max = false;
+            bool flag_Max_DONE = false;
             bool flag_AskMax = false;
             bool flag_Min = false;
+            bool flag_Min_DONE = false;
             bool flag_AskMin = false;
 
             vector<string> customEntriesVector;
             string customName;
             string customExt;
+            string customMax;
+            string customMin;
 
-            while(getline(fconfigFile, fileData))
+            while (getline(fconfigFile, fileData))
             {
-                //Valid File
                 lineNumber++;
                 if (lineNumber == 1 && fileData == "--Dictator-Config--")
                 {
-                    cout << "[$] Valid configuration found in '" + fconfigFileName + "'!" << endl;
+                    cout << "[$] Valid configuration found in '" + fconfigFileName + "'! " << endl;
                     validConfigFound = true;
                     continue;
                 }
@@ -205,13 +209,13 @@ bool FConfigReader(void)
                 {
                     continue;
                 }
+
                 if (!validConfigFound)
                 {
                     break;
                 }
-
-                //Creator Entries
-                if(fileData == "--Entries--")
+                //-----
+                if (fileData == "--Entries--")
                 {
                     flag_EntryStart = true;
                     continue;
@@ -221,7 +225,7 @@ bool FConfigReader(void)
                     flag_EntryEnd = true;
                     continue;
                 }
-                if (flag_EntryStart && !flag_EntryEnd)
+                else if (flag_EntryStart && !flag_EntryEnd)
                 {
                     customEntriesVector.push_back(fileData);
                     continue;
@@ -231,20 +235,19 @@ bool FConfigReader(void)
                     flag_AskEntry = true;
                     continue;
                 }
-
+                //-----
                 if (fileData == "--Overwrite-If-Exists--")
                 {
                     flag_OverWrite = true;
                     continue;
                 }
-
-                //File Info
+                //-----
                 if (fileData == "--File-Name--")
                 {
                     flag_Name = true;
                     continue;
                 }
-                if (flag_Name && !flag_Name_DONE)
+                else if (flag_Name && !flag_Name_DONE)
                 {
                     customName = fileData;
                     flag_Name_DONE = true;
@@ -255,22 +258,74 @@ bool FConfigReader(void)
                     flag_AskName = true;
                     continue;
                 }
+                //-----
                 if (fileData == "--Custom-Extension--")
                 {
                     flag_Ext = true;
                     continue;
                 }
-                if (flag_Ext && !flag_Ext_DONE)
+                else if (flag_Ext && !flag_Ext_DONE)
                 {
                     customExt = fileData;
                     flag_Ext_DONE = true;
                     continue;
                 }
-
-                // Length
-                // W I P
+                //-----
+                if (fileData == "--Max-Len--")
+                {
+                    flag_Max = true;
+                    continue;
+                }
+                else if (flag_Max && !flag_Max_DONE)
+                {
+                    customMax = fileData;
+                    flag_Max_DONE = true;
+                    continue;
+                }
+                if (fileData == "--Still-Ask-Max--")
+                {
+                    flag_AskMax = true;
+                    continue;
+                }
+                //-----
+                if (fileData == "--Min-Len--")
+                {
+                    flag_Min = true;
+                    continue;
+                }
+                else if (flag_Min && !flag_Min_DONE)
+                {
+                    customMin = fileData;
+                    flag_Min_DONE = true;
+                    continue;
+                }
+                if (fileData == "--Still-Ask-Min--")
+                {
+                    flag_AskMin = true;
+                    continue;
+                }
             }
             fconfigFile.close();
+
+            cout << "[!] Entry start : " << flag_EntryStart
+            << endl << "[!] Entry end : " << flag_EntryEnd
+            << endl << "[!] Ask Entry : " << flag_AskEntry
+            << endl << "[!] Overwrite : " << flag_OverWrite
+            << endl << "[!] File Name : " << flag_Name
+            << endl << "[!] Ask File Name : " << flag_AskName
+            << endl << "[!] Extension : " << flag_Ext
+            << endl << "[!] Maximum : " << flag_Max
+            << endl << "[!] Ask Maximum : " << flag_AskMax
+            << endl << "[!] Minimum : " << flag_Min
+            << endl << "[!] Ask Minimum : " << flag_AskMin
+            << endl << endl;
+
+            cout << "[!] Custom Entries : " << endl;
+            for (int itemIndex = 0; itemIndex < customEntriesVector.size(); itemIndex++)
+            {
+               cout << customEntriesVector.at(itemIndex) << endl;
+            }
+            cout << endl;
         }
         return true;
     }
