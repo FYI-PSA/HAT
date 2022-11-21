@@ -16,15 +16,17 @@
 using std::cin;
 using std::cout;
 using std::endl;
-using std::getline;
 
 using std::fstream;
+using std::ifstream;
 using std::ofstream;
+
+using std::getline;
 
 using std::vector;
 
-namespace fs = std::filesystem;
-using fs::path;
+using std::filesystem::path;
+using std::filesystem::directory_iterator;
 
 using std::stoi;
 using std::string;
@@ -56,10 +58,10 @@ string D_Extension = ".txt";
 int D_MinimumChain = 1;
 int D_MaximumChain = 6;
 
-bool A_Name;
-bool A_Entry;
-bool A_MinimumChain;
-bool A_MaximumChain;
+bool A_Name = true;
+bool A_Entry = true;
+bool A_MinimumChain = true;
+bool A_MaximumChain = true;
 
 int main (void)
 {
@@ -128,7 +130,7 @@ bool FConfigReader(void)
         vector<path> fconfigFiles;
         bool fconfigExists = false;
 
-        for (auto &fileExistence : fs::directory_iterator(fconfigPath))
+        for (auto &fileExistence : directory_iterator(fconfigPath))
         {
             pathVector.push_back(fileExistence.path());
         }
@@ -136,7 +138,6 @@ bool FConfigReader(void)
         for (int fileIndex = 0; fileIndex < pathVector.size(); fileIndex++)
         {
             path fullFile = pathVector.at(fileIndex);
-
             fileVector.push_back(fullFile.filename());
             nameVector.push_back(fullFile.stem());
             extVector.push_back(fullFile.extension());
@@ -144,9 +145,10 @@ bool FConfigReader(void)
             if (extVector.at(fileIndex).generic_string() == ".fconfig")
             {
                 cout << "[@] Found configuration file '" + nameVector.at(fileIndex).generic_string() + "'! " << endl;
-                fconfigFiles.push_back(fileVector.at(fileIndex));
+                fconfigFiles.push_back(fullFile);
                 fconfigExists = true;
             }
+            cout << endl;
         }
         // if none exists, return false
         if (!fconfigExists)
@@ -157,14 +159,119 @@ bool FConfigReader(void)
         // read the first line of first file in that array
         // if the first line was --Dictator-Config-- , continue, otherwise if there's another file, try reading that one*
         // *continue until you either run out of invalid files and return false or find a valid file with the correct first line.
+        bool validConfigFound = false;
         for (int fileIndex = 0; fileIndex < fconfigFiles.size(); fileIndex++)
         {
             // DO STUFF
-            cout << fconfigFiles.at(fileIndex) << endl;
+            if (validConfigFound)
+            {
+                break;
+            }
+            string fconfigFilePath = fconfigFiles.at(fileIndex).generic_string();
+            string fconfigFileName = fconfigFiles.at(fileIndex).filename().generic_string();
+            ifstream fconfigFile(fconfigFilePath);
+            string fileData;
+            int lineNumber = 0;
+
+            bool flag_EntryStart = false;
+            bool flag_EntryEnd = false;
+            bool flag_AskEntry = false;
+            bool flag_Name = false;
+            bool flag_Name_DONE = false;
+            bool flag_AskName = false;
+            bool flag_Ext = false;
+            bool flag_Ext_DONE = false;
+            bool flag_OverWrite = false;
+            bool flag_Max = false;
+            bool flag_AskMax = false;
+            bool flag_Min = false;
+            bool flag_AskMin = false;
+
+            vector<string> customEntriesVector;
+            string customName;
+            string customExt;
+
+            while(getline(fconfigFile, fileData))
+            {
+                //Valid File
+                lineNumber++;
+                if (lineNumber == 1 && fileData == "--Dictator-Config--")
+                {
+                    cout << "[$] Valid configuration found in '" + fconfigFileName + "'!" << endl;
+                    validConfigFound = true;
+                    continue;
+                }
+                else if (lineNumber == 1 && fileData != "--Dictator-Config--")
+                {
+                    continue;
+                }
+                if (!validConfigFound)
+                {
+                    break;
+                }
+
+                //Creator Entries
+                if(fileData == "--Entries--")
+                {
+                    flag_EntryStart = true;
+                    continue;
+                }
+                if (fileData == "--End-Entries--")
+                {
+                    flag_EntryEnd = true;
+                    continue;
+                }
+                if (flag_EntryStart && !flag_EntryEnd)
+                {
+                    customEntriesVector.push_back(fileData);
+                    continue;
+                }
+                if (fileData == "--Still-Get-Entries--")
+                {
+                    flag_AskEntry = true;
+                    continue;
+                }
+
+                if (fileData == "--Overwrite-If-Exists--")
+                {
+                    flag_OverWrite = true;
+                    continue;
+                }
+
+                //File Info
+                if (fileData == "--File-Name--")
+                {
+                    flag_Name = true;
+                    continue;
+                }
+                if (flag_Name && !flag_Name_DONE)
+                {
+                    customName = fileData;
+                    flag_Name_DONE = true;
+                    continue;
+                }
+                if (fileData == "--Still-Ask-File-Name--")
+                {
+                    flag_AskName = true;
+                    continue;
+                }
+                if (fileData == "--Custom-Extension--")
+                {
+                    flag_Ext = true;
+                    continue;
+                }
+                if (flag_Ext && !flag_Ext_DONE)
+                {
+                    customExt = fileData;
+                    flag_Ext_DONE = true;
+                    continue;
+                }
+
+                // Length
+                // W I P
+            }
+            fconfigFile.close();
         }
-        // otherwise return false
-        // now read out each next line in a loop till file ends
-        // WIP - will continue this later
         return true;
     }
     cout << "[!] Something went wrong doing that." << endl << endl;
@@ -245,11 +352,11 @@ void PathFinder(void)
         //there's not a Hackers-Toolbox in DOCUMENTs, but there's a Hackers-Toolbox in DOCUMENTS
         else if(GetLastError() == ERROR_ALREADY_EXISTS)
         {
-            cout << "[#] ERR : CAN'T WORK WITH SHRODINGER'S FOLDER!"
+            cout << "[#] ERR : CAN'T WORK WITH SHRODINGER'S TOOLBOX!"
             << endl << "[!] ENDING PROGRAM [!]";
-            std::exit(1);
+            exit(1);
         }
-        //there's not a DOCUMENTS at all
+        //there's no DOCUMENTS at all
         else if(GetLastError() == ERROR_PATH_NOT_FOUND)
         {
             cout << "[#] ERR : USER HAS NO DOCUMENTS FOLDER!";
@@ -269,12 +376,12 @@ void PathFinder(void)
                     }
                 }
             }
-            //there's not a DOCUMENTS at all, however, DOCUMENTS exists.
+            //there's no DOCUMENTS at all, however, DOCUMENTS exists.
             else if (GetLastError() == ERROR_ALREADY_EXISTS)
             {
                 cout << "[#] ERR: CAN'T WORK WITH SHRODINGER'S DOCUMENTS!"
                 << endl << "[!] ENDING PROGRAM [!]";
-                std::exit(1);
+                exit(1);
             }
             //there is no USER
             else if (GetLastError() == ERROR_PATH_NOT_FOUND)
@@ -282,7 +389,7 @@ void PathFinder(void)
                 cout << "[#] USER DOESN'T EXIST, WHICH MEANS THIS PROGRAM WAS NEVER RUN!"
                 << endl << "[#] [!] ERR : PARADOX DETECTED! [!] [#]"
                 << endl << "[#] [!] ENDING SIMULATION [!] [#]";
-                std::exit(1);
+                exit(1);
             }
         }
     }
@@ -290,14 +397,13 @@ void PathFinder(void)
 
 void LengthGet(void)
 {
-    int defaultMin = 1;
     string minInput;
     cout << "[?] Minimum value for the amount of values chanied together in a single possible combination?"
     << endl << "[@] (Example : 2 -> firstSecond, 3 -> firstSecondThird)"
-    << endl << "[@] Will default to " + to_string(defaultMin) + " in case of undefined input!"
+    << endl << "[@] Will default to " + to_string(D_MinimumChain) + " in case of undefined input!"
     << endl << "[?] Minimum chain length value: ";
     getline(cin,minInput);
-    int minLength = defaultMin;
+    int minLength;
     try
     {
         minLength = stoi(minInput);
@@ -305,26 +411,33 @@ void LengthGet(void)
     }
     catch (std::invalid_argument)
     {
-        cout << "[!] Couldn't understand input, defaulting to " + to_string(defaultMin) + " for minimum value" << endl;
+        cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MinimumChain) + " for minimum value" << endl;
+        minLength = D_MinimumChain;
     }
-    int defaultMax = 6;
     string maxInput;
     cout << endl << "[?] Maximum value for the amount of values chanied together in a single possible combination?"
-    << endl << "[@] Will default to " + to_string(defaultMax) + " in case of undefined input!"
+    << endl << "[@] Will default to " + to_string(D_MaximumChain) + " in case of undefined input!"
     << endl << "[?] Maximum chain length value: ";
     getline(cin,maxInput);
-    int maxLength = defaultMax;
+    int maxLength;
     try
     {
         maxLength = stoi(maxInput);
-        cout << "[$] Set maximum value to " + to_string(maxLength) + " !" << endl;
+        cout << "[$] Set maximum value to " + to_string(D_MaximumChain) + " !" << endl;
     }
     catch (std::invalid_argument)
     {
-        cout << "[!] Couldn't understand input, defaulting to " + to_string(defaultMax) + " for maximum value" << endl;
+        cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MaximumChain) + " for maximum value" << endl;
+        maxLength = D_MaximumChain;
     }
     L_minChainLen = minLength;
     L_maxChainLen = maxLength;
+    if (L_minChainLen > L_maxChainLen)
+    {
+        cout << endl << "[!] ERR : Minimum value larger than maximum value."
+        << endl << "[!] Exiting program..." << endl;
+        exit(1);
+    }
 }
 
 void Unchained(void)
