@@ -335,6 +335,13 @@ bool FConfigReader(void)
             << endl << "[!] Custom Minimum Chain Value : " << endl << customMin << endl
             << endl << "[!] Custom Maximum Chain Value : " << endl << customMax << endl
             << endl;
+
+            if (flag_EntryStart)
+            {
+               for (int itemIndex = 0; itemIndex < customEntriesVector.size(); itemIndex++) {
+                    cout << customEntriesVector.at(itemIndex) << endl;
+               }
+            }
         }
         return true;
     }

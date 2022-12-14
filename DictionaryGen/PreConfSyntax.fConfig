@@ -5,7 +5,7 @@ File must be named "<NAME>.fConfig" unless providing the
 argument during execution from terminal [WIP]
 
 * The first file with the .fConf extension that gets automatically detected in ~/Documents/Hackers-Toolbox/PreConfigs/
-on run, will be executed.
+on run, will be executed. 
 if you want to make sure the correct config gets selected, make the first line something other than the starting syntax.
 
 The program will also ignore these .fConfig files if you use the

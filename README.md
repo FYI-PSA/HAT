@@ -2,7 +2,7 @@
 
 ## **Currently included tools:**
 
-* ### Wordlist Generator [Prototype](/DictionaryGen)
+* ### Wordlist Generator [Version 0.98](/DictionaryGen)
 
   * [See how it works](/DictionaryGen/Algorithm.md)
 

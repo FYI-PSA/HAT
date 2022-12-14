@@ -1,12 +1,14 @@
 **/.idea/
-**/**.iml
-
 **/.vscode/
+**/.vs/
+
+**/**.iml
 **/**.code-workspace
 
 **/out/
-**/**.exe
 **/__pycache__/
+
+**/**.exe
 
 **/Releases/
 **/DuckyScript/

@@ -2,7 +2,7 @@
 
 ## How it works
 
-1. Get a list of words from input
+1. Get a list of words from input 
 
    * Ensure that there's a mechanism for stopping, and that it won't accidentally stop with a normal input (Don't use a simple "done")
 2. Get its file name from the user
