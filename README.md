@@ -1,8 +1,7 @@
 # H A T
-### *A Skilled **Hacker's Awesome Toolbox***
-
-### Removes the need to create tools or do annoying repetitive tasks, just focus on the hacking!
-
+#### *A Skilled **Hacker's Awesome Toolbox***
+#### Removes the need to create tools or do annoying repetitive tasks, just focus on the hacking!
+________
 ## **Currently included tools:**
 
 * ### Wordlist Generator [Alpha Version](/DictionaryGen)
