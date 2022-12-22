@@ -13,4 +13,4 @@ ________
   
 * ***[More will soon be added, thank you for your patience]***
 
-## **As always, a disclaimer to not use these tools for mallicous perposes and without concent of the owner of whatever you're trying to hack! And for tools that request from servers, don't spam them as they could lead to accidental server abuse. I am not responsible. You've been warned!**
+## **As always, a disclaimer to not use these tools for mallicous purposes and without concent of the owner of whatever you're trying to hack! And for tools that request from servers, don't spam them as they could lead to accidental server abuse. I am not responsible. You've been warned!**
