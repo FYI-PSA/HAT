@@ -374,7 +374,7 @@ void PathFinder(void)
     cout << "[@] Name the file to save your dictionary as"
     << endl << "[!] (Files will be saved at '" + dictionaryPath + "' as a .txt file )"
     << endl << "[@] Leave field blank to save your file name as the default dictionary.txt"
-    << endl << "[@] If the file already exists, new data will be added to the beggining leaving old data untouched."
+    << endl << "[@] If the file already exists, new data will be added to the beginning leaving old data untouched."
     << endl << "[?] File name : ";
     getline(cin,inputName);
     if (inputName == "")
