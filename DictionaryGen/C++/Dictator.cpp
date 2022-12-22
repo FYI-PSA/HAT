@@ -65,6 +65,7 @@ bool A_MaximumChain = true;
 
 int main (void)
 {
+
     cout << "[*] Dictator V0.99" << endl << endl;
     GlobalPathVars();
     cout << "[!] Looking for fconfig files..." << endl << endl;
