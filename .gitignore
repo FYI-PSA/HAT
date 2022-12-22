@@ -1,10 +1,14 @@
 **/.idea/
 **/.vscode/
-**/Hackers-Toolbox.iml
+**/.vs/
+
+**/**.iml
+**/**.code-workspace
 
 **/out/
-**/**.exe
 **/__pycache__/
+
+**/**.exe
 
 **/Releases/
 **/DuckyScript/
