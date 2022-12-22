@@ -4,11 +4,11 @@
 ________
 ## **Currently included tools:**
 
-* ### Wordlist Generator [Alpha Version](/DictionaryGen)
+* ### Wordlist Generator [(Version 0.98)](/DictionaryGen)
   * A useful dictionary file generator for all of your guessing needs!
   * [See how it works](/DictionaryGen/Algorithm.md)
 
-* ### Social Buster
+* ### Social Buster [(Early Development)](https://github.com/Funtime-UwU/HAT/tree/Live-Development)
   * Want to check for someone's social media accounts but don't have their exact username and can't seem to find it? This tool can help you do exactly that! Works like the wordlist generator, but has a GUI and will automatically request from your target platform's API for the user names.
   
 * ***[More will soon be added, thank you for your patience]***
