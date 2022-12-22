@@ -4,7 +4,7 @@
 ________
 ## **Currently included tools:**
 
-* ### Wordlist Generator [(Version 0.98)](/DictionaryGen)
+* ### Wordlist Generator [(Version 0.98)](https://github.com/Funtime-UwU/HAT/releases/tag/Stable-Unready)
   * A useful dictionary file generator for all of your guessing needs!
   * [See how it works](/DictionaryGen/Algorithm.md)
 
