@@ -426,6 +426,44 @@ void InputCollector(void)
     L_wordListSize = L_wordList.size();
 }
 
+void PathErrors(void)
+{
+    // Errors to account for:
+
+    // DWORD 2 : Can not find the file specified 
+    // - defined as ERROR_FILE_NOT_FOUND
+    // Notes :
+    // *Not for this section of the code*
+
+    // DWORD 3 : Can not find the path specified 
+    // - defined as ERROR_PATH_NOT_FOUND
+    // Notes :
+    // A parent directory is missing, try creating that, and check for the same errors
+    //   - Again, if a parent directory is missing, then try creating that and check for the same errors
+    //     - Put this in some sort of function or class to avoid repeating code too much
+    //     [At most will repeat twice to create Documents in the ~ Home path]
+
+    // DWORD 4 : Can not open the file specified 
+    // - defined as ERROR_TOO_MANY_OPEN_FILES
+    // *Not for this section of the code*
+
+    // DWORD 5 : Access is denied 
+    // - defined as ERROR_ACCESS_DENIED
+    // Notes:
+    // Exit out and tell the user to either run as admin or ask the admin for permission on the ~/Documents folder
+
+    // DWORD 18 : There are no more files 
+    // - defined as ERROR_NO_MORE_FILES
+    // *Not for this section of the code*
+
+    // DWORD 183 : Can not create an already existing file 
+    // - defined as ERROR_ALREADY_EXISTS
+    // Notes:
+    // Cool, located pre existing folder, make your file in there, no more need for creating directories.
+
+    // Any other value: throw exception, exit, out the code and the text form of the message.
+}
+
 void PathFinder(void)
 {
     string dictionaryPath = U_HomePath + "Dictionaries/";
@@ -449,11 +487,21 @@ void PathFinder(void)
     L_filePath = dictionaryPath + fileName;
     
     
-     cout << "Attempting to create something at " << dictionaryPath.c_str() << endl;
-    CreateDirectory(dictionaryPath.c_str(), NULL);
-    DWORD ERRMSG = ::GetLastError();
-     cout << "Response code : " << ERRMSG << endl;
-     cout << "Here's what it translates to : " << std::system_category().message(ERRMSG) << endl;
+    cout << "Attempting to create something at " << dictionaryPath.c_str() << endl;
+    if(CreateDirectory(dictionaryPath.c_str(), NULL))
+    {
+        cout << "Created directory " << dictionaryPath.c_str() << " with success." << endl;
+    }
+    else
+    {
+        cout << "Coudn't create directory at " << dictionaryPath.c_str() << " because of this: " << endl;
+        DWORD ERRMSG = ::GetLastError();
+        cout << "Code : " << ERRMSG << "  |  ";
+        cout << "Message : " << std::system_category().message(ERRMSG) << endl;
+    }
+    
+    // Make PathErrors() a switch case that checks for errors, exists, and exceptions, and creates the directory called for in param
+
     // 
     // BUG:
     // "CreateDirectory" SEEMS TO NOT BE WORKING CORRECTLY SOMETIMES
@@ -462,21 +510,21 @@ void PathFinder(void)
     // CAN'T CREATE ANY DIRECTORY. ONLY THE FILE IF "~/Documents/HAT/Dictionaries" EXISTS
     // 
     
-    //there's a HAT in DOCUMENTS, there's also a Dictionaries folder.
     if (::GetLastError() == ERROR_ALREADY_EXISTS)
     {
+        //there's a HAT in DOCUMENTS, there's also a Dictionaries folder.
         cout << "[!] Located pre-existing 'Dictionaries' folder..." << endl;
         ofstream fileInitObj(L_filePath);
         fileInitObj << " \n \n ";
         fileInitObj.close();
         cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
     }
-    //there's not a HAT in DOCUMENTS
     else if (::GetLastError() == ERROR_PATH_NOT_FOUND)
     {
-        //there's a DOCUMENTS in USER
+        //there's not a HAT in DOCUMENTS
         if (CreateDirectory(U_HomePath.c_str(), NULL))
         {
+            //there's a DOCUMENTS in USER
             cout << "[!] Creating the parent folder '" + U_HomePath + "'... " << endl;
             if (CreateDirectory(dictionaryPath.c_str(), NULL) || ::GetLastError() == ERROR_ALREADY_EXISTS)
             {
@@ -486,20 +534,20 @@ void PathFinder(void)
                 cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
             }
         }
-        //there's not a HAT in DOCUMENTs, but there's a HAT in DOCUMENTS
         else if(::GetLastError() == ERROR_ALREADY_EXISTS)
         {
+            //there's not a HAT in DOCUMENTs, but there's a HAT in DOCUMENTS
             cout << "[#] ERR : CAN'T WORK WITH SHRODINGER'S TOOLBOX!"
             << endl << "[!] ENDING PROGRAM [!]";
             exit(1);
         }
-        //there's no DOCUMENTS at all
         else if(::GetLastError() == ERROR_PATH_NOT_FOUND)
         {
+            //there's no DOCUMENTS at all
             cout << "[#] ERR : USER HAS NO DOCUMENTS FOLDER!";
-            //there's a USER
             if (CreateDirectory(U_DocumentsPath.c_str(), NULL))
             {
+                //there's a USER
                 cout << "[!] Creating 'Documents' folder for " + U_UserName + "... " << endl;
                 if (CreateDirectory(U_HomePath.c_str(), NULL) || ::GetLastError() == ERROR_ALREADY_EXISTS)
                 {
@@ -513,16 +561,16 @@ void PathFinder(void)
                     }
                 }
             }
-            //there's no DOCUMENTS at all, however, DOCUMENTS exists.
             else if (::GetLastError() == ERROR_ALREADY_EXISTS)
             {
+                //there's no DOCUMENTS at all, however, DOCUMENTS exists.
                 cout << "[#] ERR: CAN'T WORK WITH SHRODINGER'S DOCUMENTS!"
                 << endl << "[!] ENDING PROGRAM [!]";
                 exit(1);
             }
-            //there is no USER
             else if (::GetLastError() == ERROR_PATH_NOT_FOUND)
             {
+                //there is no USER
                 cout << "[#] USER DOESN'T EXIST, WHICH MEANS THIS PROGRAM WAS NEVER RUN!"
                 << endl << "[#] [!] ERR : PARADOX DETECTED! [!] [#]"
                 << endl << "[#] [!] ENDING SIMULATION [!] [#]";
@@ -530,9 +578,9 @@ void PathFinder(void)
             }
         }
     }
-    //there's a HAT in DOCUMENTS, there's not a Dictionaries folder.
     else
-    {
+    { 
+        //there's a HAT in DOCUMENTS, there's not a Dictionaries folder.
         cout << "[!] Creating 'Dictionaries' folder..." << endl;
         CreateDirectory(dictionaryPath.c_str(), NULL);
         ofstream fileInitObj(L_filePath);
