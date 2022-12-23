@@ -1,4 +1,5 @@
 //#define _CRT_SECURE_NO_WARNINGS
+#include <system_error>
 #include <filesystem>
 #include <Windows.h>
 #include <process.h>
@@ -31,6 +32,7 @@ using std::filesystem::directory_iterator;
 using std::stoi;
 using std::string;
 using std::to_string;
+using std::invalid_argument;
 
 void Unchained(void);
 void LengthGet(void);
@@ -38,7 +40,6 @@ void PathFinder(void);
 void WriteToFile(void);
 bool FConfigReader(void);
 void InputCollector(void);
-void GlobalPathVars(void);
 void WordListCreation(string baseString, int lengthVar);
 
 fstream L_fileObj;
@@ -65,9 +66,15 @@ bool A_MaximumChain = true;
 
 int main (void)
 {
+    char userName[UNLEN+1];
+    DWORD userNameLength = UNLEN+1;
+    GetUserName(userName, &userNameLength);
+    U_UserName = (string)userName;
+    U_UserPath = "C:/Users/" + U_UserName + "/";
+    U_DocumentsPath = U_UserPath + "Documents/";
+    U_HomePath = U_DocumentsPath + "HAT/";
 
     cout << "[*] Dictator V0.99" << endl << endl;
-    GlobalPathVars();
     cout << "[!] Looking for fconfig files..." << endl << endl;
     FConfigReader();
     cout << "[!] Getting inputs for dictionary..." << endl << endl;
@@ -95,16 +102,9 @@ TODO :
 */
 }
 
-void GlobalPathVars(void)
-{
-    char userName[UNLEN+1];
-    DWORD userNameLength = UNLEN+1;
-    GetUserName(userName, &userNameLength);
-    U_UserName = (string)userName;
-    U_UserPath = "C:/Users/" + U_UserName + "/";
-    U_DocumentsPath = U_UserPath + "Documents/";
-    U_HomePath = U_DocumentsPath + "Hackers-Toolbox/";
-}
+// CAN MAKE NEW FULL PATH FROM PARENT DOWN
+// CAN NOT MAKE "DICTIONARIES" FOLDER
+// CAN NOT MAKE FILES IN "DICTIONARIES" FOLDER
 
 bool FConfigReader(void)
 {
@@ -117,7 +117,7 @@ bool FConfigReader(void)
     }
     else if (GetLastError() == ERROR_PATH_NOT_FOUND)
     {
-        cout << "[!] Main folder for the Hackers-Toolbox app doesn't exist. No fconfig files found." << endl;
+        cout << "[!] Main folder for the HAT app doesn't exist. No fconfig files found." << endl;
         return false;
     }
     else if (GetLastError() == ERROR_ALREADY_EXISTS)
@@ -339,9 +339,72 @@ bool FConfigReader(void)
 
             if (flag_EntryStart)
             {
-               for (int itemIndex = 0; itemIndex < customEntriesVector.size(); itemIndex++) {
-                    cout << customEntriesVector.at(itemIndex) << endl;
-               }
+                for (int itemIndex = 0; itemIndex < customEntriesVector.size(); itemIndex++)
+                {
+                    L_wordList.push_back(customEntriesVector.at(itemIndex));
+                }
+                if (flag_AskEntry)
+                {
+                    A_Entry = true;
+                }
+                else
+                {
+                    A_Entry = false;
+                }
+            }
+            if (flag_Name && flag_Name_DONE)
+            {
+                D_Name = customName;
+                if (flag_AskName)
+                {
+                    A_Name = true;
+                }
+                else
+                {
+                    A_Name = false;
+                }
+            }
+            if (flag_Ext && flag_Ext_DONE)
+            {
+                D_Extension = customExt;
+            }
+            if (flag_Min && flag_Min_DONE)
+            {
+                try
+                {
+                    D_MinimumChain = stoi(customMin);
+                }
+                catch (invalid_argument)
+                {
+                    D_MinimumChain = D_MinimumChain;
+                }
+                if (flag_AskMin)
+                {
+                    A_MinimumChain = true;
+                }
+                else
+                {
+                    A_MinimumChain = false;
+                }
+            }
+            if (flag_Max && flag_Max_DONE)
+            {
+                try
+                {
+                    D_MaximumChain = stoi(customMax);
+                }
+                catch (invalid_argument)
+                {
+                    D_MaximumChain = D_MaximumChain;
+                }
+                if (flag_AskMax)
+                {
+                    A_MaximumChain = true;
+                }
+                else
+                {
+                    A_MaximumChain = true;
+                }
             }
         }
         return true;
@@ -386,19 +449,21 @@ void PathFinder(void)
     {
         fileName = inputName+".txt";
     }
+    
     L_filePath = dictionaryPath + fileName;
-    //Creating the file and the folder :
-    //there's a Hackers-Toolbox in DOCUMENTS, there's no Dictionaries folder.
-    if (CreateDirectory(dictionaryPath.c_str(), NULL))
-    {
-        cout << "[!] Creating 'Dictionaries' folder..." << endl;
-        ofstream fileInitObj(L_filePath);
-        fileInitObj << " \n \n ";
-        fileInitObj.close();
-        cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
-    }
-    //there's a Hackers-Toolbox in DOCUMENTS, there's also a Dictionaries folder.
-    else if (GetLastError() == ERROR_ALREADY_EXISTS)
+    
+    // /*
+     cout << "Attempting to create something at " << dictionaryPath.c_str() << endl;
+    CreateDirectory(dictionaryPath.c_str(), NULL);
+    DWORD ERRMSG = ::GetLastError();
+     cout << "Response code : " << ERRMSG << endl;
+     cout << "Here's what it translates to : " << std::system_category().message(ERRMSG) << endl;
+    // BUG:
+    // "CreateDirectory" SEEMS TO NOT BE WORKING CORRECTLY SOMETIMES
+    // */
+    
+    //there's a HAT in DOCUMENTS, there's also a Dictionaries folder.
+    if (::GetLastError() == ERROR_ALREADY_EXISTS)
     {
         cout << "[!] Located pre-existing 'Dictionaries' folder..." << endl;
         ofstream fileInitObj(L_filePath);
@@ -406,14 +471,14 @@ void PathFinder(void)
         fileInitObj.close();
         cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
     }
-    //there's not a Hackers-Toolbox in DOCUMENTS
-    else if (GetLastError() == ERROR_PATH_NOT_FOUND)
+    //there's not a HAT in DOCUMENTS
+    else if (::GetLastError() == ERROR_PATH_NOT_FOUND)
     {
         //there's a DOCUMENTS in USER
         if (CreateDirectory(U_HomePath.c_str(), NULL))
         {
             cout << "[!] Creating the parent folder '" + U_HomePath + "'... " << endl;
-            if (CreateDirectory(dictionaryPath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
+            if (CreateDirectory(dictionaryPath.c_str(), NULL) || ::GetLastError() == ERROR_ALREADY_EXISTS)
             {
                 ofstream fileInitObj(L_filePath);
                 fileInitObj << " \n \n ";
@@ -421,22 +486,22 @@ void PathFinder(void)
                 cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
             }
         }
-        //there's not a Hackers-Toolbox in DOCUMENTs, but there's a Hackers-Toolbox in DOCUMENTS
-        else if(GetLastError() == ERROR_ALREADY_EXISTS)
+        //there's not a HAT in DOCUMENTs, but there's a HAT in DOCUMENTS
+        else if(::GetLastError() == ERROR_ALREADY_EXISTS)
         {
             cout << "[#] ERR : CAN'T WORK WITH SHRODINGER'S TOOLBOX!"
             << endl << "[!] ENDING PROGRAM [!]";
             exit(1);
         }
         //there's no DOCUMENTS at all
-        else if(GetLastError() == ERROR_PATH_NOT_FOUND)
+        else if(::GetLastError() == ERROR_PATH_NOT_FOUND)
         {
             cout << "[#] ERR : USER HAS NO DOCUMENTS FOLDER!";
             //there's a USER
             if (CreateDirectory(U_DocumentsPath.c_str(), NULL))
             {
                 cout << "[!] Creating 'Documents' folder for " + U_UserName + "... " << endl;
-                if (CreateDirectory(U_HomePath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
+                if (CreateDirectory(U_HomePath.c_str(), NULL) || ::GetLastError() == ERROR_ALREADY_EXISTS)
                 {
                     cout << "[!] Creating the parent folder '" + U_HomePath + "'... " << endl;
                     if (CreateDirectory(dictionaryPath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
@@ -449,14 +514,14 @@ void PathFinder(void)
                 }
             }
             //there's no DOCUMENTS at all, however, DOCUMENTS exists.
-            else if (GetLastError() == ERROR_ALREADY_EXISTS)
+            else if (::GetLastError() == ERROR_ALREADY_EXISTS)
             {
                 cout << "[#] ERR: CAN'T WORK WITH SHRODINGER'S DOCUMENTS!"
                 << endl << "[!] ENDING PROGRAM [!]";
                 exit(1);
             }
             //there is no USER
-            else if (GetLastError() == ERROR_PATH_NOT_FOUND)
+            else if (::GetLastError() == ERROR_PATH_NOT_FOUND)
             {
                 cout << "[#] USER DOESN'T EXIST, WHICH MEANS THIS PROGRAM WAS NEVER RUN!"
                 << endl << "[#] [!] ERR : PARADOX DETECTED! [!] [#]"
@@ -465,6 +530,17 @@ void PathFinder(void)
             }
         }
     }
+    //there's a HAT in DOCUMENTS, there's not a Dictionaries folder.
+    else
+    {
+        cout << "[!] Creating 'Dictionaries' folder..." << endl;
+        CreateDirectory(dictionaryPath.c_str(), NULL);
+        ofstream fileInitObj(L_filePath);
+        fileInitObj << " \n \n ";
+        fileInitObj.close();
+        cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
+    }
+
 }
 
 void LengthGet(void)
@@ -481,7 +557,7 @@ void LengthGet(void)
         minLength = stoi(minInput);
         cout << "[$] Set minimum value to " + to_string(minLength) + " !" << endl;
     }
-    catch (std::invalid_argument)
+    catch (invalid_argument)
     {
         cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MinimumChain) + " for minimum value" << endl;
         minLength = D_MinimumChain;
@@ -497,7 +573,7 @@ void LengthGet(void)
         maxLength = stoi(maxInput);
         cout << "[$] Set maximum value to " + to_string(D_MaximumChain) + " !" << endl;
     }
-    catch (std::invalid_argument)
+    catch (invalid_argument)
     {
         cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MaximumChain) + " for maximum value" << endl;
         maxLength = D_MaximumChain;
