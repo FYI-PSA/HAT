@@ -92,7 +92,7 @@ int main (void)
     clock_t deltaCTime = creationStop - creationStart;
     float minuteDCT = (double)deltaCTime / 60000;
     cout << endl << endl << "[$] Done!"
-    << endl << "[$] It took " << std::setprecision(2) << minuteDCT << " minutes"
+    << endl << "[$] It took " << std::setprecision(3) << std::fixed << minuteDCT << " minutes"
     << endl << "[$] The dictionary is saved at '" + L_filePath + "' "
     << endl << endl << "[$] Goodbye!" << endl << endl;
 /*
