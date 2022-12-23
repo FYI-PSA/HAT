@@ -102,10 +102,6 @@ TODO :
 */
 }
 
-// CAN MAKE NEW FULL PATH FROM PARENT DOWN
-// CAN NOT MAKE "DICTIONARIES" FOLDER
-// CAN NOT MAKE FILES IN "DICTIONARIES" FOLDER
-
 bool FConfigReader(void)
 {
     string fconfigPath = U_HomePath + "PreConfigs/";
@@ -452,15 +448,19 @@ void PathFinder(void)
     
     L_filePath = dictionaryPath + fileName;
     
-    // /*
+    
      cout << "Attempting to create something at " << dictionaryPath.c_str() << endl;
     CreateDirectory(dictionaryPath.c_str(), NULL);
     DWORD ERRMSG = ::GetLastError();
      cout << "Response code : " << ERRMSG << endl;
      cout << "Here's what it translates to : " << std::system_category().message(ERRMSG) << endl;
+    // 
     // BUG:
     // "CreateDirectory" SEEMS TO NOT BE WORKING CORRECTLY SOMETIMES
-    // */
+    // CORRECTION:
+    // "CreateDirectory" DOESN'T WORK AT ALL. THE ERROR MESSAGES ARE NOT GETTING DETECTED, ALWAYS GOING TO ELSE CLAUSE.
+    // CAN'T CREATE ANY DIRECTORY. ONLY THE FILE IF "~/Documents/HAT/Dictionaries" EXISTS
+    // 
     
     //there's a HAT in DOCUMENTS, there's also a Dictionaries folder.
     if (::GetLastError() == ERROR_ALREADY_EXISTS)
