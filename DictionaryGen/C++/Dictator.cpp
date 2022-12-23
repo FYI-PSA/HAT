@@ -34,12 +34,16 @@ using std::string;
 using std::to_string;
 using std::invalid_argument;
 
+using std::system_category;
+
 void Unchained(void);
 void LengthGet(void);
 void PathFinder(void);
 void WriteToFile(void);
 bool FConfigReader(void);
+void NewFileCreator(void);
 void InputCollector(void);
+void PathErrors(string createPath);
 void WordListCreation(string baseString, int lengthVar);
 
 fstream L_fileObj;
@@ -426,9 +430,8 @@ void InputCollector(void)
     L_wordListSize = L_wordList.size();
 }
 
-void PathErrors(void)
-{
-    // Errors to account for:
+
+    // File creation errors to account for:
 
     // DWORD 2 : Can not find the file specified 
     // - defined as ERROR_FILE_NOT_FOUND
@@ -462,6 +465,58 @@ void PathErrors(void)
     // Cool, located pre existing folder, make your file in there, no more need for creating directories.
 
     // Any other value: throw exception, exit, out the code and the text form of the message.
+
+void PathErrors(string attemptingPath)
+{
+    if (CreateDirectory(attemptingPath.c_str(), NULL) != 0)
+    {
+        cout << "[$] Directory " + attemptingPath + " was created successfully!" << endl;
+        return; // it was successful
+    }
+    DWORD errorCode = ::GetLastError();
+    // cout << "Error Code : " << errorCode << "  |  ";
+    // cout << "Error Text : " << system_category().message(errorCode) << endl;
+    if (errorCode == 3)
+    {
+        path orphanPath = attemptingPath;
+        path noParent = orphanPath.parent_path();
+        string strungParent = noParent.generic_string();
+        cout << "[!] Parent folder missing, attempting to create..." << endl;
+        PathErrors(strungParent);
+        cout << "[!] Now trying to create the subfolder again..." << endl;
+        PathErrors(attemptingPath);
+        return;
+    }
+    else if (errorCode == 5)
+    {
+        cout << "[#] It seems you don't have the permission to create your dictionary's folder to contain your files." <<
+        endl << "[@] Try running again as an Administrator or contact your system's admin for help." << endl;
+        exit(1);
+        return;
+    }
+    else if (errorCode == 183)
+    {
+        cout << "[$] Located pre existing containing folder..." << endl;
+        return;
+    }
+    else
+    {
+        cout << "[#] Something went wrong internernally, here's the issue code and it's text:" << 
+        endl << "[%] Error Code : " << errorCode << "  |  "
+        << "Error Text : " << system_category().message(errorCode) << endl;
+        cout << "[@] Please report to the following link the above Error Code and Error Text to fix the issue in the next update:" <<
+        endl << "[%] https://www.GitHub.com/Funtime-UwU/HAT/Issues/" << endl;
+        exit(1);
+        return;
+    }
+}
+
+void NewFileCreator(void)
+{
+    ofstream fileInitObj(L_filePath);
+    fileInitObj << " \n \n ";
+    fileInitObj.close();
+    cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
 }
 
 void PathFinder(void)
@@ -486,7 +541,10 @@ void PathFinder(void)
     
     L_filePath = dictionaryPath + fileName;
     
+    PathErrors(dictionaryPath);
+    NewFileCreator();
     
+    /*
     cout << "Attempting to create something at " << dictionaryPath.c_str() << endl;
     if(CreateDirectory(dictionaryPath.c_str(), NULL))
     {
@@ -497,7 +555,7 @@ void PathFinder(void)
         cout << "Coudn't create directory at " << dictionaryPath.c_str() << " because of this: " << endl;
         DWORD ERRMSG = ::GetLastError();
         cout << "Code : " << ERRMSG << "  |  ";
-        cout << "Message : " << std::system_category().message(ERRMSG) << endl;
+        cout << "Message : " << system_category().message(ERRMSG) << endl;
     }
     
     // Make PathErrors() a switch case that checks for errors, exists, and exceptions, and creates the directory called for in param
@@ -588,6 +646,9 @@ void PathFinder(void)
         fileInitObj.close();
         cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
     }
+
+    */
+
 
 }
 
