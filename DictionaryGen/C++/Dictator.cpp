@@ -1,4 +1,4 @@
-//#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include <system_error>
 #include <filesystem>
 #include <Windows.h>
@@ -9,10 +9,13 @@
 #include <string.h>
 #include <fstream>
 #include <iomanip>
+#include <stdio.h>
+#include <errno.h>
 #include <string>
 #include <vector>
 #include <time.h>
 #include <ctime>
+#include <io.h>
 
 using std::cin;
 using std::cout;
@@ -40,11 +43,15 @@ void Unchained(void);
 void LengthGet(void);
 void PathFinder(void);
 void WriteToFile(void);
-bool FConfigReader(void);
 void NewFileCreator(void);
 void InputCollector(void);
 void PathErrors(string createPath);
 void WordListCreation(string baseString, int lengthVar);
+
+bool FConfigReader(void);
+
+int CreateDirectoryMan(string createPath);
+int CreateDirectoryMan(string createPath, bool giveFeedback);
 
 fstream L_fileObj;
 string L_filePath;
@@ -80,7 +87,9 @@ int main (void)
 
     cout << "[*] Dictator V0.99" << endl << endl;
     cout << "[!] Looking for fconfig files..." << endl << endl;
-    FConfigReader();
+    bool fconfigStatus = FConfigReader();
+    if (fconfigStatus)
+        cout << "[$] An fconfig file has been loaded!" << endl;
     cout << "[!] Getting inputs for dictionary..." << endl << endl;
     InputCollector();
     cout << endl << endl << "[!] Creating file..." << endl << endl;
@@ -99,28 +108,163 @@ int main (void)
     << endl << "[$] It took " << std::setprecision(3) << std::fixed << minuteDCT << " minutes"
     << endl << "[$] The dictionary is saved at '" + L_filePath + "' "
     << endl << endl << "[$] Goodbye!" << endl << endl;
-/*
-TODO :
-- maybe bring back the old system of overriding a file if it exists, instead of always appending to the start.
- ^ could be an idea for the GUI version
-*/
 }
+
+
+// return values : 
+// 0 = directory successfully created
+// 1 = directory was existing found
+// -1 = unidentified edge case
+int CreateDirectoryMan(string createPath, bool giveFeedback)
+{
+    // new method: check for parents first, and then create them in order
+    int successValue = mkdir(createPath.c_str());
+    int errors = 6;
+    int errorValues[errors] = {EACCES, EEXIST, ENAMETOOLONG, ENOENT, ENOTDIR, EROFS}; 
+    if (successValue == -1)
+    {
+        int errorCode = errno;
+        if (giveFeedback)
+        {
+            cout << "[!] Couldn't create folder " << createPath << " because of an issue." << 
+            endl << "[!] Trying to solve it..." << endl;
+        }
+        int matchingIndex = -1;
+        for (int i = 0 ; i < errors; i++)
+        {
+            int currentError = errorValues[i]; 
+            if (currentError == errorCode)
+            {
+                matchingIndex = i;
+                break;
+            }
+        }
+        if (matchingIndex != -1)
+        {
+            int currentError = errorValues[matchingIndex];
+            if (giveFeedback)
+            {
+                cout << "[!] Reason for the error: ";
+            }
+            if (currentError == EACCES)
+            {
+                if (giveFeedback)
+                {
+                    cout << "Access denied." << 
+                    endl << "[@] Try asking a system admin for help or if you own this computer, run this program as administrator." << endl;
+                    exit(1);
+                }
+                return 3;
+            }
+            else if (currentError == EEXIST)
+            {
+                if (giveFeedback)
+                {
+                    cout << endl << "[$] Located pre existing folder!" << endl;
+                }
+                return 1;
+            }
+            else if (currentError == ENAMETOOLONG)
+            {
+                if (giveFeedback)
+                {
+                    cout << "File name is too long or invalid." << endl;
+                    exit(1); // maybe resort back to d_name ?
+                }
+                return 3;
+            }
+            else if (currentError == ENOENT)
+            {
+                if (giveFeedback)
+                {
+                    cout << "A parent folder is missing." <<
+                    endl << "[!] Attempting to create missing parent folder..." << endl ;
+                }
+                path currentPath = createPath;
+                path parentPath = currentPath.parent_path();
+                string parentDir = parentPath.generic_string();
+                CreateDirectoryMan(parentDir, giveFeedback);
+                if (giveFeedback)
+                {
+                    cout << "[$] Parent folder successfully created!" << 
+                    endl <<"[!] Trying to create self again..." << endl;
+                }
+                CreateDirectoryMan(createPath, giveFeedback);
+                return 0;
+            }
+            else if (currentError == ENOSPC)
+            {
+                if (giveFeedback)
+                {
+                    cout << "File system out of storage space." << endl;
+                    exit(1);
+                }
+                return 3;
+            }
+            else if (currentError == ENOTDIR)
+            {
+                if (giveFeedback)
+                {
+                    cout << "A mentioned parent 'folder' is not actually a folder." << endl;
+                    exit(1);
+                }
+                return 3;
+            }
+            else
+            {
+                if (giveFeedback)
+                {
+                    cout << endl << "[!] Unidentified error!" << endl;
+                    exit(1);
+                }
+                return -1;
+            }
+        }
+        else
+        {
+            if (giveFeedback)
+            {
+                cout << endl << "[!] Unidentified error!" << endl;
+                exit(1);
+            }
+            return -1;
+        }
+    }
+    else
+    {
+        if (giveFeedback)
+        {
+            cout << "[$] Successfully created a new folder " << createPath << "!" << endl;
+        }
+        return 0;
+    }
+
+    return -1;
+}
+
+int CreateDirectoryMan(string createPath)
+{
+    return CreateDirectoryMan(createPath, true);
+}
+
+
 
 bool FConfigReader(void)
 {
     string fconfigPath = U_HomePath + "PreConfigs/";
 
-    if (CreateDirectory(fconfigPath.c_str(), NULL))
+    int createdStatus = CreateDirectoryMan(fconfigPath, true);
+    // -1 if undefined err, 
+    // 0 if successfully made, 
+    // 1 if already existed, 
+    // 2 if planned errors
+
+    if (createdStatus == -1 || createdStatus == 0 || createdStatus == 2)
     {
-        cout << "[!] No previous folder for pre configurations found." << endl;
+        cout << "[!] No folder for pre configurations found." << endl;
         return false;
     }
-    else if (GetLastError() == ERROR_PATH_NOT_FOUND)
-    {
-        cout << "[!] Main folder for the HAT app doesn't exist. No fconfig files found." << endl;
-        return false;
-    }
-    else if (GetLastError() == ERROR_ALREADY_EXISTS)
+    else if (createdStatus == 1)
     {
         vector<path> pathVector;
         vector<path> fileVector;
@@ -541,115 +685,8 @@ void PathFinder(void)
     
     L_filePath = dictionaryPath + fileName;
     
-    PathErrors(dictionaryPath);
+    CreateDirectoryMan(dictionaryPath);
     NewFileCreator();
-    
-    /*
-    cout << "Attempting to create something at " << dictionaryPath.c_str() << endl;
-    if(CreateDirectory(dictionaryPath.c_str(), NULL))
-    {
-        cout << "Created directory " << dictionaryPath.c_str() << " with success." << endl;
-    }
-    else
-    {
-        cout << "Coudn't create directory at " << dictionaryPath.c_str() << " because of this: " << endl;
-        DWORD ERRMSG = ::GetLastError();
-        cout << "Code : " << ERRMSG << "  |  ";
-        cout << "Message : " << system_category().message(ERRMSG) << endl;
-    }
-    
-    // Make PathErrors() a switch case that checks for errors, exists, and exceptions, and creates the directory called for in param
-
-    // 
-    // BUG:
-    // "CreateDirectory" SEEMS TO NOT BE WORKING CORRECTLY SOMETIMES
-    // CORRECTION:
-    // "CreateDirectory" DOESN'T WORK AT ALL. THE ERROR MESSAGES ARE NOT GETTING DETECTED, ALWAYS GOING TO ELSE CLAUSE.
-    // CAN'T CREATE ANY DIRECTORY. ONLY THE FILE IF "~/Documents/HAT/Dictionaries" EXISTS
-    // 
-    
-    if (::GetLastError() == ERROR_ALREADY_EXISTS)
-    {
-        //there's a HAT in DOCUMENTS, there's also a Dictionaries folder.
-        cout << "[!] Located pre-existing 'Dictionaries' folder..." << endl;
-        ofstream fileInitObj(L_filePath);
-        fileInitObj << " \n \n ";
-        fileInitObj.close();
-        cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
-    }
-    else if (::GetLastError() == ERROR_PATH_NOT_FOUND)
-    {
-        //there's not a HAT in DOCUMENTS
-        if (CreateDirectory(U_HomePath.c_str(), NULL))
-        {
-            //there's a DOCUMENTS in USER
-            cout << "[!] Creating the parent folder '" + U_HomePath + "'... " << endl;
-            if (CreateDirectory(dictionaryPath.c_str(), NULL) || ::GetLastError() == ERROR_ALREADY_EXISTS)
-            {
-                ofstream fileInitObj(L_filePath);
-                fileInitObj << " \n \n ";
-                fileInitObj.close();
-                cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
-            }
-        }
-        else if(::GetLastError() == ERROR_ALREADY_EXISTS)
-        {
-            //there's not a HAT in DOCUMENTs, but there's a HAT in DOCUMENTS
-            cout << "[#] ERR : CAN'T WORK WITH SHRODINGER'S TOOLBOX!"
-            << endl << "[!] ENDING PROGRAM [!]";
-            exit(1);
-        }
-        else if(::GetLastError() == ERROR_PATH_NOT_FOUND)
-        {
-            //there's no DOCUMENTS at all
-            cout << "[#] ERR : USER HAS NO DOCUMENTS FOLDER!";
-            if (CreateDirectory(U_DocumentsPath.c_str(), NULL))
-            {
-                //there's a USER
-                cout << "[!] Creating 'Documents' folder for " + U_UserName + "... " << endl;
-                if (CreateDirectory(U_HomePath.c_str(), NULL) || ::GetLastError() == ERROR_ALREADY_EXISTS)
-                {
-                    cout << "[!] Creating the parent folder '" + U_HomePath + "'... " << endl;
-                    if (CreateDirectory(dictionaryPath.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
-                    {
-                        ofstream fileInitObj(L_filePath);
-                        fileInitObj << " \n \n ";
-                        fileInitObj.close();
-                        cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
-                    }
-                }
-            }
-            else if (::GetLastError() == ERROR_ALREADY_EXISTS)
-            {
-                //there's no DOCUMENTS at all, however, DOCUMENTS exists.
-                cout << "[#] ERR: CAN'T WORK WITH SHRODINGER'S DOCUMENTS!"
-                << endl << "[!] ENDING PROGRAM [!]";
-                exit(1);
-            }
-            else if (::GetLastError() == ERROR_PATH_NOT_FOUND)
-            {
-                //there is no USER
-                cout << "[#] USER DOESN'T EXIST, WHICH MEANS THIS PROGRAM WAS NEVER RUN!"
-                << endl << "[#] [!] ERR : PARADOX DETECTED! [!] [#]"
-                << endl << "[#] [!] ENDING SIMULATION [!] [#]";
-                exit(1);
-            }
-        }
-    }
-    else
-    { 
-        //there's a HAT in DOCUMENTS, there's not a Dictionaries folder.
-        cout << "[!] Creating 'Dictionaries' folder..." << endl;
-        CreateDirectory(dictionaryPath.c_str(), NULL);
-        ofstream fileInitObj(L_filePath);
-        fileInitObj << " \n \n ";
-        fileInitObj.close();
-        cout << "[$] Successfully created file '" + L_filePath + "' !" << endl;
-    }
-
-    */
-
-
 }
 
 void LengthGet(void)
