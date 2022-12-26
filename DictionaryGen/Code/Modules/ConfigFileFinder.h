@@ -1,3 +1,13 @@
+#include <Windows.h>
+#include <filesystem>
+#include <iostream>
+#include <stdio.h>
+#include <io.h>
+#include <cstudio>
+#include <errno.h>
+#include <string>
+#include <string.h>
+#include <fstream>
 
 bool FConfigReader(void)
 {

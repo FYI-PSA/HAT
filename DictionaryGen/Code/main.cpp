@@ -17,6 +17,8 @@
 #include <ctime>
 #include <io.h>
 
+#include <Modules/ConfigFileFinder.h>
+
 using std::cin;
 using std::cout;
 using std::endl;
