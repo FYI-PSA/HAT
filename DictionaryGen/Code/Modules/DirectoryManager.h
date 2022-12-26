@@ -1,8 +1,39 @@
+#include <filesystem>
+#include <stdio.h>
+#include <iostream>
+#include <io.h>
+#include <cstudio>
+#include <Windows.h>
+#include <errno.h>
+#include <fstream>
+#include <string>
+#include <string.h>
+
+using std::cin;
+using std::cout;
+using std::endl;
+using std::fstream;
+using std::ifstream;
+using std::ofstream;
+using std::getline;
+using std::vector;
+using std::filesystem::path;
+using std::filesystem::directory_iterator;
+using std::string;
+using std::to_string;
+using std::invalid_argument;
+using std::system_category;
 
 // return values : 
 // 0 = directory successfully created
 // 1 = directory was existing found
 // -1 = unidentified edge case
+
+vector<string> ParentPaths(string targetPath)
+{
+    
+}
+
 int CreateDirectoryMan(string createPath, bool giveFeedback)
 {
     // new method: check for parents first, and then create them in order

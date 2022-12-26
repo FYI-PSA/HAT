@@ -9,9 +9,12 @@
 #include <string.h>
 #include <fstream>
 
-bool FConfigReader(void)
+#include <DirectoryManager.h>
+#include <CreationManager.h>
+
+bool FConfigReader(string HomePath)
 {
-    string fconfigPath = U_HomePath + "PreConfigs/";
+    string fconfigPath = HomePath + "PreConfigs/";
 
     int createdStatus = CreateDirectoryMan(fconfigPath, true);
     // -1 if undefined err, 
