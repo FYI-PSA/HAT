@@ -1,8 +1,10 @@
+#ifndef DIRMAN_H
+#define DIRMAN_H
 #include <filesystem>
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 #include <io.h>
-#include <cstudio>
 #include <Windows.h>
 #include <errno.h>
 #include <fstream>
@@ -29,105 +31,119 @@ using std::system_category;
 // 1 = directory was existing found
 // -1 = unidentified edge case
 
-vector<string> ParentPaths(string targetPath)
+namespace funtime
 {
-    
-}
 
-int CreateDirectoryMan(string createPath, bool giveFeedback)
-{
-    // new method: check for parents first, and then create them in order
-    int successValue = mkdir(createPath.c_str());
-    int errors = 6;
-    int errorValues[errors] = {EACCES, EEXIST, ENAMETOOLONG, ENOENT, ENOTDIR, EROFS}; 
-    if (successValue == -1)
+    vector<string> ParentPaths(string targetPath)
     {
-        int errorCode = errno;
-        if (giveFeedback)
+        vector<string> returnVector = {"Hello", "World"};
+        return returnVector;
+    }
+
+    int CreateDirectoryMan(string createPath, bool giveFeedback)
+    {
+        // new method: check for parents first, and then create them in order
+        int successValue = mkdir(createPath.c_str());
+        int errors = 6;
+        int errorValues[errors] = {EACCES, EEXIST, ENAMETOOLONG, ENOENT, ENOTDIR, EROFS}; 
+        if (successValue == -1)
         {
-            cout << "[!] Couldn't create folder " << createPath << " because of an issue." << 
-            endl << "[!] Trying to solve it..." << endl;
-        }
-        int matchingIndex = -1;
-        for (int i = 0 ; i < errors; i++)
-        {
-            int currentError = errorValues[i]; 
-            if (currentError == errorCode)
-            {
-                matchingIndex = i;
-                break;
-            }
-        }
-        if (matchingIndex != -1)
-        {
-            int currentError = errorValues[matchingIndex];
+            int errorCode = errno;
             if (giveFeedback)
             {
-                cout << "[!] Reason for the error: ";
+                cout << "[!] Couldn't create folder " << createPath << " because of an issue." << 
+                endl << "[!] Trying to solve it..." << endl;
             }
-            if (currentError == EACCES)
+            int matchingIndex = -1;
+            for (int i = 0 ; i < errors; i++)
             {
-                if (giveFeedback)
+                int currentError = errorValues[i]; 
+                if (currentError == errorCode)
                 {
-                    cout << "Access denied." << 
-                    endl << "[@] Try asking a system admin for help or if you own this computer, run this program as administrator." << endl;
-                    exit(1);
+                    matchingIndex = i;
+                    break;
                 }
-                return 3;
             }
-            else if (currentError == EEXIST)
+            if (matchingIndex != -1)
             {
+                int currentError = errorValues[matchingIndex];
                 if (giveFeedback)
                 {
-                    cout << endl << "[$] Located pre existing folder!" << endl;
+                    cout << "[!] Reason for the error: ";
                 }
-                return 1;
-            }
-            else if (currentError == ENAMETOOLONG)
-            {
-                if (giveFeedback)
+                if (currentError == EACCES)
                 {
-                    cout << "File name is too long or invalid." << endl;
-                    exit(1); // maybe resort back to d_name ?
+                    if (giveFeedback)
+                    {
+                        cout << "Access denied." << 
+                        endl << "[@] Try asking a system admin for help or if you own this computer, run this program as administrator." << endl;
+                        exit(1);
+                    }
+                    return 3;
                 }
-                return 3;
-            }
-            else if (currentError == ENOENT)
-            {
-                if (giveFeedback)
+                else if (currentError == EEXIST)
                 {
-                    cout << "A parent folder is missing." <<
-                    endl << "[!] Attempting to create missing parent folder..." << endl ;
+                    if (giveFeedback)
+                    {
+                        cout << endl << "[$] Located pre existing folder!" << endl;
+                    }
+                    return 1;
                 }
-                path currentPath = createPath;
-                path parentPath = currentPath.parent_path();
-                string parentDir = parentPath.generic_string();
-                CreateDirectoryMan(parentDir, giveFeedback);
-                if (giveFeedback)
+                else if (currentError == ENAMETOOLONG)
                 {
-                    cout << "[$] Parent folder successfully created!" << 
-                    endl <<"[!] Trying to create self again..." << endl;
+                    if (giveFeedback)
+                    {
+                        cout << "File name is too long or invalid." << endl;
+                        exit(1); // maybe resort back to d_name ?
+                    }
+                    return 3;
                 }
-                CreateDirectoryMan(createPath, giveFeedback);
-                return 0;
-            }
-            else if (currentError == ENOSPC)
-            {
-                if (giveFeedback)
+                else if (currentError == ENOENT)
                 {
-                    cout << "File system out of storage space." << endl;
-                    exit(1);
+                    if (giveFeedback)
+                    {
+                        cout << "A parent folder is missing." <<
+                        endl << "[!] Attempting to create missing parent folder..." << endl ;
+                    }
+                    path currentPath = createPath;
+                    path parentPath = currentPath.parent_path();
+                    string parentDir = parentPath.generic_string();
+                    CreateDirectoryMan(parentDir, giveFeedback);
+                    if (giveFeedback)
+                    {
+                        cout << "[$] Parent folder successfully created!" << 
+                        endl <<"[!] Trying to create self again..." << endl;
+                    }
+                    CreateDirectoryMan(createPath, giveFeedback);
+                    return 0;
                 }
-                return 3;
-            }
-            else if (currentError == ENOTDIR)
-            {
-                if (giveFeedback)
+                else if (currentError == ENOSPC)
                 {
-                    cout << "A mentioned parent 'folder' is not actually a folder." << endl;
-                    exit(1);
+                    if (giveFeedback)
+                    {
+                        cout << "File system out of storage space." << endl;
+                        exit(1);
+                    }
+                    return 3;
                 }
-                return 3;
+                else if (currentError == ENOTDIR)
+                {
+                    if (giveFeedback)
+                    {
+                        cout << "A mentioned parent 'folder' is not actually a folder." << endl;
+                        exit(1);
+                    }
+                    return 3;
+                }
+                else
+                {
+                    if (giveFeedback)
+                    {
+                        cout << endl << "[!] Unidentified error!" << endl;
+                        exit(1);
+                    }
+                    return -1;
+                }
             }
             else
             {
@@ -143,25 +159,19 @@ int CreateDirectoryMan(string createPath, bool giveFeedback)
         {
             if (giveFeedback)
             {
-                cout << endl << "[!] Unidentified error!" << endl;
-                exit(1);
+                cout << "[$] Successfully created a new folder " << createPath << "!" << endl;
             }
-            return -1;
+            return 0;
         }
+
+        return -1;
     }
-    else
+
+    int CreateDirectoryMan(string createPath)
     {
-        if (giveFeedback)
-        {
-            cout << "[$] Successfully created a new folder " << createPath << "!" << endl;
-        }
-        return 0;
+        return CreateDirectoryMan(createPath, true);
     }
 
-    return -1;
 }
 
-int CreateDirectoryMan(string createPath)
-{
-    return CreateDirectoryMan(createPath, true);
-}
+#endif

@@ -17,7 +17,13 @@
 #include <ctime>
 #include <io.h>
 
-#include <Modules/ConfigFileFinder.h>
+#include "Modules/ConfigFileFinder.h"
+using funtime::FConfigReader;
+
+#ifndef DIRMAN_H
+#include "Modules/DirectoryManager.h"
+using funtime::CreateDirectoryMan;
+#endif
 
 using std::cin;
 using std::cout;
@@ -30,6 +36,7 @@ using std::ofstream;
 using std::getline;
 
 using std::vector;
+using std::pair;
 
 using std::filesystem::path;
 using std::filesystem::directory_iterator;
@@ -42,7 +49,7 @@ using std::invalid_argument;
 using std::system_category;
 
 void Unchained(void);
-void LengthGet(void);
+pair<int,int> LengthGet(bool ask_min, bool ask_max);
 void PathFinder(void);
 void WriteToFile(void);
 void NewFileCreator(void);
@@ -51,9 +58,6 @@ void PathErrors(string createPath);
 void WordListCreation(string baseString, int lengthVar);
 
 bool FConfigReader(void);
-
-int CreateDirectoryMan(string createPath);
-int CreateDirectoryMan(string createPath, bool giveFeedback);
 
 fstream L_fileObj;
 string L_filePath;
@@ -79,25 +83,121 @@ bool A_MaximumChain = true;
 
 int main (void)
 {
-    char userName[UNLEN+1];
-    DWORD userNameLength = UNLEN+1;
-    GetUserName(userName, &userNameLength);
-    U_UserName = (string)userName;
-    U_UserPath = "C:/Users/" + U_UserName + "/";
-    U_DocumentsPath = U_UserPath + "Documents/";
-    U_HomePath = U_DocumentsPath + "HAT/";
-
+    U_HomePath = "C:/HAT/";
     cout << "[*] Dictator V0.99" << endl << endl;
     cout << "[!] Looking for fconfig files..." << endl << endl;
-    bool fconfigStatus = FConfigReader();
-    if (fconfigStatus)
+    vector<pair<int, vector<string>>> fconfigStatus = FConfigReader(U_HomePath);
+    if (fconfigStatus[9].first == 1)
+    {
         cout << "[$] An fconfig file has been loaded!" << endl;
-    cout << "[!] Getting inputs for dictionary..." << endl << endl;
-    InputCollector();
-    cout << endl << endl << "[!] Creating file..." << endl << endl;
-    PathFinder();
-    cout << endl << endl << "[!] Setting options for dictionary..." << endl << endl;
-    LengthGet();
+    
+        if (fconfigStatus[0].first != 0)
+        {
+            for (int wordIndex = 0 ; wordIndex < fconfigStatus[0].first ; wordIndex++)
+            {
+                L_wordList.push_back(fconfigStatus[0].second[wordIndex]);
+            }
+        }
+        
+        if (fconfigStatus[6].first == 1)
+        {
+            InputCollector();
+        }
+        else
+        {
+            cout << "[!] Loading only words from the fconfig..." << endl;
+            L_wordListSize = L_wordList.size();
+        }
+    }
+    else
+    {
+        InputCollector();
+    }
+    cout << "[$] Done!" << endl << endl
+        << "[!] Attempting to create the file..." << endl << endl;
+    if (fconfigStatus[9].first == 1)
+    {
+        if (fconfigStatus[2].first == 1)
+        {
+            D_Extension = fconfigStatus[2].second[0];
+        }
+        if (fconfigStatus[1].first == 1)
+        {
+            D_Name = fconfigStatus[1].second[0];
+            if (fconfigStatus[5].first == 1)
+            {
+                PathFinder();
+            }
+            else
+            {
+                cout << "[!] File name and path has been loaded from the config file and will no longer be asked." << endl;
+                L_filePath = U_HomePath + "Dictionaries/" + D_Name + D_Extension;
+                cout << "[%] File Path : " << L_filePath << endl;
+                NewFileCreator();
+            }
+        }
+    }
+    else
+    {
+        PathFinder();
+    }
+    cout << endl << endl << "[!] Setting options for dictionary..." << endl << endl;  
+    
+    pair<int,int> chainLs;
+    if (fconfigStatus[9].first == 1)
+    {
+        bool ask_mini = true, ask_maxi = true;
+
+        // 4 for min, 7 for a_min, 5 for max, 8 for a_max
+        if (fconfigStatus[3].first == 1)
+        {
+            try
+            {
+                D_MinimumChain = stoi(fconfigStatus[3].second[0]); 
+                if (fconfigStatus[7].first == 0)
+                {
+                    cout << "[!] Will not ask for the minimum chain length value, setting it to " << D_MinimumChain << " immediately." << endl;
+                    ask_mini = false;
+                }
+                else
+                {
+                    cout << "[!] Defaulted the minimum chain length value to " << D_MinimumChain << " from the config file!" << endl;
+                    ask_mini = true;
+                }
+            }
+            catch (invalid_argument)
+            {
+                ask_mini = true;
+            }
+        }
+        if (fconfigStatus[4].first ==  1)
+        {
+            try
+            {
+                D_MaximumChain = stoi(fconfigStatus[4].second[0]);
+                if (fconfigStatus[8].first == 0)
+                {
+                    cout << "[!] Will not ask for the maximum chain length value, setting it to " << D_MaximumChain << " immediately." << endl;
+                    ask_maxi = false;
+                }
+                else
+                {
+                    cout << "[!] Defaulted the maximum chain length value to " << D_MaximumChain << " from the config file!" << endl;
+                    ask_maxi = true;
+                }
+            }
+            catch (invalid_argument)
+            {
+                ask_maxi = true;
+            }
+        }
+        cout << endl;
+        chainLs = LengthGet(ask_mini, ask_maxi);
+    }
+    else
+    {
+        chainLs = LengthGet(true, true); 
+    }
     clock_t creationStart = std::clock();
     cout << endl << endl << "[!] Creating dictionary..." << endl << endl;
     L_fileObj.open(L_filePath);
@@ -108,13 +208,13 @@ int main (void)
     float minuteDCT = (double)deltaCTime / 60000;
     cout << endl << endl << "[$] Done!"
     << endl << "[$] It took " << std::setprecision(3) << std::fixed << minuteDCT << " minutes"
-    << endl << "[$] The dictionary is saved at '" + L_filePath + "' "
+    << endl << "[$] The dictionary is saved at '" << L_filePath << "' "
     << endl << endl << "[$] Goodbye!" << endl << endl;
 }
 
-
 void InputCollector(void)
 {
+    cout << "[!] Getting inputs for dictionary..." << endl << endl;
     cout << "[@] Enter the first entry to the word list."
     << endl << "[@] When you're done, just leave the input blank and hit enter again."
     << endl << "[+] First entry: " ;
@@ -144,18 +244,18 @@ void PathFinder(void)
     string fileName;
     string inputName;
     cout << "[@] Name the file to save your dictionary as"
-    << endl << "[!] (Files will be saved at '" + dictionaryPath + "' as a .txt file )"
+    << endl << "[!] (Files will be saved at '" + dictionaryPath + "' as a '" + D_Extension + "' file )"
     << endl << "[@] Leave field blank to save your file name as the default dictionary.txt"
     << endl << "[@] If the file already exists, new data will be added to the beginning leaving old data untouched."
     << endl << "[?] File name : ";
     getline(cin,inputName);
     if (inputName == "")
     {
-        fileName = "dictionary.txt";
+        fileName = D_Name + D_Extension;
     }
     else
     {
-        fileName = inputName+".txt";
+        fileName = inputName+D_Extension;
     }
     
     L_filePath = dictionaryPath + fileName;
@@ -164,49 +264,65 @@ void PathFinder(void)
     NewFileCreator();
 }
 
-void LengthGet(void)
+pair<int, int> LengthGet(bool min_ask, bool max_ask)
 {
-    string minInput;
-    cout << "[?] Minimum value for the amount of values chanied together in a single possible combination?"
-    << endl << "[@] (Example : 2 -> firstSecond, 3 -> firstSecondThird)"
-    << endl << "[@] Will default to " + to_string(D_MinimumChain) + " in case of undefined input!"
-    << endl << "[?] Minimum chain length value: ";
-    getline(cin,minInput);
-    int minLength;
-    try
+    if (min_ask)
     {
-        minLength = stoi(minInput);
-        cout << "[$] Set minimum value to " + to_string(minLength) + " !" << endl;
+        string minInput;
+        cout << "[?] Minimum value for the amount of values chanied together in a single possible combination?"
+        << endl << "[@] (Example : 2 -> firstSecond, 3 -> firstSecondThird)"
+        << endl << "[@] Will default to " + to_string(D_MinimumChain) + " in case of undefined input!"
+        << endl << "[?] Minimum chain length value: ";
+        getline(cin,minInput);
+        int minLength;
+        try
+        {
+            minLength = stoi(minInput);
+            cout << "[$] Set minimum value to " + to_string(minLength) + " !" << endl;
+        }
+        catch (invalid_argument)
+        {
+            cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MinimumChain) + " for minimum value" << endl;
+            minLength = D_MinimumChain;
+        }
+        L_minChainLen = minLength;
     }
-    catch (invalid_argument)
+    else
     {
-        cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MinimumChain) + " for minimum value" << endl;
-        minLength = D_MinimumChain;
+        L_minChainLen = D_MinimumChain;
     }
-    string maxInput;
-    cout << endl << "[?] Maximum value for the amount of values chanied together in a single possible combination?"
-    << endl << "[@] Will default to " + to_string(D_MaximumChain) + " in case of undefined input!"
-    << endl << "[?] Maximum chain length value: ";
-    getline(cin,maxInput);
-    int maxLength;
-    try
+    if (max_ask)
     {
-        maxLength = stoi(maxInput);
-        cout << "[$] Set maximum value to " + to_string(D_MaximumChain) + " !" << endl;
+        string maxInput;
+        cout << endl << "[?] Maximum value for the amount of values chanied together in a single possible combination?"
+        << endl << "[@] Will default to " + to_string(D_MaximumChain) + " in case of undefined input!"
+        << endl << "[?] Maximum chain length value: ";
+        getline(cin,maxInput);
+        int maxLength;
+        try
+        {
+            maxLength = stoi(maxInput);
+            cout << "[$] Set maximum value to " + to_string(D_MaximumChain) + " !" << endl;
+        }
+        catch (invalid_argument)
+        {
+            cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MaximumChain) + " for maximum value" << endl;
+            maxLength = D_MaximumChain;
+        }
+        L_maxChainLen = maxLength;
     }
-    catch (invalid_argument)
+    else
     {
-        cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MaximumChain) + " for maximum value" << endl;
-        maxLength = D_MaximumChain;
+        L_maxChainLen = D_MaximumChain;
     }
-    L_minChainLen = minLength;
-    L_maxChainLen = maxLength;
     if (L_minChainLen > L_maxChainLen)
     {
         cout << endl << "[!] ERR : Minimum value larger than maximum value."
         << endl << "[!] Exiting program..." << endl;
         exit(1);
     }
+    pair<int,int> chainReturn = {L_minChainLen, L_maxChainLen};
+    return chainReturn;
 }
 
 void Unchained(void)

@@ -8,8 +8,7 @@
 **/out/
 **/__pycache__/
 
-**/**.exe
-
 **/Releases/
 **/DuckyScript/
+**/SocialBuster/
 **/__Prototypes__/
