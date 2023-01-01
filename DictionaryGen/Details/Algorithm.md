@@ -76,7 +76,7 @@
         Create(base, chainLen)
        ```
 
-     * Assuming our `WriteFunction` word properly, this code creates the following:
+     * Assuming our `WriteFunction` works properly, this code creates the following:
        * `'hello-hello-hello-'`
        * `'hello-hello-WORLD-'`
        * `'hello-WORLD-hello-'`
