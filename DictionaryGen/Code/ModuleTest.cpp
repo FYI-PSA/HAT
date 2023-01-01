@@ -12,7 +12,7 @@ int main(int argc, char ** argv)
 
     CreateDirectoryMan(homePath+"/Dictionaries/");
     CreateDirectoryMan(homePath+"/PreConfigs/");
-    CreateDirectoryMan(homePath+"/ValidSocials/");
+    CreateDirectoryMan(homePath+"/ValidSocials/"); // for SocialBuster
     vector<pair<int, vector<string>>> configReturn = FConfigReader(homePath);
     int rows = configReturn.size();
     for (int row = 0 ; row < rows ; row++)
