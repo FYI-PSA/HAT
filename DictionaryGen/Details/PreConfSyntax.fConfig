@@ -37,9 +37,6 @@ ALL OF THE BELOW ARE OPTIONAL UNLESS SPECIFIED OTHERWISE:
 [will ask you for more entries during runtime, even if you provided some entries previously]
 [Ignored if no --Entries-- flag]
 
---Overwrite-If-Exists--
-[Not functional as overwriting is still not an option, won't cause an error so feel free to make part of your preset until that's done]
-
 --File-Name--
 <name without extension>
 [Will set the default name for the file. Won't ask unless provided]
