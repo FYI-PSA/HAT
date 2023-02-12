@@ -1,14 +1,12 @@
+**/.vs/
+**/build
 **/.idea/
 **/.vscode/
-**/.vs/
 
-**/**.iml
-**/**.code-workspace
-
-**/out/
-**/__pycache__/
-
+**/__**__/
 **/Releases/
-**/DuckyScript/
-**/SocialBuster/
-**/__Prototypes__/
+**/Compiled/
+**/out/
+
+**/**.pdn
+**/**.psd
