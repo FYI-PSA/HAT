@@ -1,6 +1,6 @@
 # **Hat**
 
-## *Hackers Toolbox*
+### _Hackers Toolbox_
 
 Removes the need to re-create scripts and do repetitive tasks. Just focus on hacking!
 
@@ -8,14 +8,14 @@ ________
 
 ## **Currently included tools:**
 
-* ### ***Dictator*** [(Version 0.98)](https://github.com/Funtime-UwU/HAT/releases/tag/Stable-Release)
+* ### _**Dictator**_ [(Version 0.98)](https://github.com/Funtime-UwU/HAT/releases/tag/Stable-Release)
 
   * A dictionary generator for brute forcing attacks!
   * Configs to repeat or don't certain words to cut down on time and size (in a future update).
   * [See how it works](/Dictator/Algorithm.md)
   * [Currently only works on Windows]
 
-* ### ***Social Buster*** [(In early prototyping)](https://github.com/Funtime-UwU/HAT/tree/Live-Development)
+* ### _**Social Buster**_ [(In early prototyping)](https://github.com/Funtime-UwU/HAT/tree/Live-Development)
 
   * Need to search for someone without an exact username?
   * Want to automate looking for users from an API, without having to deal with all of that annoyance?
@@ -25,35 +25,35 @@ ________
   * Interacts with the APIs or sometimes just brute forces GET requests to check for validity of users and if so, information about said user.
   * [Not even on version 0.1 yet]
 
-* ### ***Hecktor***
+* ### _**Hecktor**_
 
   * Explore executables, object code, compiled files, encrypted data and all else unreadable data in a nice format, including support for Hexadecimal, Binary, Ascii, or a combination of them!
   * Uses the core of Hexagon to provide support for encryption of file data.
   * Settings can be tweaked to do almost everything Hexagon can do. (Not recommended to hash your files by accident!)
   * [Not Started]
 
-* ### ***Hexagon***
+* ### _**Hexagon**_
 
   * A software core with support for encrypting and decrypting many forms of encoded data, including normal Strings, Ascii, Binary, Hexadecimal, Base64, and Morse code.
   * Has options for different sizes for each (for example two digit hexadecimal or 8 bit binary) with tweakable configs.
   * Can be capable of making some encryptions unreversable but consistant, so you can use it as a weaker hashing algorithm. (Not recommended as it can be easily brute forced, ironically using tools from this app itself, lol)
   * [Not Started]
 
-* ### ***Quackenbirdt***
+* ### _**Quackenbirdt**_
 
   * A toolbox for RubberDucky tasks
   * Will contain a DuckyScript generator
   * WIll contain some pre-made Ducky scripts to do a few general tasks or to use as boilerplate
   * [README IS CURRETLY WIP]
 
-* ### ***Knock Knock!***
+* ### _**Knock Knock!**_
 
   * Who's there? Why not check it out yourself! "Knock Knock" will (try to) open any file in any format and try to make it viewable for you.
   * There will be a future update to automatically give information about the file type opened.
   * Uses the cores of Hecktor and Hexagon, and expands upon them by actually trying to understand what it's trying to read.
   * [Not Started]
 
-* ### *[These are all of our currently planned apps.]*
+* ### _[These are all of our currently planned apps.]_
 
 * Hat will have it's own special folder where apps with configs can read pre-made config files from and apps that output data will save them there.
 
@@ -63,7 +63,7 @@ ________
 
 ________
 
-## ***Warning:***
+## _**Warning:**_
 
 * ## Do not use these tools for malicious purposes
 
