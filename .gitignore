@@ -1,11 +1,12 @@
 **/.vs/
+**/build
 **/.idea/
 **/.vscode/
 
+**/__**__/
+**/Releases/
+**/Compiled/
 **/out/
-**/__pycache__/
 
 **/**.pdn
-
-**/Releases/
-**/__Prototypes__/
+**/**.psd
