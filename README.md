@@ -44,7 +44,7 @@ ________
   * A toolbox for RubberDucky tasks
   * Will contain a DuckyScript generator
   * WIll contain some pre-made Ducky scripts to do a few general tasks or to use as boilerplate
-  * [README IS CURRETLY WIP]
+  * [Not Started]
 
 * ### _**Knock Knock!**_
 
