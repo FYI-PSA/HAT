@@ -22,14 +22,7 @@ ________
   * _Social buster can do all of that!_
   * Uses the core of Dictator to generate lists of user data, with the same configs available (in a future update).
   * Interacts with the APIs or sometimes just brute forces GET requests to check for validity of users and if so, information about said user.
-  * [Not even on version 0.1 yet]
-
-* ### _**Hecktor**_
-
-  * Explore executables, object code, compiled files, encrypted data and all else unreadable data in a nice format, including support for Hexadecimal, Binary, Ascii, or a combination of them!
-  * Uses the core of Hexagon to provide support for encryption of file data.
-  * Settings can be tweaked to do almost everything Hexagon can do. (Not recommended to hash your files by accident!)
-  * [Not Started]
+  * [Needs the finished version of Dictator]
 
 * ### _**Hexagon**_
 
@@ -37,6 +30,22 @@ ________
   * Has options for different sizes for each (for example two digit hexadecimal or 8 bit binary) with tweakable configs.
   * Can be capable of making some encryptions unreversable but consistant, so you can use it as a weaker hashing algorithm. (Not recommended as it can be easily brute forced, ironically using tools from this app itself, lol)
   * [Not Started]
+
+* ### _**Hecktor**_
+
+  * Explore executables, object code, compiled files, encrypted data and all else unreadable data in a nice format, including support for Hexadecimal, Binary, Ascii, or a combination of them!
+  * Uses the core of Hexagon to provide support for encryption of file data.
+  * Settings can be tweaked to do almost everything Hexagon can do. (Not recommended to hash your files by accident!)
+  * [Needs the finished version of Hexagon]
+
+* ### _**Versteckt**_
+
+  * Encrypt your data!
+  * Uses the core from Hecktor, and will encrypt all forms of media you feed it with whatever encryptions you select for it!
+  * [In the future will support adding keys to make it impossible to decrypt without said key]
+  * A method to get around censorship, detection software, and other filters on your freedom. You can trade information and easily encrypt and decrypt it with just a few clicks!
+  * You can use it's core to create a more secure client modifications for your platform of choice. (Credit this repository if you do!)
+  * [Needs Hecktor to be finished]
 
 * ### _**Quackenbirdt**_
 
@@ -50,7 +59,7 @@ ________
   * Who's there? Why not check it out yourself! "Knock Knock" will (try to) open any file in any format and try to make it viewable for you.
   * There will be a future update to automatically give information about the file type opened.
   * Uses the cores of Hecktor and Hexagon, and expands upon them by actually trying to understand what it's trying to read.
-  * [Not Started]
+  * [Needs the finished version of Hecktor]
 
 * ### _[These are all of our currently planned apps.]_
 
