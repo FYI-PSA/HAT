@@ -1,26 +1,25 @@
 # **Hat**
 
-### _Hackers Toolbox_
+## _Hackers Toolbox_
 
-Removes the need to re-create scripts and do repetitive tasks. Just focus on hacking!
+_Removes the need to re-create scripts and do repetitive tasks. Just focus on hacking!_
 
 ________
 
 ## **Currently included tools:**
 
-* ### _**Dictator**_ [(Version 0.98)](https://github.com/Funtime-UwU/HAT/releases/tag/Stable-Release)
+* ### _**Dictator**_
 
   * A dictionary generator for brute forcing attacks!
   * Configs to repeat or don't certain words to cut down on time and size (in a future update).
-  * [See how it works](/Dictator/Algorithm.md)
   * [Currently only works on Windows]
 
-* ### _**Social Buster**_ [(In early prototyping)](https://github.com/Funtime-UwU/HAT/tree/Live-Development)
+* ### _**Social Buster**_
 
   * Need to search for someone without an exact username?
   * Want to automate looking for users from an API, without having to deal with all of that annoyance?
   * Want information about social media accounts neatly wrapped into a JSON?
-  * *Social buster can do all of that!*
+  * _Social buster can do all of that!_
   * Uses the core of Dictator to generate lists of user data, with the same configs available (in a future update).
   * Interacts with the APIs or sometimes just brute forces GET requests to check for validity of users and if so, information about said user.
   * [Not even on version 0.1 yet]
@@ -59,7 +58,7 @@ ________
 
 ________
 
-## *Once everything is finished, they'll be combined into the main Top Hat, containing all and offering the best user tools, with a great feeling GUI!*
+## _Once everything is finished, they'll be combined into the main Top Hat, containing all and offering the best user tools, with a great feeling GUI!_
 
 ________
 
@@ -69,14 +68,16 @@ ________
 
 * ## Do not use decryptors and binary explorers on data that's not supposed to be revealed
 
-* ## Do not use encryptors on data you do not own, as it could lead to accidental loss of data or cause damage to the owner of said data and potentially their system
+* ## Do not use encryptors on data you do not own, as it could lead to accidental loss of important data
 
-* ## Do not spam tools that ping servers, as they could cause accidental damage and server abuse. (May get you banned from said platform)
+* ## Do not spam tools that ping servers, as they could cause accidental damage and server abuse. (Abusing online servers can also get you banned from using them)
 
-### ***Anyone working on this project is not responsible if do anything unlawful, don't braek these rules!***
+### _**Anyone working on this project is not responsible if do anything unlawful, don't break these rules!**_
 
 ________
 
 Thank you, have fun ethical hacking!
 
-~ [@Funtime-UwU](https://www.GitHub.com/Funtime-UwU)
+Written by :
+
+## @Funtime-UwU
