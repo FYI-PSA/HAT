@@ -58,8 +58,8 @@ ________
 
   * Who's there? Why not check it out yourself! "Knock Knock" will (try to) open any file in any format and try to make it viewable for you.
   * There will be a future update to automatically give information about the file type opened.
-  * Uses the cores of Hecktor and Hexagon, and expands upon them by actually trying to understand what it's trying to read.
-  * [Needs the finished version of Hecktor]
+  * Uses the cores of Hexagon, and expands upon them by actually trying to understand what it's trying to read.
+  * [Needs the finished version of Hexagon]
 
 * ### _[These are all of our currently planned apps.]_
 
