@@ -5,12 +5,12 @@ def decimal_to_binary(decimal_value:int, bits_length:int = 8) -> str:
         bit_value:int = 2**bit_power
         if (decimal_value >= bit_value):
             binary_value += '1'
-            decimal_to_binary -= bit_value
+            decimal_value -= bit_value
         else:
             binary_value += '0'
     return binary_value
 
-def binary_to_decimal(binary_value:str) -> int:
+def binary_to_decimal(binary_value:str, bits_length:int = 8) -> int:
     decimal_value:int = 0
     bits_length:int = len(binary_value)
     for bit_index in range(0,bits_length):
