@@ -63,6 +63,8 @@ ________
 
 * ### _[These are all of our currently planned apps.]_
 
+* ### Tools will be made with C/C++/C# (if possible). If you see Java or Python versions, then that module is in prototyping and not complete
+
 * Hat will have it's own special folder where apps with configs can read pre-made config files from and apps that output data will save them there.
 
 ________

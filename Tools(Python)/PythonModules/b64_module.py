@@ -20,7 +20,6 @@ except ImportError:
     except ImportError:
         pass
 
-import base64
 global b64_table
 
 def b64_lookup_table() -> list[chr]:
@@ -38,6 +37,8 @@ def b64_lookup_table() -> list[chr]:
 b64_table = b64_lookup_table()
 
 def item_to_b64(item: str|int) -> str:
+    global b64_table
+    
     unencoded_string: str = str(item)
     
     # print(unencoded_string)
@@ -86,6 +87,7 @@ def item_to_b64(item: str|int) -> str:
     return encoded_string
 
 def b64_to_item(encoded_string: str) -> int|str:
+    global b64_table
     
     encoded_list: list[chr] = list(encoded_string)
     
@@ -141,6 +143,7 @@ def b64_to_item(encoded_string: str) -> int|str:
     return unencoded_string
 
 if __name__ == "__main__":
+    import base64
     loop_switch: bool = True
     while loop_switch:
         entry: str = input("Enter something or nothing: ")
