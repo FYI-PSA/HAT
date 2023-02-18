@@ -143,26 +143,16 @@ def b64_to_item(encoded_string: str) -> int|str:
     return unencoded_string
 
 if __name__ == "__main__":
-    import base64
     loop_switch: bool = True
     while loop_switch:
-        entry: str = input("Enter something or nothing: ")
+        entry: str = input("Enter en | de | <nothing>: ")
         if entry == '':
             loop_switch = False
             continue
-        print("Encoded to B64 using this:")
-        
-        b64_encoded = item_to_b64(entry)
-        print(b64_encoded.encode('utf-8'))
-        
-        print("\nDecoded from B64 using this:")
-        
-        b64_decoded = b64_to_item(b64_encoded)
-        print(b64_decoded.encode('utf-8'))
-        
-        print("\nPython builtin:")
-        
-        print(base64.b64encode(entry.encode('utf-8')))
-        print(base64.b64decode(b64_encoded))
-        
+        if entry == 'de':
+            entry = input("Base64 to decrypt into utf-8 byte: ")
+            print(b64_to_item(entry).encode('utf-8'))
+        else:
+            entry = input("String input to returned as Base64 encrypted utf-8 byte: ")
+            print(item_to_b64(entry).encode('utf-8'))
         print("\n")

@@ -2,100 +2,92 @@ from PythonModules.file_modifying_module import *
 from PythonModules.hex_module import *
 import tkinter as tk
 import tkinter.filedialog as fd
+import time
 
-global filedata
+global file_name
 
-filedata = b''
+file_name:str = ''
 
 def SelectFile():
-    global filedata
+    global file_name
     filename:str = fd.askopenfilename()
     if filename == '':
         return
-    file_data_raw:bytes = read_bytes_data(filename)
-    filedata = file_data_raw
-    Data_Display(file_data_raw)
+    file_name = filename
+    Data_Display(filename)
 
-def Data_Display(file_data_raw):
-    file_data_list:list[str] = [hex(data) for data in file_data_raw]
-    data:str = ''
-    end_index:int = len(file_data_list)
+def Data_Display(file_name):
+    print(file_name)
     space = 10
-    # PLEASE CHANGE THIS A VALUE ONLY IF IT % WIDTH == 0 
+    # PLEASE CHANGE THIS A VALUE ONLY IF ITS MOD BY <space> IS 0
     line_limit = hexes_width / space
-    # ffs keep the font at 16px
     
-    read_out_data: list[str] = []
-    # read_out_data should be as many data that can fit on a line, then that amount of it translated into ascii
-    # then that amount of it translated into a readable character
-
-    for i in range(0, end_index):
-        read_out_data.append(str(file_data_list[i]))
-        read_out_data.append(str(hex_to_decimal(file_data_list[i])))
-        read_out_data.append(str(chr(hex_to_decimal(file_data_list[i])).encode('utf-8')).removeprefix('b\'').removesuffix('\''))
-    
-    for i in range(0, end_index):
-        mode:str = modes_button.cget('text')
-
-        if mode == 'HEX':
-            index:int = (int(i / 3) * 3)
-
-        elif mode == 'ASCII':
-            index:int = (int(i / 3) * 3) + 1
-
-        else:
-            index:int = (int(i / 3) * 3) + 2
-        
-        current_data:str = read_out_data[index]
-        data += current_data
-        
-        if (i == (end_index - 1)):
-            continue
-        
-        l = len(current_data)
-        data += (space - (l % space)) * ' '
-
-
     hexes['state'] = 'normal'
-    hexes.delete('1.0', tk.END)
-    hexes.insert('0.0', data)
-    hexes['state'] = 'disabled'
+    hexes.delete('0.0', tk.END)    
+    mode:str = modes_button.cget('text')
+    i:int = 0
+    with open(file_name, 'rb') as file:
+        reading_from_file = True
+        while reading_from_file:
+            for data in file.readline(i):
+                if data == b'':
+                    reading_from_file=False
+                    i+=1
+                    root.update()
+                    break
+                item = hex(data)
+                if mode == 'HEX':
+                    current_data:str = item
+                elif mode == 'ASCII':
+                    current_data:str = str(hex_to_decimal(item))
+                else:
+                    current_data:str = str( str((str(chr(hex_to_decimal(item)))).encode('utf-8')).removeprefix('b\'').removesuffix('\'') )
+                l = len(current_data)
+                current_data += (space - (l % space)) * ' '            
+                hexes.insert(tk.END, current_data)
+                root.update()
+            i+=1
+        hexes['state'] = 'disabled'
 
 
 def Kill():
     root.destroy()
 
 def ChangeMode():
-    global filedata
+    global file_name
     mode:str = modes_button['text']
     if mode == "HEX":
         modes_button.config(text="ASCII")
-        Data_Display(filedata)
+        Data_Display(file_name)
     elif mode == "ASCII":
         modes_button.config(text="CHAR")
-        Data_Display(filedata)
+        Data_Display(file_name)
     else:
         modes_button.config(text="HEX")
-        Data_Display(filedata)
+        Data_Display(file_name)
 
 root: tk.Tk = tk.Tk()
 root.resizable(False,False)
-root.geometry('1420x710')
+window_size = (root.winfo_screenwidth(),root.winfo_screenheight())
+root.geometry('%dx%d' %window_size)
+root.title('explorer')
+root.attributes('-fullscreen', True)
+root.state('zoomed')
 
 kill_b: tk.Button = tk.Button(root, text="Die", command=Kill)
 kill_b.grid(row=0, column=0)
 
 file_select: tk.Button = tk.Button(root, text="PICK FILE", command=SelectFile)
-file_select.grid(row=0, column=1)
+file_select.grid(row=2, column=0)
 
 modes_button: tk.Button = tk.Button(root, text="HEX", command=ChangeMode)
-modes_button.grid(row=1, column=2)
+modes_button.grid(row=1, column=0)
 
-hexes_width = 100
+hexes_width = 150
 hexes_height = 25
-hexes: tk.Text = tk.Text(root, width=hexes_width, height=hexes_height, state='disabled', font=("Determination Mono", 16))
+hexes: tk.Text = tk.Text(root, width=hexes_width, height=hexes_height, state='disabled', font=("Fira Code", 12))
 hexes.grid(row=1, column=1)
-
+# The font is Fira Code @  https://fonts.google.com/specimen/Fira+Code?category=Monospace&subset=latin
 root.mainloop()
 
 
