@@ -24,6 +24,13 @@ ________
   * Interacts with the APIs or sometimes just brute forces GET requests to check for validity of users and if so, information about said user.
   * [Needs the finished version of Dictator]
 
+* ### _**Clacker**_
+
+  * A simple keylogger.
+  * Can be toggled on and off or restarted.
+  * Shows logged data live in it's console, but will be able to save a session to a file. (You can change the location)
+  * [Not Started]
+
 * ### _**Hexagon**_
 
   * A software core with support for encrypting and decrypting many forms of encoded data, including normal Strings, Ascii, Binary, Hexadecimal, Base64, and Morse code.
