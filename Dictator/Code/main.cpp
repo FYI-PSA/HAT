@@ -81,6 +81,28 @@ bool A_Entry = true;
 bool A_MinimumChain = true;
 bool A_MaximumChain = true;
 
+
+/*
+TODO:
+
+    FEATURE EXCLUSIVE TO CONFIG FILE SETTINGS:
+    CAN SPECIFY IF REPEATING OF A WORD IS ALLOWED IN PASSPHRASE
+    """documentation:
+    during the word list entries, you can format like the following:
+
+    { MIN : 0 , MAX : 5 } : <word>
+
+    """
+    OTHERWISE WORDS WILL HAVE A MIN OF 0 AND A MAX OF 1
+*/
+
+/*
+EXTRA FUTURE TODO:
+    ABILITY TO REPLACE STUFF LIKE H@XX0R-M@N AND 1337-DUD3
+--- may not intruduce due to the nature of this app and how it would potentially be very computationaly heavy
+*/
+
+
 int main (void)
 {
     U_HomePath = "C:/HAT/";
