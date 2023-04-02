@@ -11,8 +11,9 @@ ________
 * ### _**Dictator**_
 
   * A dictionary generator for brute forcing attacks!
-  * Configs to repeat or don't certain words to cut down on time and size (in a future update).
+  * Configs: Automate some inputs and add prefixes and suffixes to every output.
   * [Currently only works on Windows]
+  * How it works
 
 * ### _**Social Buster**_
 

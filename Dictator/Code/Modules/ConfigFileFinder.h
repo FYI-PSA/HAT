@@ -26,7 +26,7 @@ using std::pair;
 
 namespace funtime
 {
-    vector<pair<int, vector<string>>> FConfigReader(string HomePath)
+    vector<pair<int, vector<string>>> FConfigReader(string HomePath, bool shouldSearch, string customPath)
     {
         vector<string> L_wordList;
         string D_Name;
@@ -76,7 +76,31 @@ namespace funtime
         // eight one : int=0/1 false/true = ask_min , NULL
         // ninth one : int=0/1 false/true = ask_max , NULL
 
+
+        if (!shouldSearch)
+        {
+            cout << "[!] Configurations are to be ignored (launch paramater)" << endl;
+            return baseValue;
+        }
+
         string fconfigPath = HomePath + "PreConfigs/";
+        string customFileName = "";
+        string customFilePath = "";
+        if (customPath != "")
+        {
+            path customPath_path = customPath;
+
+            path customPathParent_path = customPath_path;
+            customPathParent_path = customPathParent_path.remove_filename();
+            customFilePath = customPathParent_path.generic_string();
+
+            path customFileName_path = customPath_path;
+            customFileName_path = customFileName_path.filename();
+            customFileName = customFileName_path.generic_string();
+            
+            fconfigPath = customFilePath;
+            cout << "[$] Custom Path loaded." << endl;
+        }
         int createdStatus = CreateDirectoryMan(fconfigPath, false);
         // -1 if undefined err, 
         // 0 if successfully made, 
@@ -85,24 +109,23 @@ namespace funtime
 
         if (createdStatus == -1 || createdStatus == 0 || createdStatus == 2)
         {
-            cout << "[!] No folder for pre configurations found." << endl;
+            cout << "[!] No folder for the configurations was found." << endl;
             return baseValue;
         }
         else if (createdStatus == 1)
         {
-            vector<path> pathVector;
-            vector<path> fileVector;
-            vector<path> nameVector;
-            vector<path> extVector;
+            vector<path> pathVector = {};
+            vector<path> fileVector = {};
+            vector<path> nameVector = {};
+            vector<path> extVector = {};
 
-            vector<path> fconfigFiles;
+            vector<path> fconfigFiles = {};
             bool fconfigExists = false;
 
             for (auto &fileExistence : directory_iterator(fconfigPath))
             {
                 pathVector.push_back(fileExistence.path());
             }
-
             for (int fileIndex = 0; fileIndex < pathVector.size(); fileIndex++)
             {
                 path fullFile = pathVector.at(fileIndex);
@@ -126,6 +149,7 @@ namespace funtime
             }
 
             bool validConfigFound = false;
+            bool customFileFound = false;
             for (int fileIndex = 0; fileIndex < fconfigFiles.size(); fileIndex++)
             {
                 if (validConfigFound)
@@ -135,6 +159,21 @@ namespace funtime
 
                 string fconfigFilePath = fconfigFiles.at(fileIndex).generic_string();
                 string fconfigFileName = fconfigFiles.at(fileIndex).filename().generic_string();
+
+                if (customFileName != "")
+                {
+                    if (fconfigFileName != customFileName)
+                    {
+                        // debug cout, not neccessary to list all files that don't match
+                        // cout << "[#] " + fconfigFileName + " Doesn't match " + customFileName << endl;
+                        continue;
+                    }
+                    else
+                    {
+                        cout << "[$] Located configuration file from launch paramaters!" << endl;
+                        customFileFound = true;
+                    }
+                }
 
                 ifstream fconfigFile(fconfigFilePath);
                 string fileData;
@@ -402,6 +441,11 @@ namespace funtime
                 }
             }
             returnValue[9].first = 1;
+            if (!customFileFound && (customPath != ""))
+            {
+                returnValue[9].first = 0;
+                return baseValue;
+            }
             if (!validConfigFound)
             {
                 returnValue[9].first = 0;
@@ -423,7 +467,7 @@ namespace funtime
             return returnValue;
         }
         returnValue[9].first = 0;
-        cout << "[!] Something went wrong doing that." << endl << endl;
+        cout << "[!] Couldn't load custom file... Skipping configs." << endl << endl;
         return baseValue;
     }
 

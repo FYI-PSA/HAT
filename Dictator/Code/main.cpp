@@ -81,50 +81,72 @@ bool A_Entry = true;
 bool A_MinimumChain = true;
 bool A_MaximumChain = true;
 
+bool F_SearchForConfig = true;
+string F_CustomPath = "";
 
 /*
 TODO:
-    THINGY:
-    CAN SPECIFY IF REPEATING OF A WORD IS ALLOWED IN PASSPHRASE
-    """
-    during the word list entries in the config file, you can format like the following:
-
-    [<UINT64_T>MIN : <UINT64_T>MAX]:<STRING>WORD   
-
-    """
+ - SUFFIX AND PREFIX (CONFIGS AND LAUNCH-PARAMS)
+ - MOVE LAUNCH PARAMATER CHECKING TO ANOTHER FUNCTION
 */
 
-/*
-
-okay so here's what im thinking, right?
-uhh
-you re add the word multiple times into the wordlist
-and then it loops through things only once
-
-im not yet sure what happens what happens if you have less material than your chain lenght
-needs testing and analysis
-let's just do the first part carefully for now
-
-im REALLY not fucking sure how to do min
-
-we can just ignore it for now
-for now we can also just add the thing multiple times in normal mode so it works since min isn't implemented yet
-im too fucking lazy to implement the config files yet, this is the only way as of now
-*/
-
-/*
-EXTRA FUTURE TODO:
-    ABILITY TO REPLACE STUFF LIKE H@XX0R-M@N AND 1337-DUD3
---- may not intruduce due to the nature of this app and how it would potentially be very computationaly heavy
-*/
-
-
-int main (void)
+int main (int argc, char** argv)
 {
     U_HomePath = "C:/HAT/";
     cout << "[*] Dictator V2.0" << endl << endl;
-    cout << "[!] Looking for fconfig files..." << endl << endl;
-    vector<pair<int, vector<string>>> fconfigStatus = FConfigReader(U_HomePath);
+
+    vector<string> launchParams = {};
+    for (int argumentIndex = 0; argumentIndex < argc; argumentIndex++)
+    {
+        launchParams.push_back(argv[argumentIndex]);
+    }
+
+    bool customConfig = false;
+    for (auto& paramater : launchParams)
+    {
+        if (paramater == "-h" || paramater == "-help" || paramater == "--help")
+        {
+            cout
+            << endl << endl;
+            cout << endl
+            << endl << "[@] Use '--conf-file <config file path>' to load a custom config file"
+            << endl << "[@] By default the first valid file in an alphabetical order is loaded from the default configs folder"
+            << endl << "[%] Default Location: " + U_HomePath + "PreConfigs"
+            << endl;
+            cout
+            << endl << "[@] Use '--ignore-conf' to ignore all configuration files"
+            << endl << "[@] (If used with '--conf-file' it will still ignore all configurations)"
+            << endl;
+            cout
+            << endl << endl;
+            exit(0);
+        }
+        if (paramater == "--ignore-conf")
+        {
+            cout << "[!] Will ignore all configuration files" << endl;
+            F_SearchForConfig = false;
+        }
+        if (customConfig)
+        {
+            cout << "[!] Will load custom config file : '" + paramater + "'" << endl;
+            F_CustomPath = paramater;
+            customConfig = false;
+        }
+        else if (paramater == "--conf-file")
+        {
+            customConfig = true;
+        }
+    }
+    if (customConfig)
+    {
+        cout << "[#] Custom config file :  !!ERR {No file specified, flag will be ignored.}!!" << endl;
+    }
+
+    if (F_SearchForConfig)
+    {
+        cout << "[!] Looking for fconfig files..." << endl << endl;
+    }
+    vector<pair<int, vector<string>>> fconfigStatus = FConfigReader(U_HomePath, F_SearchForConfig, F_CustomPath);
     if (fconfigStatus[9].first == 1)
     {
         cout << "[$] An fconfig file has been loaded!" << endl;
@@ -249,6 +271,12 @@ int main (void)
     << endl << "[$] The dictionary is saved at '" << L_filePath << "' "
     << endl << endl << "[$] Goodbye!" << endl << endl;
 }
+
+void ProcessLaunchParamters()
+{
+    // MOVE LAUNCH PARAMS TO THIS FUNCTION LATER
+}
+
 
 void InputCollector(void)
 {
