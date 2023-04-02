@@ -55,7 +55,7 @@ void WriteToFile(void);
 void NewFileCreator(void);
 void InputCollector(void);
 void PathErrors(string createPath);
-void WordListCreation(string baseString, int lengthVar);
+void WordListCreation(string baseString, int lengthVar, vector<int> ignoreIndexes);
 
 bool FConfigReader(void);
 
@@ -84,16 +84,32 @@ bool A_MaximumChain = true;
 
 /*
 TODO:
-
-    FEATURE EXCLUSIVE TO CONFIG FILE SETTINGS:
+    THINGY:
     CAN SPECIFY IF REPEATING OF A WORD IS ALLOWED IN PASSPHRASE
-    """documentation:
-    during the word list entries, you can format like the following:
+    """
+    during the word list entries in the config file, you can format like the following:
 
-    { MIN : 0 , MAX : 5 } : <word>
+    [<UINT64_T>MIN : <UINT64_T>MAX]:<STRING>WORD   
 
     """
-    OTHERWISE WORDS WILL HAVE A MIN OF 0 AND A MAX OF 1
+*/
+
+/*
+
+okay so here's what im thinking, right?
+uhh
+you re add the word multiple times into the wordlist
+and then it loops through things only once
+
+im not yet sure what happens what happens if you have less material than your chain lenght
+needs testing and analysis
+let's just do the first part carefully for now
+
+im REALLY not fucking sure how to do min
+
+we can just ignore it for now
+for now we can also just add the thing multiple times in normal mode so it works since min isn't implemented yet
+im too fucking lazy to implement the config files yet, this is the only way as of now
 */
 
 /*
@@ -106,7 +122,7 @@ EXTRA FUTURE TODO:
 int main (void)
 {
     U_HomePath = "C:/HAT/";
-    cout << "[*] Dictator V0.99" << endl << endl;
+    cout << "[*] Dictator V2.0" << endl << endl;
     cout << "[!] Looking for fconfig files..." << endl << endl;
     vector<pair<int, vector<string>>> fconfigStatus = FConfigReader(U_HomePath);
     if (fconfigStatus[9].first == 1)
@@ -358,7 +374,8 @@ void Unchained(void)
     for (int currentLength = minL; currentLength <= maxL; currentLength++)
     {
         string based = "";
-        WordListCreation(based, currentLength);
+        vector<int> ignoreIndexes = {};
+        WordListCreation(based, currentLength, ignoreIndexes);
         percent += percentPart;
         if (percent < 100)
         {
@@ -376,26 +393,59 @@ void Unchained(void)
     }
 }
 
-void WordListCreation(string baseString, int lengthVar)
+/*
+
+solution:
+- LIST_IDS : make an ARRAY the length of all words, assign each one an ID by index [so dupes dont get confused]
+- USED_IDS : make an empty VECTOR
+- each time a word is used, append to the end of vector
+- check all of the vector with variable LISTINDEX signifying the current id in the wordlist
+- if it matches
+- vector needs to be local and passed through so that if it's used in one iteration it doesn't count for another iteration
+
+
+*/
+void WordListCreation(string baseString, int lengthVar, vector<int> usedIndexes)
 {
-    bool flag = false;
+    bool lengthFlag = false;
+    bool indexUsedFlag = false;
     string newString;
     for (int listIndex = 0; listIndex < L_wordListSize; listIndex++)
     {
-        newString = baseString + L_wordList.at(listIndex);
-        if (!flag)
+        if (!lengthFlag)
         {
             lengthVar--;
-            flag = true;
+            lengthFlag = true;
         }
-        if (lengthVar > 0)
+
+        bool canCreate = true;
+        for (auto& usedIndex : usedIndexes)
         {
-            WordListCreation(newString,lengthVar);
+            if (listIndex == usedIndex)
+            {
+                canCreate = false;
+                break;
+            }
         }
-        else
+        if (!indexUsedFlag)
         {
-            string resultString = newString+"\n";
-            L_fileObj << resultString;
+            usedIndexes.push_back(listIndex);
+            //indexUsedFlag = true;
+        }
+
+        if (canCreate)
+        {
+            newString = baseString + L_wordList.at(listIndex);
+            if (lengthVar > 0)
+            {
+                WordListCreation(newString, lengthVar, usedIndexes);
+                usedIndexes.pop_back();
+            }
+            else
+            {
+                string resultString = newString+"\n";
+                L_fileObj << resultString;
+            }
         }
     }
 }
