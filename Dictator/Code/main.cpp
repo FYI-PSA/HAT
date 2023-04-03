@@ -48,16 +48,20 @@ using std::invalid_argument;
 
 using std::system_category;
 
-void Unchained(void);
-pair<int,int> LengthGet(bool ask_min, bool ask_max);
+bool FConfigReader(void);
+vector<string> handleLaunchParams(int argumentC, char** argumentV);
+
 void PathFinder(void);
+void PathErrors(string createPath);
+
 void WriteToFile(void);
 void NewFileCreator(void);
-void InputCollector(void);
-void PathErrors(string createPath);
-void WordListCreation(string baseString, int lengthVar, vector<int> ignoreIndexes);
 
-bool FConfigReader(void);
+void Unchained(void);
+pair<int,int> LengthGet(bool ask_min, bool ask_max);
+
+void InputCollector(void);
+void WordListCreation(string baseString, int lengthVar, vector<int> ignoreIndexes);
 
 fstream L_fileObj;
 string L_filePath;
@@ -84,10 +88,14 @@ bool A_MaximumChain = true;
 bool F_SearchForConfig = true;
 string F_CustomPath = "";
 
+string O_Prefix = ""; bool O_Prefix_Set = false;
+string O_Suffix = ""; bool O_Suffix_Set = false;
+string D_Prefix = ""; bool D_Prefix_Set = false;
+string D_Suffix = ""; bool D_Suffix_Set = false;
+
 /*
 TODO:
- - SUFFIX AND PREFIX (CONFIGS AND LAUNCH-PARAMS)
- - MOVE LAUNCH PARAMATER CHECKING TO ANOTHER FUNCTION
+- nothing. up to date!
 */
 
 int main (int argc, char** argv)
@@ -95,52 +103,7 @@ int main (int argc, char** argv)
     U_HomePath = "C:/HAT/";
     cout << "[*] Dictator V2.0" << endl << endl;
 
-    vector<string> launchParams = {};
-    for (int argumentIndex = 0; argumentIndex < argc; argumentIndex++)
-    {
-        launchParams.push_back(argv[argumentIndex]);
-    }
-
-    bool customConfig = false;
-    for (auto& paramater : launchParams)
-    {
-        if (paramater == "-h" || paramater == "-help" || paramater == "--help")
-        {
-            cout
-            << endl << endl;
-            cout << endl
-            << endl << "[@] Use '--conf-file <config file path>' to load a custom config file"
-            << endl << "[@] By default the first valid file in an alphabetical order is loaded from the default configs folder"
-            << endl << "[%] Default Location: " + U_HomePath + "PreConfigs"
-            << endl;
-            cout
-            << endl << "[@] Use '--ignore-conf' to ignore all configuration files"
-            << endl << "[@] (If used with '--conf-file' it will still ignore all configurations)"
-            << endl;
-            cout
-            << endl << endl;
-            exit(0);
-        }
-        if (paramater == "--ignore-conf")
-        {
-            cout << "[!] Will ignore all configuration files" << endl;
-            F_SearchForConfig = false;
-        }
-        if (customConfig)
-        {
-            cout << "[!] Will load custom config file : '" + paramater + "'" << endl;
-            F_CustomPath = paramater;
-            customConfig = false;
-        }
-        else if (paramater == "--conf-file")
-        {
-            customConfig = true;
-        }
-    }
-    if (customConfig)
-    {
-        cout << "[#] Custom config file :  !!ERR {No file specified, flag will be ignored.}!!" << endl;
-    }
+    handleLaunchParams(argc, argv);
 
     if (F_SearchForConfig)
     {
@@ -151,6 +114,40 @@ int main (int argc, char** argv)
     {
         cout << "[$] An fconfig file has been loaded!" << endl;
     
+        if (fconfigStatus[9].first != 0)
+        {
+            D_Prefix = fconfigStatus[9].second[0];
+            D_Prefix_Set = true;
+        }
+        if (D_Prefix_Set && O_Prefix_Set)
+        {
+            cout << "[!] Confict in prefix options detected, setting to launch paramater as it has a higher priority"
+            << endl << "[$] Prefix is : " + O_Prefix 
+            << endl;
+        }
+        if (D_Prefix_Set && !O_Prefix_Set)
+        {
+            O_Prefix = D_Prefix;
+            cout << "[$] Prefix is : " + O_Prefix << endl;
+        }
+
+        if (fconfigStatus[10].first != 0)
+        {
+            D_Suffix = fconfigStatus[10].second[0];
+            D_Suffix_Set = true;
+        }
+        if (D_Suffix_Set && O_Suffix_Set)
+        {
+            cout << "[!] Conflict in suffix options detected, setting to launch paramater as it has a higher priority"
+            << endl << "[$] Suffix is : " + O_Suffix
+            << endl;
+        }
+        if (D_Suffix_Set && !O_Suffix_Set)
+        {
+            O_Suffix = D_Suffix;
+            cout << "[$] Suffix is : " + O_Suffix << endl;
+        }
+
         if (fconfigStatus[0].first != 0)
         {
             for (int wordIndex = 0 ; wordIndex < fconfigStatus[0].first ; wordIndex++)
@@ -272,9 +269,100 @@ int main (int argc, char** argv)
     << endl << endl << "[$] Goodbye!" << endl << endl;
 }
 
-void ProcessLaunchParamters()
+vector<string> handleLaunchParams(int argCount, char** argArr)
 {
-    // MOVE LAUNCH PARAMS TO THIS FUNCTION LATER
+    vector<string> launchParams = {};
+    for (int argumentIndex = 0; argumentIndex < argCount; argumentIndex++)
+    {
+        launchParams.push_back(argArr[argumentIndex]);
+    }
+
+    bool paramDetected = false;
+    bool hasCustomConfig = false;
+    bool hasSuffix = false;
+    bool hasPrefix = false;
+    for (auto& paramater : launchParams)
+    {
+        if (paramater == "-h" || paramater == "-help" || paramater == "--help")
+        {
+            paramDetected = true;
+            cout
+            << endl << "[@] Use '--prefix <output prefix>' to set a prefix at the start of each output in the dictionary file"
+            << endl << "[@] There is no prefix by default, unless specified in a custom config file"
+            << endl;
+            cout
+            << endl << "[@] Use '--suffix <output suffix>' to set a suffix at the end of each output in the dictionary file"
+            << endl << "[@] There is no suffix by default, unless specified in a custom config file"
+            << endl;
+            cout
+            << endl << "[@] Use '--conf-file <config file path>' to load a custom config file"
+            << endl << "[@] By default the first valid file in an alphabetical order is loaded from the default configs folder"
+            << endl << "[%] Default Location: " + U_HomePath + "PreConfigs"
+            << endl;
+            cout
+            << endl << "[@] Use '--ignore-conf' to ignore all configuration files"
+            << endl << "[@] (If used with '--conf-file' it will still ignore all configurations)"
+            << endl;
+            cout
+            << endl << endl;
+            exit(0);
+        }
+        if (paramater == "--config-help")
+        {
+            cout << endl << endl << "WIP, SHOUlD READ OU THE CONTENTS OF 'PreConfigSyntax.fConf'" << endl << endl;
+        }
+        if (paramater == "--ignore-conf")
+        {
+            paramDetected = true;
+            cout << "[!] Will ignore all configuration files" << endl;
+            F_SearchForConfig = false;
+        }
+        if (hasCustomConfig)
+        {
+            cout << "[!] Will load custom config file : '" + paramater + "'" << endl;
+            F_CustomPath = paramater;
+            hasCustomConfig = false;
+        }
+        else if (paramater == "--conf-file")
+        {
+            paramDetected = true;
+            hasCustomConfig = true;
+        }
+        if (hasPrefix)
+        {
+            cout << "[$] Custom prefix of '" + paramater + "' was detected." << endl;
+            O_Prefix = paramater;
+            O_Prefix_Set = true;
+            hasPrefix = false;
+        }
+        else if (paramater == "--prefix")
+        {
+            paramDetected = true;
+            hasPrefix = true;
+        }
+        if (hasSuffix)
+        {
+            cout << "[$] Custom suffix of '" + paramater + "' was detected." << endl;
+            O_Suffix = paramater;
+            O_Suffix_Set = true;
+            hasSuffix = false;
+        }
+        else if (paramater == "--suffix")
+        {
+            paramDetected = true;
+            hasSuffix = true;
+        }
+    }
+    if (hasCustomConfig)
+    {
+        cout << "[#] Custom config file :  !!ERR {No file specified, flag will be ignored.}!!" << endl;
+    }
+    if (!paramDetected && (argCount > 1))
+    {
+        cout << endl << "[#] Incorrect launch paramaters, run with '--help' to see all valid flags." << endl << endl;
+        exit(0);
+    }
+    return launchParams;
 }
 
 
@@ -471,7 +559,7 @@ void WordListCreation(string baseString, int lengthVar, vector<int> usedIndexes)
             }
             else
             {
-                string resultString = newString+"\n";
+                string resultString = O_Prefix + newString + O_Suffix + "\n";
                 L_fileObj << resultString;
             }
         }

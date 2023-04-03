@@ -37,6 +37,16 @@ ALL OF THE BELOW ARE OPTIONAL UNLESS SPECIFIED OTHERWISE:
 [will ask you for more entries during runtime, even if you provided some entries previously]
 [Ignored if no --Entries-- flag]
 
+--Prefix--
+<string>
+[Will set a prefix at the start of each output in the dictionary]
+[*If you set the prefix using launch flags, then that will override this entry]
+
+--Suffix--
+<string>
+[Will set a prefix at the start of each output in the dictionary]
+[*If you set the suffix using launch flags, then that will override this entry]
+
 --File-Name--
 <name without extension>
 [Will set the default name for the file. Won't ask unless provided]

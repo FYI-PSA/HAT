@@ -29,6 +29,8 @@ namespace funtime
     vector<pair<int, vector<string>>> FConfigReader(string HomePath, bool shouldSearch, string customPath)
     {
         vector<string> L_wordList;
+        string D_Prefix;
+        string D_Suffix;
         string D_Name;
         string D_Extension;
         int D_MaximumChain;
@@ -60,22 +62,28 @@ namespace funtime
                 {0,{dummy}} // ask_max
                 ,
                 {0,{dummy}} // success check
+                ,
+                {0,{dummy}} // prefix
+                ,
+                {0,{dummy}} // suffix
         };
 
         vector<pair<int, vector<string>>> returnValue = baseValue;
 
-        // first one : int=words , vector<string>=list
+        // 0 : first one : int=words , vector<string>=list
         
-        // second one : int=0/1 not/set , vector<string>[0] = d_name
-        // third one : int=0/1 not/set , vector<string>[0] = d_ext
-        // fourth one : int=0/1 not/set , vector<string>[0] = string(d_min)
-        // fifth one : int=0/1 not/set , vector<string>[0] = string(d_max)
+        // 1 : second one : int=0/1 not/set , vector<string>[0] = d_name
+        // 2 : third one : int=0/1 not/set , vector<string>[0] = d_ext
+        // 3 : fourth one : int=0/1 not/set , vector<string>[0] = string(d_min)
+        // 4 : fifth one : int=0/1 not/set , vector<string>[0] = string(d_max)
         
-        // sixth one : int=0/1 false/true = ask_name , NULL
-        // seventh one : int=0/1 false/true = ask_entries , NULL
-        // eight one : int=0/1 false/true = ask_min , NULL
-        // ninth one : int=0/1 false/true = ask_max , NULL
+        // 5 : sixth one : int=0/1 false/true = ask_name , NULL
+        // 6 : seventh one : int=0/1 false/true = ask_entries , NULL
+        // 7 : eight one : int=0/1 false/true = ask_min , NULL
+        // 8 : ninth one : int=0/1 false/true = ask_max , NULL
 
+        // 9 : tenth one : int=0/1 not/set , string = prefix
+        // 10 : eleventh one : 1nt=0/1 not/set , string = suffix
 
         if (!shouldSearch)
         {
@@ -185,6 +193,11 @@ namespace funtime
                 bool flag_AskEntry = false;
                 bool flag_OverWrite = false;
 
+                bool flag_Prefix = false;
+                bool flag_Prefix_DONE = false;
+                bool flag_Suffix = false;
+                bool flag_Suffix_DONE = false;
+
                 bool flag_Name = false;
                 bool flag_Name_DONE = false;
                 bool flag_AskName = false;
@@ -198,11 +211,13 @@ namespace funtime
                 bool flag_Min_DONE = false;
                 bool flag_AskMin = false;
 
-                vector<string> customEntriesVector;
-                string customName;
-                string customExt;
-                string customMax;
-                string customMin;
+                vector<string> customEntriesVector = {};
+                string customPrefix = "";
+                string customSuffix = "";
+                string customName = "";
+                string customExt = "";
+                string customMax = "";
+                string customMin = "";
 
                 while (getline(fconfigFile, fileData))
                 {
@@ -253,6 +268,30 @@ namespace funtime
                     if (fileData == "--Overwrite-If-Exists--")
                     {
                         flag_OverWrite = true;
+                        continue;
+                    }
+                    //-----
+                    if (fileData == "--Prefix--")
+                    {
+                        flag_Prefix = true;
+                        continue;
+                    }
+                    else if (flag_Prefix && !flag_Prefix_DONE)
+                    {
+                        customPrefix = fileData;
+                        flag_Prefix_DONE = true;
+                        continue;
+                    }                    
+                    //-----
+                    if (fileData == "--Suffix--")
+                    {
+                        flag_Suffix = true;
+                        continue;
+                    }
+                    else if (flag_Suffix && !flag_Suffix_DONE)
+                    {
+                        customSuffix = fileData;
+                        flag_Suffix_DONE = true;
                         continue;
                     }
                     //-----
@@ -332,6 +371,8 @@ namespace funtime
                 << endl << "[!] Entry end : " << flag_EntryEnd
                 << endl << "[!] Ask Entry : " << flag_AskEntry
                 << endl << "[!] Overwrite : " << flag_OverWrite
+                << endl << "[!] Prefix : " << flag_Prefix
+                << endl << "[!] Suffix : " << flag_Suffix
                 << endl << "[!] File Name : " << flag_Name
                 << endl << "[!] Ask File Name : " << flag_AskName
                 << endl << "[!] Extension : " << flag_Ext
@@ -346,12 +387,15 @@ namespace funtime
                 {
                    cout << customEntriesVector.at(itemIndex) << endl;
                 }
-                cout << endl << "[!] Custom File Name : " << endl << customName << endl
+                cout
+                << endl << "[!] Custom Prefix : " << endl << customPrefix << endl
+                << endl << "[!] Custom Suffix : " << endl << customSuffix << endl  
+                << endl << "[!] Custom File Name : " << endl << customName << endl
                 << endl << "[!] Custom File Extension : " << endl << customExt << endl
                 << endl << "[!] Custom Minimum Chain Value : " << endl << customMin << endl
                 << endl << "[!] Custom Maximum Chain Value : " << endl << customMax << endl
                 << endl;
-                */
+                // */
 
 
                 if (flag_EntryStart)
@@ -372,6 +416,18 @@ namespace funtime
                         A_Entry = false;
                         returnValue[6].first = 0;
                     }
+                }
+                if (flag_Prefix && flag_Prefix_DONE)
+                {
+                    D_Prefix = customPrefix;
+                    returnValue[9].second[0] = customPrefix;
+                    returnValue[9].first = 1;
+                }
+                if (flag_Suffix && flag_Suffix_DONE)
+                {
+                    D_Suffix = customSuffix;
+                    returnValue[10].second[0] = customSuffix;
+                    returnValue[10].first = 1;
                 }
                 if (flag_Name && flag_Name_DONE)
                 {
