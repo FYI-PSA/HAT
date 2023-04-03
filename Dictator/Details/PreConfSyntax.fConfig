@@ -1,23 +1,23 @@
 here's how it should work:
 
 File must be named "<NAME>.fConfig" unless providing the
-{--pre-conf <path including name and ext>}
-argument during execution from terminal [WIP]
+'--conf-file <path including name and ext>'
+argument during execution from the console
 
 * The first file with the .fConf extension that gets automatically detected in ~/Documents/Hackers-Toolbox/PreConfigs/
 on run, will be executed. 
 if you want to make sure the correct config gets selected, make the first line something other than the starting syntax.
 
 The program will also ignore these .fConfig files if you use the
-{--ignore-conf}
-argument during execution from terminal [WIP]
-(will also ignore the config if you use in combination with --conf-file <file>)
+'--ignore-conf'
+flag during execution from the console
+(will also ignore all configs even if you use '--conf-file <file>')
 
 _________________________________________________________________________________
 
 Start:
 --Dictator-Config--
-[to avoid confusion with other hackers-toolbox apps, is required]
+[to avoid confusion with other HAT apps, is required]
 
 
 ALL OF THE BELOW ARE OPTIONAL UNLESS SPECIFIED OTHERWISE:

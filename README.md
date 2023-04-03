@@ -10,10 +10,32 @@ ________
 
 * ### _**Dictator**_
 
-  * A dictionary generator for brute forcing attacks!
-  * Configs: Automate some inputs and add prefixes and suffixes to every output.
+  * A dictionary generator for web crawlers and brute forcing!
+  * Configs: Configure things such as file name and extension, prefix and suffix.
+  * You can also set some details that the program normally asks you to automate the process and be more efficient
   * [Currently only works on Windows]
-  * How it works
+
+________
+
+## **Currently in prototyping tools:**
+
+* ### _**Clacker**_
+
+  * A simple keylogger.
+  * Can be toggled on and off or restarted.
+  * Shows logged data live in it's console, but will be able to save a session to a file. (You can change the location)
+  * [Very baisc prototype, only works on windows]
+
+* ### _**Quackenbirdt**_
+
+  * A toolbox for RubberDucky tasks
+  * Will contain a DuckyScript generator
+  * WIll contain some pre-made Ducky scripts to do a few general tasks or to use as boilerplate
+  * [Not public]
+
+________
+
+## **Future Projects:**
 
 * ### _**Social Buster**_
 
@@ -24,13 +46,6 @@ ________
   * Uses the core of Dictator to generate lists of user data, with the same configs available (in a future update).
   * Interacts with the APIs or sometimes just brute forces GET requests to check for validity of users and if so, information about said user.
   * [Needs the finished version of Dictator]
-
-* ### _**Clacker**_
-
-  * A simple keylogger.
-  * Can be toggled on and off or restarted.
-  * Shows logged data live in it's console, but will be able to save a session to a file. (You can change the location)
-  * [Not Started]
 
 * ### _**Hexagon**_
 
@@ -55,13 +70,6 @@ ________
   * You can use it's core to create a more secure client modifications for your platform of choice. (Credit this repository if you do!)
   * [Needs Hecktor to be finished]
 
-* ### _**Quackenbirdt**_
-
-  * A toolbox for RubberDucky tasks
-  * Will contain a DuckyScript generator
-  * WIll contain some pre-made Ducky scripts to do a few general tasks or to use as boilerplate
-  * [Not Started]
-
 * ### _**Knock Knock!**_
 
   * Who's there? Why not check it out yourself! "Knock Knock" will (try to) open any file in any format and try to make it viewable for you.
@@ -69,11 +77,9 @@ ________
   * Uses the cores of Hexagon, and expands upon them by actually trying to understand what it's trying to read.
   * [Needs the finished version of Hexagon]
 
-* ### _[These are all of our currently planned apps.]_
+________
 
 * ### Tools will be made with C/C++/C# (if possible). If you see Java or Python versions, then that module is in prototyping and not complete
-
-* Hat will have it's own special folder where apps with configs can read pre-made config files from and apps that output data will save them there.
 
 ________
 
@@ -95,7 +101,7 @@ ________
 
 ________
 
-Thank you, have fun ethical hacking!
+Thank you, have fun hacking!
 
 Written by :
 
