@@ -2,7 +2,7 @@
 
 ## _Hackers Toolbox_
 
-_Removes the need to re-create scripts and do repetitive tasks. Just focus on hacking!_
+_A Set of tools made to remove the tediousness of pentesting, spend more time on the fun parts!_
 
 ________
 
