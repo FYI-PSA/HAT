@@ -1,0 +1,82 @@
+here's how it should work:
+
+File must be named "<NAME>.fConfig" unless providing the
+'--conf-file <path including name and ext>'
+argument during execution from the console
+
+* The first file with the .fConf extension that gets automatically detected in ~/Documents/Hackers-Toolbox/PreConfigs/
+on run, will be executed. 
+if you want to make sure the correct config gets selected, make the first line something other than the starting syntax.
+
+The program will also ignore these .fConfig files if you use the
+'--ignore-conf'
+flag during execution from the console
+(will also ignore all configs even if you use '--conf-file <file>')
+
+_________________________________________________________________________________
+
+Start:
+--Dictator-Config--
+[to avoid confusion with other HAT apps, is required]
+
+
+ALL OF THE BELOW ARE OPTIONAL UNLESS SPECIFIED OTHERWISE:
+
+
+--Entries--
+<entry1>
+<entry2>
+<entry...>
+<...>
+--End-Entries--
+[--End-Entries-- is required to stop adding entries, however if the file ends, it will automatically stop]
+[Be careful to include the end flag, otherwise the program will count your other flags as inputs, unless they're blank*]
+[*A blank entry will not be counted.]
+
+--Still-Get-Entries--
+[will ask you for more entries during runtime, even if you provided some entries previously]
+[Ignored if no --Entries-- flag]
+
+--Prefix--
+<string>
+[Will set a prefix at the start of each output in the dictionary]
+[*If you set the prefix using launch flags, then that will override this entry]
+
+--Suffix--
+<string>
+[Will set a prefix at the start of each output in the dictionary]
+[*If you set the suffix using launch flags, then that will override this entry]
+
+--File-Name--
+<name without extension>
+[Will set the default name for the file. Won't ask unless provided]
+[If you provided an extension it will count as part of the name*]
+[*Unless you set the custom extension blank]
+
+--Still-Ask-File-Name--
+[Will still ask you for a file name during runtime]
+[--File-Name-- will be the default if you leave entry blank during runtime]
+[Ignored if no --File-Name-- Flag]
+
+--Custom-Extension--
+<extension, including the dot>
+[Will set the extension of the file. Can be without a dot, but it will result in a normal file*]
+[*Unless provided with an extension in the file name]
+
+--Max-Len--
+<maximum chain length>
+[Gets a maximum chain length. Won't ask unless provided]
+
+--Still-Ask-Max-Len--
+[Will still ask you for a maximum chain length during runtime]
+[--Max-Len-- will be the default if you enter nothing for maximum chain value during runtime]
+[Ignored if no --Max-Len-- flag]
+
+--Min-Len--
+<minimum chain length>
+[Gets a minimum chain length. Won't ask unless provided]
+
+--Still-Ask-Min-Len--
+[Will still ask you for a minimum chain length during runtime]
+[--MinLen-- will be the default if you enter nothing for minimum chain value during runtime]
+[Ignored if no --Min-Len-- flag]
