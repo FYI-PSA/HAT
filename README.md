@@ -1,4 +1,4 @@
-## _**Hackers Toolbox**_
+# _**Hackers Toolbox**_
 
 _A Set of tools made to remove the tediousness of pentesting, spend more time on the fun parts!_
 
@@ -9,8 +9,9 @@ ________
 * ### _**Dictator**_
 
   * A dictionary generator for web crawlers and brute forcing!
-  * Configs: Configure things such as file name and extension, prefix and suffix.
-  * You can also set some details that the program normally asks you to automate the process and be more efficient
+  * Configs:
+    * Configure things such as file name and extension, prefix and suffix.
+    * You can also set some details that the program normally asks you to automate the process and be more efficient
   * [Currently only works on Windows]
 
 ________
