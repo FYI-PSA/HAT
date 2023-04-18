@@ -105,4 +105,4 @@ Thank you, have fun hacking!
 
 Written by :
 
-## @Funtime-UwU
+## (@Funtime-UwU)[https://GitHub.com/Funtime-UwU/]
