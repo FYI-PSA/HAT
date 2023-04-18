@@ -1,6 +1,4 @@
-# **Hat**
-
-## _Hackers Toolbox_
+## _**Hackers Toolbox**_
 
 _A Set of tools made to remove the tediousness of pentesting, spend more time on the fun parts!_
 
