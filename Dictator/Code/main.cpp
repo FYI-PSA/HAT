@@ -95,7 +95,7 @@ string D_Suffix = ""; bool D_Suffix_Set = false;
 
 /*
 TODO:
-- nothing. up to date!
+- change default directory path from C:/HAT
 */
 
 int main (int argc, char** argv)
