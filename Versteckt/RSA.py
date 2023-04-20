@@ -93,7 +93,7 @@ def PrivateKeys(phi: int, e: int) -> list[int]:
 def GenerateRSA() -> tuple[str, str]:
 
     print("[%] Calculating random factors...")
-    prime_range = random.randint(50, 500)
+    prime_range = random.randint(6, 66)
     primes = PrimeList(prime_range)
     p = random.choice(primes)
     q = random.choice(primes)
@@ -193,27 +193,41 @@ def ProcessEncryptedInput(data: str) -> list[int]:
     data = data.removeprefix('START - ')
     data = data.removesuffix(' - END')
     items: list[str] = data.split(' - ')
+    # print(data)
     integers: list[int] = [int(item) for item in items]
+    # print(integers)
     return integers
 
 def DecryptData(b64_data: str, D: int, N: int) -> str:
-    data = BASE64.B64_Decrypt(b64_data).decode('utf-8')
+    # print(b64_data)
+    data = (BASE64.B64_Decrypt(b64_data)).decode('utf-8')
+    # print(data)
     data_encrypted_arr: list[int] = ProcessEncryptedInput(data)
+    # print(data_encrypted_arr)
     data_ascii_arr: list[int] = [DecryptMessage(C=encrypted, B=D, N=N) for encrypted in data_encrypted_arr]
+    # print(data_ascii_arr)
     character_arr = [chr(item) for item in data_ascii_arr] 
     original_string = ''.join(character_arr)
-    original_data = BASE64.B64_Decrypt(original_string).decode('utf-8')
+    # print(original_string)
+    original_data = (BASE64.B64_Decrypt(original_string)).decode('utf-8')
+    # print(original_data)
     return original_data
 
 def EncryptData(data: str, E: int, N: int) -> str:
+    # print(data)
     b64_data = BASE64.B64_Encrypt(data.encode('utf-8'))
+    # print(b64_data)
     data_ascii_arr: list[int] = [ord(character) for character in b64_data]
+    # print(data_ascii_arr)
     data_encrypted_arr: list[int] = [EncryptMessage(M=number, A=E, N=N) for number in data_ascii_arr]
+    # print(data_encrypted_arr)
     encrypted_string = "START - "
     for item in data_encrypted_arr:
         encrypted_string += str(item) + ' - '
     encrypted_string += 'END'
+    # print(encrypted_string)
     b64_result = BASE64.B64_Encrypt(encrypted_string.encode('utf-8'))
+    # print(b64_result)
     return b64_result
 
 
