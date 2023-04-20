@@ -1,3 +1,4 @@
+import BASE64
 import random
 import time
 import math
@@ -195,21 +196,25 @@ def ProcessEncryptedInput(data: str) -> list[int]:
     integers: list[int] = [int(item) for item in items]
     return integers
 
-def DecryptData(data: str, D: int, N: int) -> str:
+def DecryptData(b64_data: str, D: int, N: int) -> str:
+    data = BASE64.B64_Decrypt(b64_data).decode('utf-8')
     data_encrypted_arr: list[int] = ProcessEncryptedInput(data)
     data_ascii_arr: list[int] = [DecryptMessage(C=encrypted, B=D, N=N) for encrypted in data_encrypted_arr]
     character_arr = [chr(item) for item in data_ascii_arr] 
     original_string = ''.join(character_arr)
-    return original_string
+    original_data = BASE64.B64_Decrypt(original_string).decode('utf-8')
+    return original_data
 
 def EncryptData(data: str, E: int, N: int) -> str:
-    data_ascii_arr: list[int] = [ord(character) for character in data]
+    b64_data = BASE64.B64_Encrypt(data.encode('utf-8'))
+    data_ascii_arr: list[int] = [ord(character) for character in b64_data]
     data_encrypted_arr: list[int] = [EncryptMessage(M=number, A=E, N=N) for number in data_ascii_arr]
     encrypted_string = "START - "
     for item in data_encrypted_arr:
         encrypted_string += str(item) + ' - '
     encrypted_string += 'END'
-    return encrypted_string
+    b64_result = BASE64.B64_Encrypt(encrypted_string.encode('utf-8'))
+    return b64_result
 
 
 def Goodbye() -> None:
