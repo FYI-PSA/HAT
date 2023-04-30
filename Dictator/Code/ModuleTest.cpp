@@ -1,8 +1,8 @@
-#include "./Modules/DirectoryManager.h"
 #include "./Modules/ConfigFileFinder.h"
+#include "./Modules/DirectoryManager.h"
 
-using funtime::CreateDirectoryMan;
-using funtime::FConfigReader;
+using hat::CreateDirectoryMan;
+using hat::FConfigReader;
 
 int main(int argc, char ** argv)
 {
@@ -12,8 +12,7 @@ int main(int argc, char ** argv)
 
     CreateDirectoryMan(homePath+"/Dictionaries/");
     CreateDirectoryMan(homePath+"/PreConfigs/");
-    CreateDirectoryMan(homePath+"/ValidSocials/"); // for SocialBuster
-    vector<pair<int, vector<string>>> configReturn = FConfigReader(homePath);
+    vector<pair<int, vector<string>>> configReturn = FConfigReader(homePath, true, "");
     int rows = configReturn.size();
     for (int row = 0 ; row < rows ; row++)
     {
