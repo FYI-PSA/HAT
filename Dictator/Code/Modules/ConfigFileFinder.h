@@ -1,30 +1,31 @@
-#include <Windows.h>
-#include <filesystem>
-#include <iostream>
-#include <stdio.h>
-#include <io.h>
-#include <errno.h>
-#include <string>
-#include <vector>
-#include <string.h>
-#include <fstream>
-#include <filesystem>
+#ifndef DICTATOR_MODULES_CONFIGFILEFINDER_H
+#define DICTATOR_MODULES_CONFIGFILEFINDER_H
 
-#ifndef DIRMAN_H
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <utility>
+#include <vector>
+
 #include "DirectoryManager.h"
-using funtime::CreateDirectoryMan;
-#endif
+using hat::CreateDirectoryMan;
+
 
 using std::string;
 using std::vector;
+using std::fstream;
+using std::ifstream;
+using std::ofstream;
 using std::filesystem::path;
 using std::filesystem::directory_iterator;
 using std::cout;
 using std::cin;
 using std::endl;
 using std::pair;
+using std::invalid_argument;
 
-namespace funtime
+namespace hat
 {
     vector<pair<int, vector<string>>> FConfigReader(string HomePath, bool shouldSearch, string customPath)
     {
@@ -529,3 +530,4 @@ namespace funtime
 
 }
 
+#endif

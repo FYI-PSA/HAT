@@ -1,4 +1,5 @@
-# _**Hackers Toolbox**_
+## _**Hackers Toolbox**_
+
 
 _A Set of tools made to remove the tediousness of pentesting, spend more time on the fun parts!_
 
@@ -24,6 +25,14 @@ ________
   * Can be toggled on and off or restarted.
   * Shows logged data live in it's console, but will be able to save a session to a file. (You can change the location)
   * [Very baisc prototype, only works on windows]
+
+* ### _**Versteckt**_
+
+  * Uses the RSA algorithm alongside some other obfuscaton methods to encrypt your data!
+  * Accepts all forms of media including text, pictures, videos, audio and more!
+  * A method of bypassing content checks, cencorship and filtering! (Please still be careful! <3 )
+  * [Will have Android, Windows, Linux and Mac support]
+  * [In prototyping...]
 
 * ### _**Quackenbirdt**_
 
@@ -59,15 +68,6 @@ ________
   * Uses the core of Hexagon to provide support for encryption of file data.
   * Settings can be tweaked to do almost everything Hexagon can do. (Not recommended to hash your files by accident!)
   * [Needs the finished version of Hexagon]
-
-* ### _**Versteckt**_
-
-  * Encrypt your data!
-  * Uses the core from Hecktor, and will encrypt all forms of media you feed it with whatever encryptions you select for it!
-  * [In the future will support adding keys to make it impossible to decrypt without said key]
-  * A method to get around censorship, detection software, and other filters on your freedom. You can trade information and easily encrypt and decrypt it with just a few clicks!
-  * You can use it's core to create a more secure client modifications for your platform of choice. (Credit this repository if you do!)
-  * [Needs Hecktor to be finished]
 
 * ### _**Knock Knock!**_
 

@@ -1,49 +1,47 @@
-#ifndef DIRMAN_H
-#define DIRMAN_H
-#include <filesystem>
-#include <stdio.h>
-#include <iostream>
-#include <vector>
-#include <io.h>
-#include <Windows.h>
-#include <errno.h>
-#include <fstream>
-#include <string>
-#include <string.h>
+#ifndef DICTATOR_MODULES_DIRMAN_H
+#define DICTATOR_MODULES_DIRMAN_H
 
-using std::cin;
+#include <errno.h>
+#include <filesystem>
+#include <iostream>
+#include <string>
+
 using std::cout;
 using std::endl;
-using std::fstream;
-using std::ifstream;
-using std::ofstream;
-using std::getline;
-using std::vector;
-using std::filesystem::path;
-using std::filesystem::directory_iterator;
 using std::string;
-using std::to_string;
-using std::invalid_argument;
-using std::system_category;
+using std::filesystem::path;
+
+#ifndef __unix__
+#include <io.h>
+int __global_hat_mkdir(string dirpath)
+{
+    int successValue = mkdir(dirpath.c_str());
+    return successValue;
+}
+#else
+#include <sys/stat.h>
+int __global_hat_mkdir(string dirpath)
+{
+    mode_t fullAdminPerm = S_IRWXU | S_IRUSR | S_IWUSR | S_IXUSR;
+    mode_t fullGroupPerm = S_IRWXG | S_IRGRP | S_IWGRP | S_IXGRP;
+    mode_t fullOtherPerm = S_IRWXO | S_IROTH | S_IWOTH | S_IXOTH;
+    mode_t createFileMode =  fullAdminPerm | fullGroupPerm | fullOtherPerm; 
+    int successValue = mkdir(dirpath.c_str(), createFileMode);
+    return successValue;
+}
+#endif 
 
 // return values : 
 // 0 = directory successfully created
 // 1 = directory was existing found
 // -1 = unidentified edge case
 
-namespace funtime
+namespace hat
 {
-
-    vector<string> ParentPaths(string targetPath)
-    {
-        vector<string> returnVector = {"Hello", "World"};
-        return returnVector;
-    }
 
     int CreateDirectoryMan(string createPath, bool giveFeedback)
     {
-        // new method: check for parents first, and then create them in order
-        int successValue = mkdir(createPath.c_str());
+        int successValue = __global_hat_mkdir(createPath);
         int errors = 6;
         int errorValues[errors] = {EACCES, EEXIST, ENAMETOOLONG, ENOENT, ENOTDIR, EROFS}; 
         if (successValue == -1)

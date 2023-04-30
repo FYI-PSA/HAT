@@ -1,29 +1,20 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <system_error>
-#include <filesystem>
-#include <Windows.h>
-#include <process.h>
-#include <Lmcons.h>
-#include <iostream>
-#include <stdlib.h>
-#include <string.h>
-#include <fstream>
-#include <iomanip>
-#include <stdio.h>
-#include <errno.h>
-#include <string>
-#include <vector>
-#include <time.h>
+/* "Github.com/Funtime-UwU/Hat" */
+// #define _CRT_SECURE_NO_WARNINGS
+
+
+// #include <time.h>
 #include <ctime>
-#include <io.h>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <utility>
+#include <vector>
 
-#include "Modules/ConfigFileFinder.h"
-using funtime::FConfigReader;
-
-#ifndef DIRMAN_H
 #include "Modules/DirectoryManager.h"
-using funtime::CreateDirectoryMan;
-#endif
+using hat::CreateDirectoryMan;
+#include "Modules/ConfigFileFinder.h"
+using hat::FConfigReader;
+
 
 using std::cin;
 using std::cout;
@@ -38,23 +29,15 @@ using std::getline;
 using std::vector;
 using std::pair;
 
-using std::filesystem::path;
-using std::filesystem::directory_iterator;
-
 using std::stoi;
 using std::string;
 using std::to_string;
 using std::invalid_argument;
 
-using std::system_category;
-
-bool FConfigReader(void);
-vector<string> handleLaunchParams(int argumentC, char** argumentV);
+vector<string> HandleLaunchParams(int argumentC, char** argumentV);
 
 void PathFinder(void);
-void PathErrors(string createPath);
 
-void WriteToFile(void);
 void NewFileCreator(void);
 
 void Unchained(void);
@@ -63,6 +46,24 @@ pair<int,int> LengthGet(bool ask_min, bool ask_max);
 void InputCollector(void);
 void WordListCreation(string baseString, int lengthVar, vector<int> ignoreIndexes);
 
+#ifndef __unix__
+string Operating_System = "Windows";
+string homePathCreator()
+{
+    string homePath = "C:/Hat/";
+    return homePath;
+}
+#else
+#include <unistd.h>
+string Operating_System = "Linux";
+string homePathCreator()
+{
+    string username = getlogin();
+    string homePath = "/home/" + username + "/Hat/";
+    return homePath;
+}
+#endif
+
 fstream L_fileObj;
 string L_filePath;
 int L_maxChainLen;
@@ -70,10 +71,7 @@ int L_minChainLen;
 int L_wordListSize;
 vector<string> L_wordList;
 
-string U_UserName;
-string U_UserPath;
 string U_HomePath;
-string U_DocumentsPath;
 
 string D_Name = "dictionary";
 string D_Extension = ".txt";
@@ -95,15 +93,16 @@ string D_Suffix = ""; bool D_Suffix_Set = false;
 
 /*
 TODO:
-- nothing. up to date!
+- Rewrite sub modules of header files for linux 
 */
 
 int main (int argc, char** argv)
 {
-    U_HomePath = "C:/HAT/";
     cout << "[*] Dictator V2.0" << endl << endl;
+    
+    U_HomePath = homePathCreator();
 
-    handleLaunchParams(argc, argv);
+    HandleLaunchParams(argc, argv);
 
     if (F_SearchForConfig)
     {
@@ -255,21 +254,21 @@ int main (int argc, char** argv)
     {
         chainLs = LengthGet(true, true); 
     }
-    clock_t creationStart = std::clock();
+    uint32_t creationStart = std::time(NULL);
     cout << endl << endl << "[!] Creating dictionary..." << endl << endl;
     L_fileObj.open(L_filePath);
     Unchained();
     L_fileObj.close();
-    clock_t creationStop = std::clock();
-    clock_t deltaCTime = creationStop - creationStart;
-    float minuteDCT = (double)deltaCTime / 60000;
+    uint32_t creationStop = std::time(NULL);
+    uint32_t deltaCTime = creationStop - creationStart;
+    float minuteDCT = (static_cast<double>(deltaCTime)) / 60;
     cout << endl << endl << "[$] Done!"
     << endl << "[$] It took " << std::setprecision(3) << std::fixed << minuteDCT << " minutes"
     << endl << "[$] The dictionary is saved at '" << L_filePath << "' "
     << endl << endl << "[$] Goodbye!" << endl << endl;
 }
 
-vector<string> handleLaunchParams(int argCount, char** argArr)
+vector<string> HandleLaunchParams(int argCount, char** argArr)
 {
     vector<string> launchParams = {};
     for (int argumentIndex = 0; argumentIndex < argCount; argumentIndex++)
@@ -469,6 +468,12 @@ pair<int, int> LengthGet(bool min_ask, bool max_ask)
     {
         L_maxChainLen = D_MaximumChain;
     }
+    if (L_maxChainLen > L_wordListSize)
+    {
+        cout << endl << "[!] ERR : Minimum length longer than all words, shortening max to count of words.";
+        L_maxChainLen = L_wordListSize;
+        cout << endl << "[@] Maximum value is now " << L_maxChainLen << endl;
+    }
     if (L_minChainLen > L_maxChainLen)
     {
         cout << endl << "[!] ERR : Minimum value larger than maximum value."
@@ -495,7 +500,7 @@ void Unchained(void)
         percent += percentPart;
         if (percent < 100)
         {
-            cout << "[!] Progress: " + to_string(percent) + "\%" << endl;
+            cout << "[!] Progress: " + to_string(percent) + "%" << endl;
         }
         else
         {
