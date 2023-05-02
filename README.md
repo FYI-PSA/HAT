@@ -47,19 +47,11 @@ ________
 
 * ### _**Social Buster**_
 
-  * Need to search for someone without an exact username?
-  * Want to automate looking for users from an API, without having to deal with all of that annoyance?
-  * Want information about social media accounts neatly wrapped into a JSON?
-  * _Social buster can do all of that!_
-  * Uses the core of Dictator to generate lists of user data, with the same configs available (in a future update).
-  * Interacts with the APIs or sometimes just brute forces GET requests to check for validity of users and if so, information about said user.
+  * Checks for valid social media accounts using small amounts of information to guess their usernames.
 
 * ### _**Hecktor**_
 
-  * Explore executables, object code, compiled files, encrypted data and all else unreadable data in a nice format, including support for Hexadecimal, Binary, Ascii, or a combination of them!
-  * Uses the core of Hexagon to provide support for encryption of file data.
-  * Settings can be tweaked to do almost everything Hexagon can do. (Not recommended to hash your files by accident!)
-  * [Needs the finished version of Hexagon]
+  * Explore normally unreadable files and look deeper into the compiled instructions and binaries.
 
 ________
 
