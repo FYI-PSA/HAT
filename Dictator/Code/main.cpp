@@ -15,6 +15,7 @@ using hat::CreateDirectoryMan;
 #include "Modules/ConfigFileFinder.h"
 using hat::FConfigReader;
 
+#include "Modules/ConfigHelper.h"
 
 using std::cin;
 using std::cout;
@@ -98,7 +99,7 @@ TODO:
 
 int main (int argc, char** argv)
 {
-    cout << "[*] Dictator V2.0" << endl << endl;
+    cout << "[*] Dictator V2.1" << endl << endl;
     
     U_HomePath = homePathCreator();
 
@@ -113,9 +114,9 @@ int main (int argc, char** argv)
     {
         cout << "[$] An fconfig file has been loaded!" << endl;
     
-        if (fconfigStatus[9].first != 0)
+        if (fconfigStatus[10].first != 0)
         {
-            D_Prefix = fconfigStatus[9].second[0];
+            D_Prefix = fconfigStatus[10].second[0];
             D_Prefix_Set = true;
         }
         if (D_Prefix_Set && O_Prefix_Set)
@@ -130,9 +131,9 @@ int main (int argc, char** argv)
             cout << "[$] Prefix is : " + O_Prefix << endl;
         }
 
-        if (fconfigStatus[10].first != 0)
+        if (fconfigStatus[11].first != 0)
         {
-            D_Suffix = fconfigStatus[10].second[0];
+            D_Suffix = fconfigStatus[11].second[0];
             D_Suffix_Set = true;
         }
         if (D_Suffix_Set && O_Suffix_Set)
@@ -164,6 +165,8 @@ int main (int argc, char** argv)
             cout << "[!] Loading only words from the fconfig..." << endl;
             L_wordListSize = L_wordList.size();
         }
+
+        cout << "[@] " << L_wordListSize << " words were loaded!" << endl; 
     }
     else
     {
@@ -294,6 +297,9 @@ vector<string> HandleLaunchParams(int argCount, char** argArr)
             << endl << "[@] There is no suffix by default, unless specified in a custom config file"
             << endl;
             cout
+            << endl << "[@] Use '--conf-help' for help about how config files work."
+            << endl;
+            cout
             << endl << "[@] Use '--conf-file <config file path>' to load a custom config file"
             << endl << "[@] By default the first valid file in an alphabetical order is loaded from the default configs folder"
             << endl << "[%] Default Location: " + U_HomePath + "PreConfigs"
@@ -306,9 +312,12 @@ vector<string> HandleLaunchParams(int argCount, char** argArr)
             << endl << endl;
             exit(0);
         }
-        if (paramater == "--config-help")
+        if (paramater == "--conf-help")
         {
-            cout << endl << endl << "WIP, SHOUlD READ OU THE CONTENTS OF 'PreConfigSyntax.fConf'" << endl << endl;
+            paramDetected = true;
+            string config_help = hat::configHelpData();
+            cout << endl << endl << config_help << endl << endl;
+            exit(0);
         }
         if (paramater == "--ignore-conf")
         {

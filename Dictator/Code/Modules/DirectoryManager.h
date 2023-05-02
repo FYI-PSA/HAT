@@ -31,6 +31,7 @@ int __global_hat_mkdir(string dirpath)
 }
 #endif 
 
+
 // return values : 
 // 0 = directory successfully created
 // 1 = directory was existing found
@@ -43,7 +44,7 @@ namespace hat
     {
         int successValue = __global_hat_mkdir(createPath);
         int errors = 6;
-        int errorValues[errors] = {EACCES, EEXIST, ENAMETOOLONG, ENOENT, ENOTDIR, EROFS}; 
+        int errorValues[6] = {EACCES, EEXIST, ENAMETOOLONG, ENOENT, ENOTDIR, EROFS}; 
         if (successValue == -1)
         {
             int errorCode = errno;
