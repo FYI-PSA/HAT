@@ -1,16 +1,35 @@
-# WIP
+________________
 
 ## Install
 
-  *###WIP
-  *normal install : curl from /release/latest, put into /.local/bin/
-  *compile : git clone, then just go into /Dictator/ and `mkdir Compiled; g++ Code/main.cpp -o Compiled/Dictator --std=c++20`
+  * ### _Windows:_
+    - Download the [latest release of dictator for Windows](https://GitHub.com/Funtime-UwU/Hat/releases/latest)
+    - Simply launch the executable from CMD or PowerShell  
 
-## How to use
+  * ### _Linux/Mac:_
+    - Download the [latest release of dictator for Linux/Mac](https://GitHub.com/Funtime-UwU/Hat/releases/latest)
+    - Run the following command in the same folder as your downloaded executable:
+    
+    > (Replace {FILE} with the name of the file you just downloaded)
 
-  *This part will probably be a more readable version of the --help flags
-  *WIP
+    * ```sudo chmod a+x ./{FILE}; cp ./{FILE} ~/.local/bin/dictator;```
+    - You may now launch dictator at any time from your console by entering `dictator`
 
-## Config files
+________________
 
-  *Literally just the config-help.txt with some markdown
+## Compiling from source
+  * Dictator does not have many dependencies, you can compile it by navigating to /Dictator/ in the sourc folders and then entering:
+  
+  * `mkdir Compiled; g++ Code/main.cpp -o Compiled/dictator --std=c++20`
+
+________________
+
+## Config files:
+  * [config-help.txt](/Dictator/config-help.txt)
+
+________________
+
+## More help on using the software
+  * All necessary information about using the software can be found by using the `--help` flag when executing
+
+________________
