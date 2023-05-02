@@ -1,10 +1,9 @@
-here's how it should work:
 
-File must be named "<NAME>.fConfig" unless providing the
+File must be named '<NAME>.fConfig' unless providing the
 '--conf-file <path including name and ext>'
 argument during execution from the console
 
-* The first file with the .fConf extension that gets automatically detected in ~/Documents/Hackers-Toolbox/PreConfigs/
+* The first file with the .fConf extension that gets automatically detected in '{Hat Home Path}/PreConfigs/'
 on run, will be executed. 
 if you want to make sure the correct config gets selected, make the first line something other than the starting syntax.
 
@@ -17,10 +16,10 @@ ________________________________________________________________________________
 
 Start:
 --Dictator-Config--
-[to avoid confusion with other HAT apps, is required]
+[required, first line of file]
 
 
-ALL OF THE BELOW ARE OPTIONAL UNLESS SPECIFIED OTHERWISE:
+[!! From this point, all settings are optional (unless specified otherwise). !!]
 
 
 --Entries--

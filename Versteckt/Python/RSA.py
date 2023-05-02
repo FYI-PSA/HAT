@@ -1,4 +1,4 @@
-import BASE64
+import BASE64 as BASE64
 import random
 import time
 import math

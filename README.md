@@ -13,6 +13,8 @@ ________
   * You can also set some details that the program normally asks you to automate the process and be more efficient
   * [Currently only works on Windows]
 
+  ### _**[Intall and Instructions](/Dictator/Instructions.md)**_
+
 ________
 
 ## **Currently in prototyping tools:**

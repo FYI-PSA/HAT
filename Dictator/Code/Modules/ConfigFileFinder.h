@@ -11,19 +11,18 @@
 #include "DirectoryManager.h"
 using hat::CreateDirectoryMan;
 
-
-using std::string;
-using std::vector;
+using std::cin;
+using std::cout;
+using std::endl;
 using std::fstream;
 using std::ifstream;
-using std::ofstream;
-using std::filesystem::path;
-using std::filesystem::directory_iterator;
-using std::cout;
-using std::cin;
-using std::endl;
-using std::pair;
 using std::invalid_argument;
+using std::ofstream;
+using std::pair;
+using std::string;
+using std::vector;
+using std::filesystem::directory_iterator;
+using std::filesystem::path;
 
 namespace hat
 {
@@ -39,45 +38,45 @@ namespace hat
         bool A_Name;
         bool A_Entry;
         bool A_MinimumChain;
-        bool A_MaximumChain;   
-        
+        bool A_MaximumChain;
+
         string dummy = "-1";
         vector<pair<int, vector<string>>> baseValue =
-        {
-                {0,{}} //wordlist
+            {
+                {0, {}} // wordlist
                 ,
-                {0,{"dictionary"}} // name
+                {0, {"dictionary"}} // name
                 ,
-                {0,{".txt"}} // extension
+                {0, {".txt"}} // extension
                 ,
-                {0,{"1"}} // min
+                {0, {"1"}} // min
                 ,
-                {0,{"6"}} // max
+                {0, {"6"}} // max
                 ,
-                {0,{dummy}} // ask_name
+                {0, {dummy}} // ask_name
                 ,
-                {0,{dummy}} // ask_entries
+                {0, {dummy}} // ask_entries
                 ,
-                {0,{dummy}} // ask_min
+                {0, {dummy}} // ask_min
                 ,
-                {0,{dummy}} // ask_max
+                {0, {dummy}} // ask_max
                 ,
-                {0,{dummy}} // success check
+                {0, {dummy}} // success check
                 ,
-                {0,{dummy}} // prefix
+                {0, {dummy}} // prefix
                 ,
-                {0,{dummy}} // suffix
-        };
+                {0, {dummy}} // suffix
+            };
 
         vector<pair<int, vector<string>>> returnValue = baseValue;
 
         // 0 : first one : int=words , vector<string>=list
-        
+
         // 1 : second one : int=0/1 not/set , vector<string>[0] = d_name
         // 2 : third one : int=0/1 not/set , vector<string>[0] = d_ext
         // 3 : fourth one : int=0/1 not/set , vector<string>[0] = string(d_min)
         // 4 : fifth one : int=0/1 not/set , vector<string>[0] = string(d_max)
-        
+
         // 5 : sixth one : int=0/1 false/true = ask_name , NULL
         // 6 : seventh one : int=0/1 false/true = ask_entries , NULL
         // 7 : eight one : int=0/1 false/true = ask_min , NULL
@@ -106,14 +105,14 @@ namespace hat
             path customFileName_path = customPath_path;
             customFileName_path = customFileName_path.filename();
             customFileName = customFileName_path.generic_string();
-            
+
             fconfigPath = customFilePath;
             cout << "[$] Custom Path loaded." << endl;
         }
         int createdStatus = CreateDirectoryMan(fconfigPath, false);
-        // -1 if undefined err, 
-        // 0 if successfully made, 
-        // 1 if already existed, 
+        // -1 if undefined err,
+        // 0 if successfully made,
+        // 1 if already existed,
         // 2 if planned errors
 
         if (createdStatus == -1 || createdStatus == 0 || createdStatus == 2)
@@ -153,7 +152,8 @@ namespace hat
 
             if (!fconfigExists)
             {
-                cout << "[!] No configuration file with the '.fconfig' extension found at '" + fconfigPath + "'. " << endl << endl;
+                cout << "[!] No configuration file with the '.fconfig' extension found at '" + fconfigPath + "'. " << endl
+                     << endl;
                 return baseValue;
             }
 
@@ -282,7 +282,7 @@ namespace hat
                         customPrefix = fileData;
                         flag_Prefix_DONE = true;
                         continue;
-                    }                    
+                    }
                     //-----
                     if (fileData == "--Suffix--")
                     {
@@ -365,7 +365,6 @@ namespace hat
                     cout << "[#] Invalid config" << endl;
                     break;
                 }
-                  
 
                 /*
                 cout << "[!] Entry start : " << flag_EntryStart
@@ -390,7 +389,7 @@ namespace hat
                 }
                 cout
                 << endl << "[!] Custom Prefix : " << endl << customPrefix << endl
-                << endl << "[!] Custom Suffix : " << endl << customSuffix << endl  
+                << endl << "[!] Custom Suffix : " << endl << customSuffix << endl
                 << endl << "[!] Custom File Name : " << endl << customName << endl
                 << endl << "[!] Custom File Extension : " << endl << customExt << endl
                 << endl << "[!] Custom Minimum Chain Value : " << endl << customMin << endl
@@ -398,14 +397,13 @@ namespace hat
                 << endl;
                 // */
 
-
                 if (flag_EntryStart)
                 {
                     for (int itemIndex = 0; itemIndex < customEntriesVector.size(); itemIndex++)
                     {
                         L_wordList.push_back(customEntriesVector.at(itemIndex));
                         returnValue[0].second.push_back(customEntriesVector.at(itemIndex));
-                        returnValue[0].first+=1;
+                        returnValue[0].first += 1;
                     }
                     if (flag_AskEntry)
                     {
@@ -509,11 +507,11 @@ namespace hat
                 return baseValue;
             }
             bool changedFlag = false;
-            for (int row = 0 ; row < returnValue.size()-1 ; row ++)
+            for (int row = 0; row < returnValue.size() - 1; row++)
             { // -1 because the last one needs to be ignored
                 if (returnValue[row].first != 0)
                 {
-                    changedFlag = true;   
+                    changedFlag = true;
                 }
             }
             if (!changedFlag)
@@ -524,7 +522,8 @@ namespace hat
             return returnValue;
         }
         returnValue[9].first = 0;
-        cout << "[!] Couldn't load custom file... Skipping configs." << endl << endl;
+        cout << "[!] Couldn't load custom file... Skipping configs." << endl
+             << endl;
         return baseValue;
     }
 

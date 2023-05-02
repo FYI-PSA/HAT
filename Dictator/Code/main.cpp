@@ -15,6 +15,7 @@ using hat::CreateDirectoryMan;
 #include "Modules/ConfigFileFinder.h"
 using hat::FConfigReader;
 
+#include "Modules/ConfigHelper.h"
 
 using std::cin;
 using std::cout;
@@ -164,6 +165,8 @@ int main (int argc, char** argv)
             cout << "[!] Loading only words from the fconfig..." << endl;
             L_wordListSize = L_wordList.size();
         }
+
+        cout << "[@] " << L_wordListSize << " words were loaded!" << endl; 
     }
     else
     {
@@ -294,6 +297,9 @@ vector<string> HandleLaunchParams(int argCount, char** argArr)
             << endl << "[@] There is no suffix by default, unless specified in a custom config file"
             << endl;
             cout
+            << endl << "[@] Use '--conf-help' for help about how config files work."
+            << endl;
+            cout
             << endl << "[@] Use '--conf-file <config file path>' to load a custom config file"
             << endl << "[@] By default the first valid file in an alphabetical order is loaded from the default configs folder"
             << endl << "[%] Default Location: " + U_HomePath + "PreConfigs"
@@ -306,9 +312,12 @@ vector<string> HandleLaunchParams(int argCount, char** argArr)
             << endl << endl;
             exit(0);
         }
-        if (paramater == "--config-help")
+        if (paramater == "--conf-help")
         {
-            cout << endl << endl << "WIP, SHOUlD READ OU THE CONTENTS OF 'PreConfigSyntax.fConf'" << endl << endl;
+            paramDetected = true;
+            string config_help = hat::configHelpData();
+            cout << endl << endl << config_help << endl << endl;
+            exit(0);
         }
         if (paramater == "--ignore-conf")
         {
