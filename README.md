@@ -11,7 +11,7 @@ ________
   * A dictionary generator for web crawlers and brute forcing!
   * Configs: Configure things such as file name and extension, prefix and suffix.
   * You can also set some details that the program normally asks you to automate the process and be more efficient
-  * [Works on Linux,
+  * [Works on Linux, MacOS, Windows]
 
   ### _**[Intall and Instructions](/Dictator/Instructions.md)**_
 
