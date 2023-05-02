@@ -99,7 +99,7 @@ TODO:
 
 int main (int argc, char** argv)
 {
-    cout << "[*] Dictator V2.0" << endl << endl;
+    cout << "[*] Dictator V2.1" << endl << endl;
     
     U_HomePath = homePathCreator();
 
