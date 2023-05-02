@@ -114,9 +114,9 @@ int main (int argc, char** argv)
     {
         cout << "[$] An fconfig file has been loaded!" << endl;
     
-        if (fconfigStatus[9].first != 0)
+        if (fconfigStatus[10].first != 0)
         {
-            D_Prefix = fconfigStatus[9].second[0];
+            D_Prefix = fconfigStatus[10].second[0];
             D_Prefix_Set = true;
         }
         if (D_Prefix_Set && O_Prefix_Set)
@@ -131,9 +131,9 @@ int main (int argc, char** argv)
             cout << "[$] Prefix is : " + O_Prefix << endl;
         }
 
-        if (fconfigStatus[10].first != 0)
+        if (fconfigStatus[11].first != 0)
         {
-            D_Suffix = fconfigStatus[10].second[0];
+            D_Suffix = fconfigStatus[11].second[0];
             D_Suffix_Set = true;
         }
         if (D_Suffix_Set && O_Suffix_Set)

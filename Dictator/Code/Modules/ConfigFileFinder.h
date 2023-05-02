@@ -82,8 +82,10 @@ namespace hat
         // 7 : eight one : int=0/1 false/true = ask_min , NULL
         // 8 : ninth one : int=0/1 false/true = ask_max , NULL
 
-        // 9 : tenth one : int=0/1 not/set , string = prefix
-        // 10 : eleventh one : 1nt=0/1 not/set , string = suffix
+        // 9 : tenth one: int=0/1 false/true = success , NULL 
+
+        // 10 : tenth one : int=0/1 not/set , string = prefix
+        // 11 : eleventh one : 1nt=0/1 not/set , string = suffix
 
         if (!shouldSearch)
         {
@@ -419,14 +421,14 @@ namespace hat
                 if (flag_Prefix && flag_Prefix_DONE)
                 {
                     D_Prefix = customPrefix;
-                    returnValue[9].second[0] = customPrefix;
-                    returnValue[9].first = 1;
+                    returnValue[10].second[0] = customPrefix;
+                    returnValue[10].first = 1;
                 }
                 if (flag_Suffix && flag_Suffix_DONE)
                 {
                     D_Suffix = customSuffix;
-                    returnValue[10].second[0] = customSuffix;
-                    returnValue[10].first = 1;
+                    returnValue[11].second[0] = customSuffix;
+                    returnValue[11].first = 1;
                 }
                 if (flag_Name && flag_Name_DONE)
                 {
@@ -507,7 +509,7 @@ namespace hat
                 return baseValue;
             }
             bool changedFlag = false;
-            for (int row = 0; row < returnValue.size() - 1; row++)
+            for (int row = 0; row < (returnValue.size() - 1); row++)
             { // -1 because the last one needs to be ignored
                 if (returnValue[row].first != 0)
                 {
