@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class BASE64 
 {   
-    public static final ArrayList<Character> getB64Table()
+    public static ArrayList<Character> getB64Table()
     {
         ArrayList<Character> table = new ArrayList<>(){};
         for (char uppercase = 'A'; uppercase < ('Z' + 1); uppercase++)

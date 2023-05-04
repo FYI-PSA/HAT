@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class BASE16 
 {
-    public static final ArrayList<String> allHexadecimalDigits = new ArrayList<>(Arrays.asList("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"));
+    public static ArrayList<String> allHexadecimalDigits = new ArrayList<>(Arrays.asList("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"));
     private static String getInput(Scanner input)
     {
         String data = input.nextLine();
