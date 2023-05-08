@@ -2,58 +2,57 @@ import java.lang.Math;
 import java.util.Scanner;
 
 public class BASE2 
+
 {
-    private static String getInput(Scanner input)
-    {
-        String data = input.nextLine();
-        return data;
-    }
-    private static void print(String data)
-    {
-        System.out.flush();
-        System.out.print(data);
-        return;
-    }
+    /* -------------------------------------------------------------------------------------- */
+    /* MAIN---------------------------------------------------------------------------------- */
+    /* -------------------------------------------------------------------------------------- */
+
     public static void main(String[] args) 
     {
         Scanner input = new Scanner(System.in);
-        print("[*] Binary Converter\n\n");
-        print("[@] Press 'B' to turn binary into a number\n");
-        print("[@] Press 'N' to turn a number into a byte\n");
-        print("\n[?] > ");
-        char choice = getInput(input).charAt(0);
-        print("\n\n");
+        GENERAL.print("[*] Binary Converter\n\n");
+        GENERAL.print("[@] Enter 'B' to turn binary into a number\n");
+        GENERAL.print("[@] Enter 'N' to turn a number into a byte\n");
+        GENERAL.print("\n[?] > ");
+        char choice = GENERAL.getInput(input).charAt(0);
+        GENERAL.print("\n\n");
         if (choice == 'B')
         {
-            print("[@] Enter the binary string\n");
-            print("[?] > ");
-            String binaryValue = getInput(input);
-            print("[$] Done.\n\n");
-            print(String.valueOf(binaryToDecimal(binaryValue)));
-            print("\n\n[!] Goodbye!\n\n");
+            GENERAL.print("[@] Enter the binary string\n");
+            GENERAL.print("[?] > ");
+            String binaryValue = GENERAL.getInput(input);
+            GENERAL.print("[$] Done.\n\n");
+            GENERAL.print(String.valueOf(binaryToDecimal(binaryValue)));
+            GENERAL.print("\n\n[!] Goodbye!\n\n");
         }
         else if (choice == 'N')
         {
-            print("[@] Enter the number\n");
-            print("[?] > ");
-            int decimalValue = Integer.parseInt(getInput(input));
-            print("[@] How many digits of binary? (default: 8)\n");
-            print("[@] Leave blank if you don't know\n");
-            print("[?] > ");
+            GENERAL.print("[@] Enter the number\n");
+            GENERAL.print("[?] > ");
+            int decimalValue = Integer.parseInt(GENERAL.getInput(input));
+            GENERAL.print("[@] How many digits of binary? (default: 8)\n");
+            GENERAL.print("[@] Leave blank if you don't know\n");
+            GENERAL.print("[?] > ");
             int binaryDigits = 8;
-            String digitInput = getInput(input);
+            String digitInput = GENERAL.getInput(input);
             if (!(digitInput.equals("")))
             {
                 binaryDigits = Integer.parseInt(digitInput);
             }
             String binaryValue = decimalToBinary(decimalValue, binaryDigits);
-            print("[$] Done.\n\n");
-            print(binaryValue);
-            print("\n\n[!] Goodbye!\n\n");
+            GENERAL.print("[$] Done.\n\n");
+            GENERAL.print(binaryValue);
+            GENERAL.print("\n\n[!] Goodbye!\n\n");
         }
         input.close();
         return;
     }
+
+    /* -------------------------------------------------------------------------------------- */
+    /* MAIN-BASE2-METHODS----------------------------------------------------------------------- */
+    /* -------------------------------------------------------------------------------------- */
+
     public static String decimalToBinary(int decimal)
     {
         return decimalToBinary(decimal, 8);
@@ -90,4 +89,5 @@ public class BASE2
         }
         return decimalOutput;
     } 
+    
 }

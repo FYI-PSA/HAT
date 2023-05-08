@@ -3,6 +3,11 @@ import java.util.Scanner;
 
 public class BASE64 
 {   
+
+    /* -------------------------------------------------------------------------------------- */
+    /* BASE64-TABLE-------------------------------------------------------------------------- */
+    /* -------------------------------------------------------------------------------------- */
+
     public static ArrayList<Character> getB64Table()
     {
         ArrayList<Character> table = new ArrayList<>(){};
@@ -22,88 +27,83 @@ public class BASE64
         table.add('/');
         return table;
     }
-    private static String getInput(Scanner input)
-    {
-        String data = input.nextLine();
-        return data;
-    }
-    private static void print(String data)
-    {
-        System.out.print(data);
-        System.out.flush();
-        return;
-    }
-    private static String repeatStr(String repeatingString, int count)
-    {
-        String repeated = "";
-        for (int repeat = 0; repeat < count; repeat ++)
-        {
-            repeated += repeatingString;
-        }
-        return repeated;
-    }
+
+    /* -------------------------------------------------------------------------------------- */
+    /* MAIN---------------------------------------------------------------------------------- */
+    /* -------------------------------------------------------------------------------------- */
+
     public static void main(String[] args) 
     {
         Scanner input = new Scanner(System.in);
-        print("[*] Base64 Converter\n\n");
-        print("[@] Press 'D' to turn base64 encrypted content into a string\n");
-        print("[@] Press 'E' to encrypt a string into base64\n");
-        print("\n[?] > ");
-        char choice = getInput(input).charAt(0);
-        print("\n\n");
+        GENERAL.print("[*] Base64 Converter\n\n");
+        GENERAL.print("[@] Enter 'D' to turn base64 encrypted content into a string\n");
+        GENERAL.print("[@] Enter 'E' to encrypt a string into base64\n");
+        GENERAL.print("\n[?] > ");
+        char choice = GENERAL.getInput(input).charAt(0);
+        GENERAL.print("\n\n");
         if (choice == 'E')
         {
-            print("[@] Enter your text\n");
-            print("[?] > ");
-            String data = getInput(input);
-            print("[$] Done.\n\n");
-            print(String.valueOf(encrypt(data)));
-            print("\n\n[!] Goodbye!\n\n");
+            GENERAL.print("[@] Enter your text\n");
+            GENERAL.print("[?] > ");
+            String data = GENERAL.getInput(input);
+            GENERAL.print("[$] Done.\n\n");
+            GENERAL.print(String.valueOf(encrypt(data)));
+            GENERAL.print("\n\n[!] Goodbye!\n\n");
         }
         else if (choice == 'D')
         {
-            print("[@] Enter your encrypted base64 string\n");
-            print("[?] > ");
-            String data = getInput(input);
-            print("[$] Done.\n\n");
-            print(String.valueOf(decrypt(data)));
-            print("\n\n[!] Goodbye!\n\n");        
+            GENERAL.print("[@] Enter your encrypted base64 string\n");
+            GENERAL.print("[?] > ");
+            String data = GENERAL.getInput(input);
+            GENERAL.print("[$] Done.\n\n");
+            GENERAL.print(String.valueOf(decrypt(data)));
+            GENERAL.print("\n\n[!] Goodbye!\n\n");        
         }
         input.close();
         return;
     }
+
+    /* -------------------------------------------------------------------------------------- */
+    /* MAIN-BASE64-METHODS------------------------------------------------------------------- */
+    /* -------------------------------------------------------------------------------------- */
+
     public static String encrypt(String data)
     {
         String encrypted = "";
-        ArrayList<Character> characters = makeCharacterArrayFromString(data);
-        ArrayList<Integer> characterCodes = characterArrayToIntegerArray(characters);
+        ArrayList<Character> characters = GENERAL.makeCharacterArrayFromString(data);
+        ArrayList<Integer> characterCodes = GENERAL.characterArrayToIntegerArray(characters);
         ArrayList<String> byteArray = makeByteArrayFromIntegerArray(characterCodes);
         int paddingCount = calculatePaddingCount(byteArray);
         ArrayList<String> paddedByteArray = addPaddingBits(byteArray, paddingCount);
         String allBitsString = joinBits(paddedByteArray);
-        ArrayList<String> sixBitBinaryArray = makeChunksFromString(allBitsString, 6);
+        ArrayList<String> sixBitBinaryArray = GENERAL.makeChunksFromString(allBitsString, 6);
         ArrayList<Integer> sixBitAsciiArray = makeIntegerArrayFromBinaryArray(sixBitBinaryArray);
         ArrayList<Character> newCharacterArray = lookupOnTable(sixBitAsciiArray);
         ArrayList<Character> paddedCharacterArray = fixB64Array(newCharacterArray, paddingCount);
-        encrypted = makeStringFromCharacterArray(paddedCharacterArray);
+        encrypted = GENERAL.makeStringFromCharacterArray(paddedCharacterArray);
         return encrypted;
     }
     public static String decrypt(String data)
     {
         String decrypted = "";
-        ArrayList<Character> paddedCharacterArray = makeCharacterArrayFromString(data);
+        ArrayList<Character> paddedCharacterArray = GENERAL.makeCharacterArrayFromString(data);
         int paddingCount = countPaddings(paddedCharacterArray);
         ArrayList<Character> noPaddingCharacterArray = replacePaddings(paddedCharacterArray, paddingCount);
         ArrayList<Integer> characterCodeArray = indexLookupOnTable(noPaddingCharacterArray);
         ArrayList<String> sixBitBinaryArray = makeBinaryArrayFromIntegerArray(characterCodeArray, 6);
         String allBitsString = joinBits(sixBitBinaryArray);
-        ArrayList<String> paddedByteArray = makeChunksFromString(allBitsString, 8);
+        ArrayList<String> paddedByteArray = GENERAL.makeChunksFromString(allBitsString, 8);
         ArrayList<String> byteArray = removePaddingBytes(paddedByteArray);
         ArrayList<Integer> originalAsciiArray = makeIntegerArrayFromBinaryArray(byteArray);
-        ArrayList<Character> originalCharacterArray = integerArrayToCharacterArray(originalAsciiArray);
-        decrypted = makeStringFromCharacterArray(originalCharacterArray);
+        ArrayList<Character> originalCharacterArray = GENERAL.integerArrayToCharacterArray(originalAsciiArray);
+        decrypted = GENERAL.makeStringFromCharacterArray(originalCharacterArray);
         return decrypted;
     }
+
+    /* -------------------------------------------------------------------------------------- */
+    /* CALCULATION-METHODS------------------------------------------------------------------- */
+    /* -------------------------------------------------------------------------------------- */
+
     private static ArrayList<String> removePaddingBytes(ArrayList<String> paddedBytes)
     {
         ArrayList<String> normalByteArray = new ArrayList<>();
@@ -163,16 +163,6 @@ public class BASE64
         }
         return paddings;
     }
-    private static String makeStringFromCharacterArray(ArrayList<Character> characterArray)
-    {
-        String data = "";
-        int dataLength = characterArray.size();
-        for (int characterIndex = 0; characterIndex < dataLength; characterIndex++)
-        {
-            data += (String.valueOf(characterArray.get(characterIndex)));
-        }
-        return data;
-    }
     private static ArrayList<Character> fixB64Array(ArrayList<Character> characterArray, int paddingCount)
     {
         ArrayList<Character> fixedCharacters = characterArray;
@@ -204,32 +194,6 @@ public class BASE64
         }
         return integerValues;
     }
-    private static ArrayList<String> makeChunksFromString(String originalString, int chunkSize)
-    {
-        ArrayList<String> newStringArray = new ArrayList<>();
-        int characters = originalString.length(); 
-        int bufferCount = 0;
-        String bufferString = "";
-        for (int characterIndex = 0; characterIndex < characters; characterIndex++)
-        {
-            char currentCharacter = originalString.charAt(characterIndex);
-            if (bufferCount == chunkSize)
-            {
-                newStringArray.add(bufferString);
-                bufferString = "";
-                bufferCount = 0;
-            }
-            bufferCount ++;
-            bufferString += (String.valueOf(currentCharacter));
-        }
-        if (bufferCount != 0)
-        {
-            newStringArray.add(bufferString);
-            bufferString = "";
-            bufferCount = 0;
-        }  
-        return newStringArray;
-    }
     private static String joinBits(ArrayList<String> binaryArray)
     {
         String joinedBinary = "";
@@ -243,7 +207,7 @@ public class BASE64
     {
         ArrayList<String> paddedByteArray = byteArray;
         int paddingBits = paddingCount * 6;
-        String extras = repeatStr("0", paddingBits);
+        String extras = GENERAL.repeatStr("0", paddingBits);
         paddedByteArray.add(extras);
         return paddedByteArray;
     }
@@ -267,43 +231,5 @@ public class BASE64
         }
         return binaryValues;
     }
-    /*
-    private static ArrayList<Integer> addNToIntegerArray(ArrayList<Integer> integerArray, int n)
-    {
-        ArrayList<Integer> newArray = new ArrayList<>();
-        for (Integer item : integerArray)
-        {
-            newArray.add((item + n));
-        } 
-        return newArray;
-    }
-    */
-    private static ArrayList<Character> integerArrayToCharacterArray(ArrayList<Integer> integerValues)
-    {
-        ArrayList<Character> characters = new ArrayList<>();
-        for (Integer integerValue : integerValues) 
-        {
-            characters.add(((char)(integerValue.intValue())));
-        }
-        return characters;
-    }
-    private static ArrayList<Integer> characterArrayToIntegerArray(ArrayList<Character> characters)
-    {
-        ArrayList<Integer> integerValues = new ArrayList<>();
-        for (Character character : characters) 
-        {
-            integerValues.add((int)(character.charValue()));
-        }
-        return integerValues;
-    }
-    private static ArrayList<Character> makeCharacterArrayFromString(String originalString)
-    {
-        ArrayList<Character> characters = new ArrayList<>();
-        int dataLength = originalString.length();
-        for (int characterIndex = 0; characterIndex < dataLength; characterIndex ++)
-        {
-            characters.add(originalString.charAt(characterIndex));
-        }
-        return characters;
-    }
+    
 }
