@@ -1,3 +1,5 @@
+package com.example.versteckt.rsamodules;
+
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +12,7 @@ public class BASE16
     /* BASE16-TABLE-------------------------------------------------------------------------- */
     /* -------------------------------------------------------------------------------------- */
 
-    public static ArrayList<String> allHexadecimalDigits = new ArrayList<>(Arrays.asList("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"));
+    public static ArrayList<String> allHexadecimalDigits = new ArrayList<String>(Arrays.asList("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"));
 
     /* -------------------------------------------------------------------------------------- */
     /* MAIN---------------------------------------------------------------------------------- */

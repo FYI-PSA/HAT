@@ -1,6 +1,5 @@
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class RSA 
 {
@@ -73,7 +72,7 @@ public class RSA
 
     private static ArrayList<Integer> validDList(int phiN, int E)
     {
-        ArrayList<Integer> validDs = new ArrayList<>(){};
+        ArrayList<Integer> validDs = new ArrayList<Integer>(){};
         /*
             it's a valid D if
                 E*D (mod phiN) = 1 (mod phiN)
@@ -108,7 +107,7 @@ public class RSA
     }
     private static ArrayList<Integer> validEList(Integer phiN)
     {
-        ArrayList<Integer> validEs = new ArrayList<>(){};
+        ArrayList<Integer> validEs = new ArrayList<Integer>(){};
         // it's a valid E if  (1 < x < phiN)  and  (GCD(phiN, E) == 1) 
         // all even numbers are out because phiN = (q-1)(p-1) both p or q are primes and one of them - 1 MUST become even
         for (Integer number = 2; number < phiN; number++)
@@ -125,18 +124,18 @@ public class RSA
     }
     private static ArrayList<Integer> generatePrimeList(int floor, int ceil) 
     { /* Includes both ends (if possible) */
-        ArrayList<Integer> numbers = new ArrayList<>(){};
+        ArrayList<Integer> numbers = new ArrayList<Integer>(){};
         for (int number = 2; number <= ceil; ++ number)
         {
             numbers.add(number);
         }        
-        ArrayList<Integer> checks = new ArrayList<>(numbers);
-        ArrayList<Integer> flaggedPrimes = new ArrayList<>(){};
+        ArrayList<Integer> checks = new ArrayList<Integer>(numbers);
+        ArrayList<Integer> flaggedPrimes = new ArrayList<Integer>(){};
         for (int loop = 0; loop <= ceil; loop++)
         {
-            ArrayList<Integer> copycat = new ArrayList<>(checks);
+            ArrayList<Integer> copycat = new ArrayList<Integer>(checks);
             int currentPrime = 1;
-            Boolean notEnded = true;
+            boolean notEnded = true;
             for (Integer nextPrime : checks)
             {
                 if (! (flaggedPrimes.contains(nextPrime)))
@@ -162,9 +161,9 @@ public class RSA
                     copycat.remove(currentChecking);
                 }
             }
-            checks = new ArrayList<>(copycat);
+            checks = new ArrayList<Integer>(copycat);
         }
-        ArrayList<Integer> primes = new ArrayList<>(flaggedPrimes);
+        ArrayList<Integer> primes = new ArrayList<Integer>(flaggedPrimes);
         for (Integer prime : flaggedPrimes)
         {
             if (prime < floor)

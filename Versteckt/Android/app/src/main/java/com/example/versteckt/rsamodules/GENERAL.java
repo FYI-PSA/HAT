@@ -1,3 +1,5 @@
+package com.example.versteckt.rsamodules;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.security.SecureRandom;
@@ -34,7 +36,7 @@ public class GENERAL
     /*
     public static ArrayList<Integer> addNToIntegerArray(ArrayList<Integer> integerArray, int n)
     {
-        ArrayList<Integer> newArray = new ArrayList<>();
+        ArrayList<Integer> newArray = new ArrayList<Integer>();
         for (Integer item : integerArray)
         {
             newArray.add((item + n));
@@ -53,7 +55,7 @@ public class GENERAL
     }
     public static ArrayList<String> makeChunksFromString(String originalString, int chunkSize)
     {
-        ArrayList<String> newStringArray = new ArrayList<>();
+        ArrayList<String> newStringArray = new ArrayList<String>();
         int characters = originalString.length(); 
         int bufferCount = 0;
         String bufferString = "";
@@ -79,7 +81,7 @@ public class GENERAL
     }
     public static ArrayList<Character> integerArrayToCharacterArray(ArrayList<Integer> integerValues)
     {
-        ArrayList<Character> characters = new ArrayList<>();
+        ArrayList<Character> characters = new ArrayList<Character>();
         for (Integer integerValue : integerValues) 
         {
             characters.add(((char)(integerValue.intValue())));
@@ -88,7 +90,7 @@ public class GENERAL
     }
     public static ArrayList<Integer> characterArrayToIntegerArray(ArrayList<Character> characters)
     {
-        ArrayList<Integer> integerValues = new ArrayList<>();
+        ArrayList<Integer> integerValues = new ArrayList<Integer>();
         for (Character character : characters) 
         {
             integerValues.add((int)(character.charValue()));
@@ -97,7 +99,7 @@ public class GENERAL
     }
     public static ArrayList<Character> makeCharacterArrayFromString(String originalString)
     {
-        ArrayList<Character> characters = new ArrayList<>();
+        ArrayList<Character> characters = new ArrayList<Character>();
         int dataLength = originalString.length();
         for (int characterIndex = 0; characterIndex < dataLength; characterIndex ++)
         {
@@ -147,7 +149,7 @@ public class GENERAL
     public static ArrayList<Integer> strongValues(ArrayList<Integer> allValues)
     {
         int length = allValues.size();
-        ArrayList<Integer> wantedItems = new ArrayList<>(){};
+        ArrayList<Integer> wantedItems = new ArrayList<Integer>(){};
         for (Integer index = (2*(length/3)); index < (length); index++)
         {
             Integer item = allValues.get(index);

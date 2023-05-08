@@ -10,7 +10,7 @@ public class BASE64
 
     public static ArrayList<Character> getB64Table()
     {
-        ArrayList<Character> table = new ArrayList<>(){};
+        ArrayList<Character> table = new ArrayList<Character>(){};
         for (char uppercase = 'A'; uppercase < ('Z' + 1); uppercase++)
         {
             table.add(uppercase);
@@ -106,7 +106,7 @@ public class BASE64
 
     private static ArrayList<String> removePaddingBytes(ArrayList<String> paddedBytes)
     {
-        ArrayList<String> normalByteArray = new ArrayList<>();
+        ArrayList<String> normalByteArray = new ArrayList<String>();
         for (String byteString : paddedBytes)
         {
             if ((byteString.length()) == 8)
@@ -131,7 +131,7 @@ public class BASE64
     private static ArrayList<Integer> indexLookupOnTable(ArrayList<Character> characterArray)
     {
         ArrayList<Character> table = getB64Table();
-        ArrayList<Integer> indices = new ArrayList<>();
+        ArrayList<Integer> indices = new ArrayList<Integer>();
         for (Character character : characterArray)
         {
             int index = table.indexOf(character);
@@ -177,7 +177,7 @@ public class BASE64
     private static ArrayList<Character> lookupOnTable(ArrayList<Integer> indexArray)
     {
         ArrayList<Character> table = getB64Table();
-        ArrayList<Character> characterArray = new ArrayList<>();
+        ArrayList<Character> characterArray = new ArrayList<Character>();
         for (Integer index : indexArray)
         {
             characterArray.add(table.get(index));
@@ -186,7 +186,7 @@ public class BASE64
     }
     private static ArrayList<Integer> makeIntegerArrayFromBinaryArray(ArrayList<String> binaryArray)
     {
-        ArrayList<Integer> integerValues = new ArrayList<>();
+        ArrayList<Integer> integerValues = new ArrayList<Integer>();
         for (String binaryValue : binaryArray)
         {
             Integer integerItem = BASE2.binaryToDecimal(binaryValue);
@@ -223,7 +223,7 @@ public class BASE64
     }
     private static ArrayList<String> makeBinaryArrayFromIntegerArray(ArrayList<Integer> integerArray, int digits)
     {
-        ArrayList<String> binaryValues = new ArrayList<>();
+        ArrayList<String> binaryValues = new ArrayList<String>();
         for (Integer integerValue : integerArray)
         {
             String binaryItem = BASE2.decimalToBinary((integerValue.intValue()), digits);

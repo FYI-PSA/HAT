@@ -1,3 +1,5 @@
+package com.example.versteckt.rsamodules;
+
 import java.lang.Math;
 import java.util.Scanner;
 
