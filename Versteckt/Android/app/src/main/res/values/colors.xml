@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="light_gray">#333333</color>
+    <color name="gray">#222222</color>
+    <color name="dark_gray">#111111</color>
+    <color name="violet">#B034B0</color>
+    <color name="pink">#B90970</color>
+    <color name="aggressive_pink">#FF00FF</color>
+
+    <color name="title_bg">@color/black</color>
+    <color name="title_color">@color/aggressive_pink</color>
+    <color name="normal_button_color">@color/white</color>
+    <color name="normal_button_bg">@color/light_gray</color>
+    <color name="return_button_color">@color/white</color>
+    <color name="return_button_bg">@color/pink</color>
+
+    <color name="bg">@color/dark_gray</color>
+</resources>

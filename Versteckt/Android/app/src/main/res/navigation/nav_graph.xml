@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/RSAMainFragment">
+
+    <fragment
+        android:id="@+id/RSAMainFragment"
+        android:name="com.example.versteckt.RSAMain"
+        android:label="@string/rsa_main_fragment_label"
+        tools:layout="@layout/main_rsa_page">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/SimpleEncryptionsFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SimpleEncryptionsFragment"
+        android:name="com.example.versteckt.SimpleEncryptions"
+        android:label="@string/simple_encryptions_fragment_label"
+        tools:layout="@layout/simple_encryptions">
+
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/RSAMainFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SimpleEncryptionPageFragment"
+        android:name="com.example.versteckt.SimpleEncryptionPage"
+        android:label="@string/simple_encryption_page_fragment_label"
+        tools:layout="@layout/simple_encryption_page">
+    </fragment>
+
+</navigation>

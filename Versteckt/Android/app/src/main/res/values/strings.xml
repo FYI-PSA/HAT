@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Versteckt</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="rsa_main_fragment_label">RSA Main</string>
+    <string name="simple_encryptions_fragment_label">Simple Encryptions</string>
+    <string name="simple_encryption_page_fragment_label">Simple Encryption Page</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="empty_string"> </string>
+    <!-- Simple Encryption Page-->
+    <string name="simple_encryption_page_header">NAME</string>
+    <string name="simple_encrypt_text">A</string>
+    <string name="simple_decrypt_text">A</string>
+    <string name="back_simple_encryptions_page_button">A</string>
+    <!-- Simple Encryptions Page -->
+    <string name="simple_encryptions_header">Simple Encryptions</string>
+    <string name="base2_page_button">Binary</string>
+    <string name="base16_page_button">Hexadecimal</string>
+    <string name="base64_page_button">Base64</string>
+    <string name="back_RSA_page_button">Back to RSA</string>
+    <!-- RSA Main Page-->
+    <string name="main_rsa_header">RSA</string>
+    <string name="rsa_keys_page_button">Keys</string>
+    <string name="rsa_encryption_page_button">Encryption</string>
+    <string name="rsa_decryption_page_button">Decryption</string>
+    <string name="go_simple_encryptions_page_button">Simpler Encryptions</string>
+</resources>

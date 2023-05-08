@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RSAMain">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+
+        <TextView
+            android:id="@+id/simpleEncryptionsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="40dp"
+            android:background="@color/title_bg"
+            android:textColor="@color/title_color"
+            android:text="@string/simple_encryptions_header"
+            android:textAlignment="center"
+            android:fontFamily="cursive"
+            android:textSize="40sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <Button
+            android:id="@+id/base2PageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/normal_button_bg"
+            android:textColor="@color/normal_button_color"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/base2_page_button"
+            app:layout_constraintTop_toBottomOf="@id/simpleEncryptionsHeader"
+            app:layout_constraintBottom_toTopOf="@id/base16PageButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <Button
+            android:id="@+id/base16PageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/normal_button_bg"
+            android:textColor="@color/normal_button_color"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/base16_page_button"
+            app:layout_constraintTop_toBottomOf="@id/base2PageButton"
+            app:layout_constraintBottom_toTopOf="@id/base64PageButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <Button
+            android:id="@+id/base64PageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/normal_button_bg"
+            android:textColor="@color/normal_button_color"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/base64_page_button"
+            app:layout_constraintTop_toBottomOf="@id/base16PageButton"
+            app:layout_constraintBottom_toBottomOf="@id/emptySpace"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <androidx.constraintlayout.widget.Placeholder
+            android:id="@+id/emptySpace"
+            android:layout_width="1px"
+            android:layout_height="1px"
+            app:layout_constraintTop_toBottomOf="@id/base64PageButton"
+            app:layout_constraintBottom_toTopOf="@id/backToRSAButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+
+        <Button
+            android:id="@+id/backToRSAButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/return_button_bg"
+            android:textColor="@color/return_button_color"
+            android:fontFamily="sans-serif"
+            android:text="@string/back_RSA_page_button"
+            app:layout_constraintTop_toBottomOf="@id/emptySpace"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>
+
+
