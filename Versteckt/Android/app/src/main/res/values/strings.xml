@@ -3,16 +3,17 @@
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="rsa_main_fragment_label">RSA Main</string>
+    <string name="rsa_simple_fragment_label">RSA Simple</string>
     <string name="simple_encryptions_fragment_label">Simple Encryptions</string>
     <string name="simple_encryption_page_fragment_label">Simple Encryption Page</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="empty_string"> </string>
     <!-- Simple Encryption Page-->
-    <string name="simple_encryption_page_header">NAME</string>
-    <string name="simple_encrypt_text">A</string>
-    <string name="simple_decrypt_text">A</string>
-    <string name="back_simple_encryptions_page_button">A</string>
+    <string name="simple_encryption_page_header">Encryption-Method</string>
+    <string name="simple_encrypt_text">Encrypt</string>
+    <string name="simple_decrypt_text">Decrypt</string>
+    <string name="back_simple_encryptions_page_button">Back to Encryptions Menu</string>
     <!-- Simple Encryptions Page -->
     <string name="simple_encryptions_header">Simple Encryptions</string>
     <string name="base2_page_button">Binary</string>

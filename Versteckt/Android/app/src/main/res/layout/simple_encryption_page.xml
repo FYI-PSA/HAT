@@ -1,104 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".SimpleEncryptionPage">
-
-<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" >
+    tools:context=".SimpleEncryptionPage">
 
-
-    <TextView
-        android:id="@+id/simpleEncryptionPageHeader"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="40dp"
-        android:background="@color/title_bg"
-        android:textColor="@color/title_color"
-        android:text="@string/simple_encryption_page_header"
-        android:textAlignment="center"
-        android:fontFamily="cursive"
-        android:textSize="40sp"
-        android:textStyle="bold|italic"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <Button
-        android:id="@+id/simpleEncryptButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/normal_button_bg"
-        android:textColor="@color/normal_button_color"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif-black"
-        android:text="@string/simple_encrypt_text"
-        app:layout_constraintTop_toBottomOf="@id/simpleEncryptionPageHeader"
-        app:layout_constraintBottom_toTopOf="@id/emptySpace1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-
-    <androidx.constraintlayout.widget.Placeholder
-        android:id="@+id/emptySpace1"
-        android:layout_width="1px"
-        android:layout_height="1px"
-        app:layout_constraintTop_toBottomOf="@id/simpleEncryptButton"
-        app:layout_constraintBottom_toTopOf="@id/simpleDecryptButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-
-    <Button
-        android:id="@+id/simpleDecryptButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/normal_button_bg"
-        android:textColor="@color/normal_button_color"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif-black"
-        android:text="@string/simple_decrypt_text"
-        app:layout_constraintTop_toBottomOf="@id/emptySpace1"
-        app:layout_constraintBottom_toBottomOf="@id/emptySpace2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-
-    <androidx.constraintlayout.widget.Placeholder
-        android:id="@+id/emptySpace2"
-        android:layout_width="1px"
-        android:layout_height="1px"
-        app:layout_constraintTop_toBottomOf="@id/simpleDecryptButton"
-        app:layout_constraintBottom_toTopOf="@id/backToSimpleEncryptionsPageButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-
-
-    <Button
-        android:id="@+id/backToSimpleEncryptionsPageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/return_button_bg"
-        android:textColor="@color/return_button_color"
-        android:fontFamily="sans-serif"
-        android:text="@string/back_simple_encryptions_page_button"
-        app:layout_constraintTop_toBottomOf="@id/emptySpace2"
+        android:layout_height="match_parent"
+        android:background="@color/bg"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/simpleEncryptionPageHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="40dp"
+            android:background="@color/title_bg"
+            android:textColor="@color/title_color"
+            android:text="@string/simple_encryption_page_header"
+            android:textAlignment="center"
+            android:fontFamily="cursive"
+            android:textSize="40sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/simpleEncryptTextEnter"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/simpleEncryptionPageHeader"
+            app:layout_constraintBottom_toTopOf="@id/simpleEncryptButton"
+            />
+
+        <Button
+            android:id="@+id/simpleEncryptButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/normal_button_bg"
+            android:textColor="@color/normal_button_color"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/simple_encrypt_text"
+            app:layout_constraintTop_toBottomOf="@id/simpleEncryptTextEnter"
+            app:layout_constraintBottom_toTopOf="@id/simpleDecryptButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <Button
+            android:id="@+id/simpleDecryptButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/normal_button_bg"
+            android:textColor="@color/normal_button_color"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/simple_decrypt_text"
+            app:layout_constraintTop_toBottomOf="@id/simpleEncryptButton"
+            app:layout_constraintBottom_toBottomOf="@id/emptySpace2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <androidx.constraintlayout.widget.Placeholder
+            android:id="@+id/emptySpace2"
+            android:layout_width="1px"
+            android:layout_height="1px"
+            app:layout_constraintTop_toBottomOf="@id/simpleDecryptButton"
+            app:layout_constraintBottom_toTopOf="@id/backToSimpleEncryptionsPageButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+
+        <Button
+            android:id="@+id/backToSimpleEncryptionsPageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/return_button_bg"
+            android:textColor="@color/return_button_color"
+            android:fontFamily="sans-serif"
+            android:text="@string/back_simple_encryptions_page_button"
+            app:layout_constraintTop_toBottomOf="@id/emptySpace2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </RelativeLayout>

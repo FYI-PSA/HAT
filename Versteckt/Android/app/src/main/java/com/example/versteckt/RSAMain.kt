@@ -31,8 +31,7 @@ class RSAMain : Fragment() {
     {
         view.findViewById<Button>(R.id.goToSimpleEncryptionsButton).setOnClickListener()
         {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-            /* Toast.makeText(activity, "OwO *notices your toast*", Toast.LENGTH_SHORT).show(); */
+            findNavController().navigate(R.id.action_RSAMain_to_SimpleEncryptions)
         }
         super.onViewCreated(view, savedInstanceState)
     }

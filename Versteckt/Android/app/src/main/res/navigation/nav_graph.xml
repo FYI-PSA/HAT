@@ -12,7 +12,7 @@
         tools:layout="@layout/main_rsa_page">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            android:id="@+id/action_RSAMain_to_SimpleEncryptions"
             app:destination="@id/SimpleEncryptionsFragment"
             />
     </fragment>
@@ -24,8 +24,12 @@
         tools:layout="@layout/simple_encryptions">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/action_SimpleEncryptions_to_RSAMain"
             app:destination="@id/RSAMainFragment"
+            />
+        <action
+            android:id="@+id/action_SimpleEncryptions_to_SimpleEncryptionPage"
+            app:destination="@+id/SimpleEncryptionPageFragment"
             />
     </fragment>
 
@@ -34,6 +38,11 @@
         android:name="com.example.versteckt.SimpleEncryptionPage"
         android:label="@string/simple_encryption_page_fragment_label"
         tools:layout="@layout/simple_encryption_page">
+
+        <action
+            android:id="@+id/action_SimpleEncryptionPage_to_SimpleEncryptions"
+            app:destination="@id/SimpleEncryptionsFragment"
+            />
     </fragment>
 
 </navigation>

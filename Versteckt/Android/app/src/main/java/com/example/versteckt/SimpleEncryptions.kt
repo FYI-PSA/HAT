@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.example.versteckt.databinding.SimpleEncryptionsBinding
 
@@ -31,8 +30,19 @@ class SimpleEncryptions : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.findViewById<Button>(R.id.backToRSAButton).setOnClickListener()
         {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-            /* Toast.makeText(activity, "OwO *notices your toast*", Toast.LENGTH_SHORT).show(); */
+            findNavController().navigate(R.id.action_SimpleEncryptions_to_RSAMain)
+        }
+        view.findViewById<Button>(R.id.base2PageButton).setOnClickListener()
+        {
+            findNavController().navigate(R.id.action_SimpleEncryptions_to_SimpleEncryptionPage)
+        }
+        view.findViewById<Button>(R.id.base16PageButton).setOnClickListener()
+        {
+            findNavController().navigate(R.id.action_SimpleEncryptions_to_SimpleEncryptionPage)
+        }
+        view.findViewById<Button>(R.id.base64PageButton).setOnClickListener()
+        {
+            findNavController().navigate(R.id.action_SimpleEncryptions_to_SimpleEncryptionPage)
         }
         super.onViewCreated(view, savedInstanceState)
     }
