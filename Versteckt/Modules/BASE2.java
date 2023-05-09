@@ -2,8 +2,8 @@ import java.lang.Math;
 import java.util.Scanner;
 
 public class BASE2 
-
 {
+
     /* -------------------------------------------------------------------------------------- */
     /* MAIN---------------------------------------------------------------------------------- */
     /* -------------------------------------------------------------------------------------- */
@@ -89,5 +89,48 @@ public class BASE2
         }
         return decimalOutput;
     } 
+    public static String dataStringToBinaryString(String data)
+    {
+        return dataStringToBinaryString(data, " ");
+    }
+    public static String dataStringToBinaryString(String data, int digits)
+    {
+        return dataStringToBinaryString(data, " ", 8);
+    }
+    public static String dataStringToBinaryString(String data, String separator)
+    {
+        return dataStringToBinaryString(data, separator, 8);
+    }
+    public static String dataStringToBinaryString(String data, String separator, int digits)
+    {
+        String encrypted = "";
+        int dataLength = data.length();
+        for(int characterIndex = 0; characterIndex < dataLength; characterIndex++)
+        {
+            Character currentCharacter = data.charAt(characterIndex);
+            int characterAscii = ((int)currentCharacter.charValue());
+            String binaryString = decimalToBinary(characterAscii, digits);
+            encrypted += binaryString;
+            if (characterIndex == (dataLength-1))
+            {
+                continue;
+            }
+            encrypted += separator;
+        }
+        return encrypted;
+    }
+    public static String binaryStringToDataString(String binaryString, String separator)
+    {
+        String decrypted = "";
+        String[] binaryItems = binaryString.split(separator);
+        for (String binaryItem : binaryItems)
+        {
+            int asciiCharacter = binaryToDecimal(binaryItem);
+            char currentCharacter = ((char)asciiCharacter);
+            String current = String.valueOf(currentCharacter);
+            decrypted += current;
+        }
+        return decrypted;
+    }
     
 }

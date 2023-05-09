@@ -11,6 +11,9 @@
     <string name="empty_string"> </string>
     <!-- Simple Encryption Page-->
     <string name="simple_encryption_page_header">Encryption-Method</string>
+    <string name="simple_encryption_binary_header">Binary</string>
+    <string name="simple_encryption_hexadecimal_header">Hexadecimal</string>
+    <string name="simple_encryption_base64_header">Base64</string>
     <string name="simple_encrypt_text">Encrypt</string>
     <string name="simple_decrypt_text">Decrypt</string>
     <string name="back_simple_encryptions_page_button">Back to Encryptions Menu</string>

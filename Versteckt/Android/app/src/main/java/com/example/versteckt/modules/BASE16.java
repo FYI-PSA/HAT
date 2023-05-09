@@ -1,4 +1,4 @@
-package com.example.versteckt.rsamodules;
+package com.example.versteckt.modules;
 
 import java.lang.Math;
 import java.util.ArrayList;
