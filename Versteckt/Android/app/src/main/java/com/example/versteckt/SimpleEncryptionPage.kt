@@ -1,14 +1,12 @@
 package com.example.versteckt
 
 import android.os.Bundle
-import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.example.versteckt.databinding.SimpleEncryptionPageBinding
 import com.example.versteckt.modules.*
@@ -42,9 +40,13 @@ class SimpleEncryptionPage : Fragment()
     {
         super.onViewCreated(view, savedInstanceState)
 
-        var headerName = getSimpleEncryptionHeader();
+        var headerName = getSimpleEncryptionHeader()
 
-        view.findViewById<TextView>(R.id.simpleEncryptionPageHeader)?.text = headerName;
+        val binaryText = (getString(R.string.simple_encryption_binary_header)).toString()
+        val hexadecimalText = (getString(R.string.simple_encryption_hexadecimal_header)).toString()
+        val base64Text = (getString(R.string.simple_encryption_base64_header)).toString()
+
+        view.findViewById<TextView>(R.id.simpleEncryptionPageHeader)?.text = headerName
         view.findViewById<Button>(R.id.backToSimpleEncryptionsPageButton)?.setOnClickListener()
         {
             findNavController().navigate(R.id.action_SimpleEncryptionPage_to_SimpleEncryptions)
@@ -53,33 +55,50 @@ class SimpleEncryptionPage : Fragment()
         view.findViewById<Button>(R.id.simpleEncryptButton)?.setOnClickListener()
         {
             val textEnterField = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.simpleEncryptTextEnter)
-            val currentData = textEnterField.text.toString();
-            var encryptedData = "";
-            if (headerName == ((getString(R.string.simple_encryption_binary_header)).toString()))
+            val currentData = textEnterField.text.toString()
+            var newData = "";
+            if (headerName == binaryText)
             {
-                encryptedData = BASE2.dataStringToBinaryString(currentData, " ");
+                newData = BASE2.dataStringToByteString(currentData, " ")
+            }
+            else if (headerName == hexadecimalText)
+            {
+                newData = BASE16.dataStringToHexadecimalString(currentData, true, 2, " ")
+            }
+            else if (headerName == base64Text)
+            {
+                newData = BASE64.encrypt(currentData)
             }
             else
             {
-                encryptedData = currentData;
+                newData = currentData
             }
-            textEnterField.setText(encryptedData);
+            textEnterField.setText(newData)
         }
+
 
         view.findViewById<Button>(R.id.simpleDecryptButton)?.setOnClickListener()
         {
             val textEnterField = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.simpleEncryptTextEnter)
-            val encryptedData = textEnterField.text.toString();
-            var data = "";
-            if (headerName == ((getString(R.string.simple_encryption_binary_header)).toString()))
+            val currentData = textEnterField.text.toString()
+            var newData = "";
+            if (headerName == (binaryText))
             {
-                data = BASE2.binaryStringToDataString(encryptedData, " ");
+                newData = BASE2.binaryStringToDataString(currentData, " ")
+            }
+            else if (headerName == (hexadecimalText))
+            {
+                newData = BASE16.hexadecimalStringToDataString(currentData, " ")
+            }
+            else if (headerName == (base64Text))
+            {
+                newData = BASE64.decrypt(currentData)
             }
             else
             {
-                data = encryptedData;
+                newData = currentData
             }
-            textEnterField.setText(data);
+            textEnterField.setText(newData)
         }
     }
 

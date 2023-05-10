@@ -89,15 +89,11 @@ public class BASE2
         }
         return decimalOutput;
     } 
-    public static String dataStringToBinaryString(String data)
-    {
-        return dataStringToBinaryString(data, " ");
-    }
-    public static String dataStringToBinaryString(String data, int digits)
+    public static String dataStringToByteString(String data)
     {
         return dataStringToBinaryString(data, " ", 8);
     }
-    public static String dataStringToBinaryString(String data, String separator)
+    public static String dataStringToByteString(String data, String separator)
     {
         return dataStringToBinaryString(data, separator, 8);
     }

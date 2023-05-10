@@ -48,7 +48,7 @@ public class BASE16
             {
                 hexDigits = Integer.parseInt(digitInput);
             }
-            String hexadecimalValue = decimalToHex(decimalValue, hexDigits);
+            String hexadecimalValue = decimalToHex(decimalValue, hexDigits, true);
             GENERAL.print("[$] Done.\n\n");
             GENERAL.print(hexadecimalValue);
             GENERAL.print("\n\n[!] Goodbye!\n\n");
@@ -64,9 +64,9 @@ public class BASE16
 
     public static String decimalToHex(int decimal)
     {
-        return decimalToHex(decimal, 2);
+        return decimalToHex(decimal, 2, true);
     }
-    public static String decimalToHex(int decimal, int hexadecimalDigits)
+    public static String decimalToHex(int decimal, int hexadecimalDigits, boolean prefix)
     {
         String hexOutput = "";
         for (int currentDigitIndex = 0; currentDigitIndex < hexadecimalDigits; currentDigitIndex++)
@@ -82,10 +82,15 @@ public class BASE16
             String currentDigit = allHexadecimalDigits.get(currentHexadecimalDigitValue);
             hexOutput = hexOutput + currentDigit;
         }
+        if(prefix)
+        {
+            hexOutput = "0x" + hexOutput;
+        }
         return hexOutput;
     }
     public static int hexToDecimal(String hexadecimal)
     {
+        hexadecimal = hexadecimal.replaceFirst("^0x", "");
         int decimalOutput = 0;
         hexadecimal = hexadecimal.toUpperCase();
         int hexadecimalDigits = hexadecimal.length();
@@ -100,5 +105,38 @@ public class BASE16
         }
         return decimalOutput;
     }
-    
+    public static String dataStringToHexadecimalString(String data, boolean prefix, int digits, String separator)
+    {
+        String encrypted = "";
+        int dataLength = data.length();
+        for (int characterIndex = 0; characterIndex < dataLength; characterIndex++)
+        {
+            char currentCharacter = data.charAt(characterIndex);
+            int characterAsciiCode = ((int)currentCharacter);
+            String currentHex = decimalToHex(characterAsciiCode, digits, prefix);
+            encrypted += currentHex;
+            if (characterIndex == (dataLength-1))
+            {
+                continue;
+            }
+            encrypted += separator;
+        }
+        return encrypted;
+    }
+    public static String hexadecimalStringToDataString(String hexadecimalString, String separator)
+    {
+        String data = "";
+        String[] hexadecimalArray = hexadecimalString.split(separator);
+        for (String hexadecimalItem : hexadecimalArray)
+        {
+            GENERAL.print(hexadecimalItem);
+            int currentAsciiCode = hexToDecimal(hexadecimalItem);
+            GENERAL.print(currentAsciiCode);
+            char currentCharacter = (char)currentAsciiCode;
+            String current = String.valueOf(currentCharacter);
+            data += current;
+        }
+        return data;
+    }
+
 }
