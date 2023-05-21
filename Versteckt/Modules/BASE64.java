@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BASE64 
@@ -8,23 +7,27 @@ public class BASE64
     /* BASE64-TABLE-------------------------------------------------------------------------- */
     /* -------------------------------------------------------------------------------------- */
 
-    public static ArrayList<Character> getB64Table()
+    public static Character[] getB64Table()
     {
-        ArrayList<Character> table = new ArrayList<Character>(){};
+        Character[] table = new Character[64];
+        int index = 0;
         for (char uppercase = 'A'; uppercase < ('Z' + 1); uppercase++)
         {
-            table.add(uppercase);
+            table[index] = uppercase;
+            index++;
         }
         for (char lowercase = 'a'; lowercase < ('z' + 1); lowercase++)
         {
-            table.add(lowercase);
+            table[index] = lowercase;
+            index++;
         }
         for (char number = '0'; number < ('9' + 1); number++)
         {
-            table.add(number);
+            table[index] = number;
+            index++;
         }
-        table.add('+');
-        table.add('/');
+        table[index] = '+';
+        table[(index + 1)] = '/';
         return table;
     }
 
@@ -70,32 +73,32 @@ public class BASE64
     public static String encrypt(String data)
     {
         String encrypted = "";
-        ArrayList<Character> characters = GENERAL.makeCharacterArrayFromString(data);
-        ArrayList<Integer> characterCodes = GENERAL.characterArrayToIntegerArray(characters);
-        ArrayList<String> byteArray = makeByteArrayFromIntegerArray(characterCodes);
+        Character[] characters = GENERAL.makeCharacterArrayFromString(data);
+        Integer[] characterCodes = GENERAL.characterArrayToIntegerArray(characters);
+        String[] byteArray = makeByteArrayFromIntegerArray(characterCodes);
         int paddingCount = calculatePaddingCount(byteArray);
-        ArrayList<String> paddedByteArray = addPaddingBits(byteArray, paddingCount);
+        String[] paddedByteArray = addPaddingBits(byteArray, paddingCount);
         String allBitsString = joinBits(paddedByteArray);
-        ArrayList<String> sixBitBinaryArray = GENERAL.makeChunksFromString(allBitsString, 6);
-        ArrayList<Integer> sixBitAsciiArray = makeIntegerArrayFromBinaryArray(sixBitBinaryArray);
-        ArrayList<Character> newCharacterArray = lookupOnTable(sixBitAsciiArray);
-        ArrayList<Character> paddedCharacterArray = fixB64Array(newCharacterArray, paddingCount);
+        String[] sixBitBinaryArray = GENERAL.makeChunksFromString(allBitsString, 6);
+        Integer[] sixBitAsciiArray = makeIntegerArrayFromBinaryArray(sixBitBinaryArray);
+        Character[] newCharacterArray = lookupOnTable(sixBitAsciiArray);
+        Character[] paddedCharacterArray = fixB64Array(newCharacterArray, paddingCount);
         encrypted = GENERAL.makeStringFromCharacterArray(paddedCharacterArray);
         return encrypted;
     }
     public static String decrypt(String data)
     {
         String decrypted = "";
-        ArrayList<Character> paddedCharacterArray = GENERAL.makeCharacterArrayFromString(data);
+        Character[] paddedCharacterArray = GENERAL.makeCharacterArrayFromString(data);
         int paddingCount = countPaddings(paddedCharacterArray);
-        ArrayList<Character> noPaddingCharacterArray = replacePaddings(paddedCharacterArray, paddingCount);
-        ArrayList<Integer> characterCodeArray = indexLookupOnTable(noPaddingCharacterArray);
-        ArrayList<String> sixBitBinaryArray = makeBinaryArrayFromIntegerArray(characterCodeArray, 6);
+        Character[] noPaddingCharacterArray = replacePaddings(paddedCharacterArray, paddingCount);
+        Integer[] characterCodeArray = indexLookupOnTable(noPaddingCharacterArray);
+        String[] sixBitBinaryArray = makeBinaryArrayFromIntegerArray(characterCodeArray, 6);
         String allBitsString = joinBits(sixBitBinaryArray);
-        ArrayList<String> paddedByteArray = GENERAL.makeChunksFromString(allBitsString, 8);
-        ArrayList<String> byteArray = removePaddingBytes(paddedByteArray);
-        ArrayList<Integer> originalAsciiArray = makeIntegerArrayFromBinaryArray(byteArray);
-        ArrayList<Character> originalCharacterArray = GENERAL.integerArrayToCharacterArray(originalAsciiArray);
+        String[] paddedByteArray = GENERAL.makeChunksFromString(allBitsString, 8);
+        String[] byteArray = removePaddingBytes(paddedByteArray);
+        Integer[] originalAsciiArray = makeIntegerArrayFromBinaryArray(byteArray);
+        Character[] originalCharacterArray = GENERAL.integerArrayToCharacterArray(originalAsciiArray);
         decrypted = GENERAL.makeStringFromCharacterArray(originalCharacterArray);
         return decrypted;
     }
@@ -104,15 +107,17 @@ public class BASE64
     /* CALCULATION-METHODS------------------------------------------------------------------- */
     /* -------------------------------------------------------------------------------------- */
 
-    private static ArrayList<String> removePaddingBytes(ArrayList<String> paddedBytes)
+    private static String[] removePaddingBytes(String[] paddedBytes)
     {
-        ArrayList<String> normalByteArray = new ArrayList<String>();
+        int length = paddedBytes.length;
+        String[] normalByteArray = new String[length];
+        int index = 0;
         for (String byteString : paddedBytes)
         {
             if ((byteString.length()) == 8)
             {
                 Boolean notZero = false;
-                for (int bitIndex = 0; bitIndex < 8; bitIndex++)
+                for (int bitIndex = 0; bitIndex < 8; bitIndex ++)
                 {
                     if (byteString.charAt(bitIndex) != '0')
                     {
@@ -122,40 +127,53 @@ public class BASE64
                 }
                 if (notZero) 
                 {
-                    normalByteArray.add(byteString);
+                    normalByteArray[index] = byteString;
+                    index++;
                 }
             }
         }
-        return normalByteArray;
-    }
-    private static ArrayList<Integer> indexLookupOnTable(ArrayList<Character> characterArray)
-    {
-        ArrayList<Character> table = getB64Table();
-        ArrayList<Integer> indices = new ArrayList<Integer>();
-        for (Character character : characterArray)
+        int actualLength = index;
+        String[] actualByteArray = new String[actualLength];
+        for (int actualByteIndex = 0; actualByteIndex < actualLength; actualByteIndex ++)
         {
-            int index = table.indexOf(character);
-            indices.add(index);
+            actualByteArray[actualByteIndex] = normalByteArray[actualByteIndex];
+        }
+        return actualByteArray;
+    }
+    private static Integer[] indexLookupOnTable(Character[] characterArray)
+    {
+        Character[] table = getB64Table();
+        int length = table.length;
+        int indexIndex = 0;
+        Integer[] indices = new Integer[length];
+        for (Character currentB64Character : characterArray)
+        {
+            int index = GENERAL.findIndex(currentB64Character, table);
+            indices[indexIndex] = index;
+            indexIndex++;
         }
         return indices;
     }
-    private static ArrayList<Character> replacePaddings(ArrayList<Character> paddedCharacterArray, int paddings)
+    private static Character[] replacePaddings(Character[] paddedCharacterArray, int paddings)
     {
-        ArrayList<Character> normalCharacters = paddedCharacterArray;
-        int lastIndex = (normalCharacters.size()) - 1;
+        int length = paddedCharacterArray.length;
+        Character[] normalCharacters = paddedCharacterArray.clone();
+        int lastIndex = length - 1;
         for (int paddingIndex = 0; paddingIndex < paddings; paddingIndex++)
         {
             int padding = lastIndex - paddingIndex;
-            normalCharacters.set(padding, 'A');
+            normalCharacters[padding] = 'A';
         }
         return normalCharacters;
     }
-    private static int countPaddings(ArrayList<Character> paddedCharacterArray)
+    private static int countPaddings(Character[] paddedCharacterArray)
     {
         int paddings = 0;
-        for (int characterIndex = ((paddedCharacterArray.size()) - 1); characterIndex >= 0; -- characterIndex)
+        int length = paddedCharacterArray.length;
+        int lastIndex = length - 1;
+        for (int characterIndex = lastIndex; characterIndex >= 0; -- characterIndex)
         {
-            char currentCharacter = paddedCharacterArray.get(characterIndex);
+            char currentCharacter = paddedCharacterArray[characterIndex].charValue();
             if (currentCharacter == '=')
             {
                 paddings ++;
@@ -163,38 +181,42 @@ public class BASE64
         }
         return paddings;
     }
-    private static ArrayList<Character> fixB64Array(ArrayList<Character> characterArray, int paddingCount)
+    private static Character[] fixB64Array(Character[] characterArray, int paddingCount)
     {
-        ArrayList<Character> fixedCharacters = characterArray;
-        int lastIndex = (fixedCharacters.size()) - 1;
+        int length = characterArray.length;
+        Character[] fixedCharacters = characterArray.clone();
+        int lastIndex = length - 1;
         for (int paddingIndex = 0; paddingIndex < paddingCount; paddingIndex++)
         {
             int padding = lastIndex - paddingIndex;
-            fixedCharacters.set(padding, '=');
+            fixedCharacters[padding] = '=';
         }
         return fixedCharacters;
     }
-    private static ArrayList<Character> lookupOnTable(ArrayList<Integer> indexArray)
+    private static Character[] lookupOnTable(Integer[] indexArray)
     {
-        ArrayList<Character> table = getB64Table();
-        ArrayList<Character> characterArray = new ArrayList<Character>();
-        for (Integer index : indexArray)
+        int length = indexArray.length;
+        Character[] table = getB64Table();
+        Character[] characterArray = new Character[length];
+        for (int index = 0; index < length; index ++)
         {
-            characterArray.add(table.get(index));
+            characterArray[index] = table[indexArray[index]];
         }
         return characterArray;
     }
-    private static ArrayList<Integer> makeIntegerArrayFromBinaryArray(ArrayList<String> binaryArray)
+    private static Integer[] makeIntegerArrayFromBinaryArray(String[] binaryArray)
     {
-        ArrayList<Integer> integerValues = new ArrayList<Integer>();
-        for (String binaryValue : binaryArray)
+        int length = binaryArray.length;
+        Integer[] integerValues = new Integer[length];
+        for (int index = 0; index < length; index ++)
         {
+            String binaryValue = binaryArray[index];
             Integer integerItem = BASE2.binaryToDecimal(binaryValue);
-            integerValues.add(integerItem);
+            integerValues[index] = integerItem;
         }
         return integerValues;
     }
-    private static String joinBits(ArrayList<String> binaryArray)
+    private static String joinBits(String[] binaryArray)
     {
         String joinedBinary = "";
         for (String binary : binaryArray)
@@ -203,31 +225,49 @@ public class BASE64
         }
         return joinedBinary;
     }
-    private static ArrayList<String> addPaddingBits(ArrayList<String> byteArray, int paddingCount)
+    private static String[] addPaddingBits(String[] byteArray, int paddingCount)
     {
-        ArrayList<String> paddedByteArray = byteArray;
+        if (paddingCount < 1)
+        {
+            return byteArray.clone();
+        }
         int paddingBits = paddingCount * 6;
+        int extraLength = (int)(Math.ceil((paddingBits/8)));
+        int normalLength = byteArray.length;
+        int paddedBytesLength = normalLength + extraLength;
+        String[] paddedByteArray = new String[paddedBytesLength];
+        for (int index = 0; index < normalLength; index++)
+        {
+            paddedByteArray[index] = byteArray[index];
+        }
         String extras = GENERAL.repeatStr("0", paddingBits);
-        paddedByteArray.add(extras);
+        String[] byteSplitExtras = GENERAL.makeChunksFromString(extras, 8);
+        for (int index = normalLength; index < paddedBytesLength; index++)
+        {
+            int extraIndex = index - normalLength;
+            paddedByteArray[index] = byteSplitExtras[extraIndex];
+        }
         return paddedByteArray;
     }
-    private static int calculatePaddingCount(ArrayList<String> byteArray)
+    private static int calculatePaddingCount(String[] byteArray)
     {
-        int bytes = byteArray.size();
-        int paddingCount = (3 - ((bytes) % 3)) % 3; //the last mod action ensures a full section wont get extras
+        int bytes = byteArray.length;
+        int paddingCount = (3 - ((bytes) % 3)) % 3; //the last mod action ensures a full section wont get a 3 padding
         return paddingCount;
     }
-    private static ArrayList<String> makeByteArrayFromIntegerArray(ArrayList<Integer> integerArray)
+    private static String[] makeByteArrayFromIntegerArray(Integer[] integerArray)
     {
         return makeBinaryArrayFromIntegerArray(integerArray, 8);
     }
-    private static ArrayList<String> makeBinaryArrayFromIntegerArray(ArrayList<Integer> integerArray, int digits)
+    private static String[] makeBinaryArrayFromIntegerArray(Integer[] integerArray, Integer digits)
     {
-        ArrayList<String> binaryValues = new ArrayList<String>();
-        for (Integer integerValue : integerArray)
+        int length = integerArray.length;
+        String[] binaryValues = new String[length];
+        for (int index = 0; index < length; index ++)
         {
-            String binaryItem = BASE2.decimalToBinary((integerValue.intValue()), digits);
-            binaryValues.add(binaryItem);
+            Integer integerValue = integerArray[index];
+            String binaryItem = BASE2.decimalToBinary(integerValue, digits);
+            binaryValues[index] = binaryItem;
         }
         return binaryValues;
     }

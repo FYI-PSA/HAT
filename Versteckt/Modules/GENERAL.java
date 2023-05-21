@@ -6,7 +6,7 @@ public class GENERAL
 {
     public static String getInput(Scanner input)
     {
-        String data = input.nextLine();
+        String data = input.nextLine().strip();
         return data;
     }
     public static void print(pair<Integer, Integer> data)
@@ -42,6 +42,30 @@ public class GENERAL
         return newArray;
     }
     */
+    public static Integer[] integerArrayListToVanillaIntegerArray(ArrayList<Integer> originalArrayList)
+    {
+        int length = originalArrayList.size();
+        Integer[] vanillaArray = new Integer[length];
+        for (int index = 0; index < length; index ++)
+        {
+            vanillaArray[index] = originalArrayList.get(index);
+        }
+        return vanillaArray;
+    }
+    public static Integer findIndex(Character target, Character[] itemsArray)
+    {
+        int itemsLength = itemsArray.length;
+        int targetIndex = -1;
+        for (int itemsCharacterIndex = 0; itemsCharacterIndex < itemsLength; itemsCharacterIndex ++)
+        {
+            if (target == itemsArray[itemsCharacterIndex])
+            {
+                targetIndex = itemsCharacterIndex;
+                break;
+            }
+        }
+        return targetIndex;
+    }
     public static String repeatStr(String repeatingString, int count)
     {
         String repeated = "";
@@ -51,18 +75,21 @@ public class GENERAL
         }
         return repeated;
     }
-    public static ArrayList<String> makeChunksFromString(String originalString, int chunkSize)
+    public static String[] makeChunksFromString(String originalString, Integer chunkSize)
     {
-        ArrayList<String> newStringArray = new ArrayList<String>();
+        int length = originalString.length();
+        int index = 0;
+        String[] newStringArray = new String[length];
         int characters = originalString.length(); 
         int bufferCount = 0;
         String bufferString = "";
         for (int characterIndex = 0; characterIndex < characters; characterIndex++)
         {
             char currentCharacter = originalString.charAt(characterIndex);
-            if (bufferCount == chunkSize)
+            if (bufferCount == (chunkSize.intValue()))
             {
-                newStringArray.add(bufferString);
+                newStringArray[index] = bufferString;
+                index ++;
                 bufferString = "";
                 bufferCount = 0;
             }
@@ -71,88 +98,138 @@ public class GENERAL
         }
         if (bufferCount != 0)
         {
-            newStringArray.add(bufferString);
+            newStringArray[index] = bufferString;
+            index ++;
             bufferString = "";
             bufferCount = 0;
         }  
         return newStringArray;
     }
-    public static ArrayList<Character> integerArrayToCharacterArray(ArrayList<Integer> integerValues)
+    public static Character[] integerArrayToCharacterArray(Integer[] integerValues)
     {
-        ArrayList<Character> characters = new ArrayList<Character>();
-        for (Integer integerValue : integerValues) 
+        int length = integerValues.length;
+        Character[] characters = new Character[length];
+        for (int index = 0; index < length; index ++) 
         {
-            characters.add(((char)(integerValue.intValue())));
+            characters[index] = (char)(integerValues[index].intValue());
         }
         return characters;
     }
-    public static ArrayList<Integer> characterArrayToIntegerArray(ArrayList<Character> characters)
+    public static Integer[] characterArrayToIntegerArray(Character[] characters)
     {
-        ArrayList<Integer> integerValues = new ArrayList<Integer>();
-        for (Character character : characters) 
+        int length = characters.length;
+        Integer[] integerValues = new Integer[length];
+        for (int index = 0; index < length; index ++)
         {
-            integerValues.add((int)(character.charValue()));
+            integerValues[index] = (int)(characters[index].charValue());
         }
         return integerValues;
     }
-    public static ArrayList<Character> makeCharacterArrayFromString(String originalString)
+    public static Character[] makeCharacterArrayFromString(String originalString)
     {
-        ArrayList<Character> characters = new ArrayList<Character>();
-        int dataLength = originalString.length();
-        for (int characterIndex = 0; characterIndex < dataLength; characterIndex ++)
+        int length = originalString.length();
+        Character[] characters = new Character[length];
+        for (int index = 0; index < length; index ++)
         {
-            characters.add(originalString.charAt(characterIndex));
+            characters[index] = originalString.charAt(index);
         }
         return characters;
     }
-    public static String makeStringFromCharacterArray(ArrayList<Character> characterArray)
+    public static String makeStringFromCharacterArray(Character[] characterArray)
     {
+        int length = characterArray.length;
         String data = "";
-        int dataLength = characterArray.size();
-        for (int characterIndex = 0; characterIndex < dataLength; characterIndex++)
+        for (int index = 0; index < length; index ++)
         {
-            data += (String.valueOf(characterArray.get(characterIndex)));
+            data += String.valueOf(characterArray[index]);
         }
         return data;
     }
-    public static Integer secureChooseInteger(ArrayList<Integer> integerList, SecureRandom secureRandomInstance)
+    public static Integer secureChooseInteger(Integer[] integerList, SecureRandom secureRandomInstance)
     {
-        int listSize = integerList.size();
-        int randomIndex = secureRandomInstance.nextInt(listSize);
-        Integer randomItem = integerList.get(randomIndex);
+        int arraySize = integerList.length;
+        int randomIndex = secureRandomInstance.nextInt(arraySize);
+        Integer randomItem = integerList[randomIndex];
         return randomItem;
     }
-    /*
-    public static pair<Integer, Integer> secureChoosePair(ArrayList<Integer> integerList)
+    public static pair<Integer, Integer> secureChoosePair(Integer[] integerList, SecureRandom secureRandomInstance)
     {
-        int listSize = integerList.size();
+        int listSize = integerList.length;
         pair<Integer, Integer> items = new pair<Integer, Integer>();
-        pair<Integer, Integer> itemsIndex = new pair<Integer, Integer>();
-        Random seed = new Random();
-        itemsIndex.first = seed.nextInt(listSize);
-        itemsIndex.second = seed.nextInt(listSize);
-        items.first = integerList.get(itemsIndex.first);
-        items.second = integerList.get(itemsIndex.second);
+        items.first = integerList[secureRandomInstance.nextInt(listSize)];
+        items.second = integerList[secureRandomInstance.nextInt(listSize)];
         return items;
     }
-    */
-    public static Integer GCD(Integer A, Integer B)
-    { // euclid's algorithm
+    public static Integer SlowModularExponentiation(Integer X, Integer P, Integer M)
+    {
+        if (P < 3)
+        {
+            return (((int)(Math.pow(X.doubleValue(), P.doubleValue()))) % M);
+        }
+        int repeat = P - 1;
+        int mainleftover = X % M;
+        int answer = X;
+        for (int cycle = 0; cycle < repeat; cycle ++)
+        {
+            answer = (answer % M);
+            answer = answer * mainleftover;
+        } 
+        answer = answer % M;
+        return answer;
+    }
+    public static Integer ModularExponentiation(Integer X, Integer P, Integer M)
+    {
+        int answer = 1;
+        X = X % M;
+        if (X == 0)
+        {
+            return 0;
+        }
+        while (P > 0)
+        {
+            if ((P & 1) != 0)
+            {
+                answer = (answer * X) % M;
+            }
+            P = P >> 1;
+            X = (X * X) % M;
+        }
+        return answer;
+    }
+    public static Integer ModularMultiplicativeInverse(Integer X, Integer M)
+    { // Infinite values of A exist with a distance of M, but it's worthless as the results and cracking of all of them is the same
+        Integer C = X % M;
+        Integer A = 0;
+        for (A = 1; A < M; A ++)
+        {
+            Integer L = (A * C) % M;
+            if (L == 1)
+            {
+                break;
+            }
+        }
+        return A;
+    }
+    public static Integer GreatestCommonDevisor(Integer A, Integer B)
+    { // Euclid's basic GCD algorithm
         if (B == 0)
         { 
             return A;
         }
-        return GCD(B, A%B);
+        return GreatestCommonDevisor(B, A%B);
     }
-    public static ArrayList<Integer> strongValues(ArrayList<Integer> allValues)
+    public static Integer[] strongValues(Integer[] allValues)
     {
-        int length = allValues.size();
-        ArrayList<Integer> wantedItems = new ArrayList<Integer>(){};
-        for (Integer index = (2*(length/3)); index < (length); index++)
+        int length = allValues.length;
+        int start = 2 * (length/3);
+        int wantedLength = (int)(length - start);
+        int i = 0;
+        Integer[] wantedItems = new Integer[wantedLength];
+        for (Integer index = start; index < length; index++)
         {
-            Integer item = allValues.get(index);
-            wantedItems.add(item);
+            Integer item = allValues[index];
+            wantedItems[i] = item; i++;
         }
-        return wantedItems;        
+        return wantedItems;
     }
 }

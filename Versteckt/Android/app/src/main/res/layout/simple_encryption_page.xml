@@ -37,10 +37,11 @@
             android:id="@+id/simpleEncryptTextEnter"
             android:layout_width="300dp"
             android:layout_height="100dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0.25"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/simpleEncryptionPageHeader"
-            app:layout_constraintBottom_toTopOf="@id/simpleEncryptButton"
+            app:layout_constraintEnd_toEndOf="parent"
             />
 
         <Button
@@ -55,6 +56,51 @@
             app:layout_constraintTop_toBottomOf="@id/simpleEncryptTextEnter"
             app:layout_constraintBottom_toTopOf="@id/simpleDecryptButton"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <Button
+            android:id="@+id/digitsMinus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/digits_button_bg"
+            android:textColor="@color/normal_button_color"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:text="-"
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@id/simpleEncryptButton"
+            app:layout_constraintBottom_toTopOf="@id/simpleDecryptButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/digitsView"
+            />
+
+        <TextView
+            android:id="@+id/digitsView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/digits_display_colour"
+            android:text=" METHOD Digits : XX  "
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@id/simpleEncryptButton"
+            app:layout_constraintBottom_toTopOf="@id/simpleDecryptButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <Button
+            android:id="@+id/digitsPlus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/digits_button_bg"
+            android:textColor="@color/normal_button_color"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:text="+"
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@id/simpleEncryptButton"
+            app:layout_constraintBottom_toTopOf="@id/simpleDecryptButton"
+            app:layout_constraintStart_toEndOf="@id/digitsView"
             app:layout_constraintEnd_toEndOf="parent"
             />
 
@@ -82,7 +128,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
-
 
         <Button
             android:id="@+id/backToSimpleEncryptionsPageButton"

@@ -1,6 +1,4 @@
 import java.lang.Math;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class BASE16 
@@ -10,7 +8,7 @@ public class BASE16
     /* BASE16-TABLE-------------------------------------------------------------------------- */
     /* -------------------------------------------------------------------------------------- */
 
-    public static ArrayList<String> allHexadecimalDigits = new ArrayList<String>(Arrays.asList("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"));
+    public static Character[] allHexadecimalDigits = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
     /* -------------------------------------------------------------------------------------- */
     /* MAIN---------------------------------------------------------------------------------- */
@@ -79,7 +77,7 @@ public class BASE16
                 currentHexadecimalDigitValue = 15;
             }
             decimal = decimal - (currentHexadecimalDigitValue * currentHexadecimalPower);
-            String currentDigit = allHexadecimalDigits.get(currentHexadecimalDigitValue);
+            String currentDigit = String.valueOf(allHexadecimalDigits[currentHexadecimalDigitValue].charValue());
             hexOutput = hexOutput + currentDigit;
         }
         if(prefix)
@@ -96,8 +94,8 @@ public class BASE16
         int hexadecimalDigits = hexadecimal.length();
         for (int currentDigitIndex = 0; currentDigitIndex < hexadecimalDigits; currentDigitIndex++)
         {
-            String currentDigit = String.valueOf((hexadecimal.charAt(currentDigitIndex)));
-            int currentDigitValue = allHexadecimalDigits.indexOf(currentDigit);
+            char currentDigit = hexadecimal.charAt(currentDigitIndex);
+            int currentDigitValue = GENERAL.findIndex(currentDigit, allHexadecimalDigits);
             int currentDigitImportance = hexadecimalDigits - (currentDigitIndex + 1);
             int currentDigitPower = (int)(Math.pow((double)16, (double)currentDigitImportance));
             int currentDigitWorth = currentDigitValue * currentDigitPower;
