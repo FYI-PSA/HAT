@@ -1,134 +1,112 @@
 package com.example.versteckt.modules;
 
-import java.lang.Math;
-import java.util.Scanner;
+import android.os.Build;
+import androidx.annotation.RequiresApi;
+
+import java.math.BigInteger;
 
 public class BASE2 
-{
-
-    /* -------------------------------------------------------------------------------------- */
-    /* MAIN---------------------------------------------------------------------------------- */
-    /* -------------------------------------------------------------------------------------- */
-
-    public static void main(String[] args) 
-    {
-        Scanner input = new Scanner(System.in);
-        GENERAL.print("[*] Binary Converter\n\n");
-        GENERAL.print("[@] Enter 'B' to turn binary into a number\n");
-        GENERAL.print("[@] Enter 'N' to turn a number into a byte\n");
-        GENERAL.print("\n[?] > ");
-        char choice = GENERAL.getInput(input).charAt(0);
-        GENERAL.print("\n\n");
-        if (choice == 'B')
+{ /* This class only deals with strings. It's currently of no use to me to make functions that use actual byte objects */
+    public static String toByte(int number_int) { return toBinary(number_int, 8); }
+    public static String toBinary(int number_int, int digits) 
+    { 
+        StringBuilder binary = new StringBuilder("");
+        for (int index = 0; index < digits; index++)
         {
-            GENERAL.print("[@] Enter the binary string\n");
-            GENERAL.print("[?] > ");
-            String binaryValue = GENERAL.getInput(input);
-            GENERAL.print("[$] Done.\n\n");
-            GENERAL.print(String.valueOf(binaryToDecimal(binaryValue)));
-            GENERAL.print("\n\n[!] Goodbye!\n\n");
-        }
-        else if (choice == 'N')
-        {
-            GENERAL.print("[@] Enter the number\n");
-            GENERAL.print("[?] > ");
-            int decimalValue = Integer.parseInt(GENERAL.getInput(input));
-            GENERAL.print("[@] How many digits of binary? (default: 8)\n");
-            GENERAL.print("[@] Leave blank if you don't know\n");
-            GENERAL.print("[?] > ");
-            int binaryDigits = 8;
-            String digitInput = GENERAL.getInput(input);
-            if (!(digitInput.equals("")))
+            int power = (digits - 1) - index;
+            int bitValue = (int)Math.pow(2, power);
+            if (number_int >= bitValue)
             {
-                binaryDigits = Integer.parseInt(digitInput);
-            }
-            String binaryValue = decimalToBinary(decimalValue, binaryDigits);
-            GENERAL.print("[$] Done.\n\n");
-            GENERAL.print(binaryValue);
-            GENERAL.print("\n\n[!] Goodbye!\n\n");
-        }
-        input.close();
-        return;
-    }
-
-    /* -------------------------------------------------------------------------------------- */
-    /* MAIN-BASE2-METHODS----------------------------------------------------------------------- */
-    /* -------------------------------------------------------------------------------------- */
-
-    public static String decimalToBinary(int decimal)
-    {
-        return decimalToBinary(decimal, 8);
-    }
-    public static String decimalToBinary(int decimal, int binaryDigits)
-    {
-        String binaryOutput = "";
-        for (int currentDigitIndex = 0; currentDigitIndex < binaryDigits; currentDigitIndex++)
-        {
-            int currentDigitImportance = binaryDigits - (currentDigitIndex + 1);
-            int currentBinaryValue = (int)(Math.pow((double)2, (double)currentDigitImportance));
-            if (decimal >= currentBinaryValue)
-            {
-                decimal = decimal - (int)currentBinaryValue;
-                binaryOutput += "1";
+                number_int = number_int - bitValue;
+                binary.append("1");
                 continue;
             }
-            binaryOutput += "0";
+            binary.append("0");
         }
-        return binaryOutput;
+        return binary.toString();
     }
-    public static int binaryToDecimal(String binaryString)
+    public static int toInt(String binary)
     {
-        int decimalOutput = 0;
-        int binaryDigits = binaryString.length();
-        for (int currentDigitIndex = 0; currentDigitIndex < binaryDigits; currentDigitIndex++)
+        int number = 0;
+        int index = 1;
+        int length = binary.length();
+        char[] bitArray = binary.toCharArray();
+        for (char bit : bitArray)
         {
-            if ((binaryString.charAt(currentDigitIndex)) == '1')
+            if (bit == '1')
             {
-                int currentDigitImportance = binaryDigits - (currentDigitIndex + 1);
-                int currentBinaryValue = (int)(Math.pow((double)2, (double)currentDigitImportance));
-                decimalOutput += currentBinaryValue;
+                int power = length - index;
+                int bitValue = (int)Math.pow(2, power);
+                number = number + bitValue;
             }
+            index++;
         }
-        return decimalOutput;
-    } 
-    public static String dataStringToByteString(String data)
-    {
-        return dataStringToBinaryString(data, " ", 8);
+        return ((int)number);
     }
-    public static String dataStringToByteString(String data, String separator)
+
+
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public static String autoBinary(int number_int)
     {
-        return dataStringToBinaryString(data, separator, 8);
+        int digits = DataHandler.autoDigit(number_int, 2);
+        String result = toBinary(number_int, digits);
+        return result;
     }
-    public static String dataStringToBinaryString(String data, String separator, int digits)
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public static String autoBinary(BigInteger number_bigint)
     {
-        String encrypted = "";
-        int dataLength = data.length();
-        for(int characterIndex = 0; characterIndex < dataLength; characterIndex++)
+        int digits = DataHandler.autoDigit(number_bigint, 2);
+        String result = toBinary(number_bigint, digits);
+        return result;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public static int toInt_UNSURE(String binary)
+    {
+        int result;
+        try
+        { result = toBigInteger(binary).intValueExact(); }
+        catch(ArithmeticException e)
+        { result = 0; }
+        return result;
+    }
+
+
+    public static String toByte(BigInteger number_bigint) { return toBinary(number_bigint, 8); }
+    public static String toBinary(BigInteger number_bigint, int digits)
+    {
+        StringBuilder binary = new StringBuilder("");
+        BigInteger two = big.n(2);
+        for (int index = 0; index < digits; index++)
         {
-            Character currentCharacter = data.charAt(characterIndex);
-            int characterAscii = ((int)currentCharacter.charValue());
-            String binaryString = decimalToBinary(characterAscii, digits);
-            encrypted += binaryString;
-            if (characterIndex == (dataLength-1))
+            int power = (digits - 1) - index;
+            BigInteger bitValue = two.pow(power);
+            if (big.eqmore(number_bigint, bitValue))
             {
+                number_bigint = number_bigint.subtract(bitValue);
+                binary.append("1");
                 continue;
             }
-            encrypted += separator;
+            binary.append("0");
         }
-        return encrypted;
+        return binary.toString();
     }
-    public static String binaryStringToDataString(String binaryString, String separator)
+    public static BigInteger toBigInteger(String binary)
     {
-        String decrypted = "";
-        String[] binaryItems = binaryString.split(separator);
-        for (String binaryItem : binaryItems)
+        BigInteger number = big.n(0);
+        BigInteger two = big.n(2);
+        int index = 1;
+        int length = binary.length();
+        char[] bitArray = binary.toCharArray();
+        for (char bit : bitArray)
         {
-            int asciiCharacter = binaryToDecimal(binaryItem);
-            char currentCharacter = ((char)asciiCharacter);
-            String current = String.valueOf(currentCharacter);
-            decrypted += current;
+            if (bit == '1')
+            {
+                int power = length - index;
+                BigInteger bitValue = two.pow(power);
+                number = number.add(bitValue);
+            }
+            index++;
         }
-        return decrypted;
+        return number;
     }
-    
 }

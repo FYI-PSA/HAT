@@ -17,6 +17,9 @@
     <string name="simple_encrypt_text">Encrypt</string>
     <string name="simple_decrypt_text">Decrypt</string>
     <string name="back_simple_encryptions_page_button">Back to Encryptions Menu</string>
+    <string name="copy_contents_button">Copy</string>
+    <string name="delete_contents">Clear</string>
+    <string name="copied_label">Copied Versteckt Content</string>
     <!-- Simple Encryptions Page -->
     <string name="simple_encryptions_header">Simple Encryptions</string>
     <string name="base2_page_button">Binary</string>

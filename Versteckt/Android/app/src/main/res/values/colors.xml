@@ -16,8 +16,8 @@
     <color name="return_button_color">@color/white</color>
     <color name="return_button_bg">@color/pink</color>
 
-    <color name="digits_display_colour">@color/aggressive_pink</color>
-    <color name="digits_button_bg">@color/gray</color>
+    <color name="special_button_colour">@color/violet</color>
+    <color name="special_button_bg">@color/gray</color>
 
     <color name="bg">@color/dark_gray</color>
 </resources>

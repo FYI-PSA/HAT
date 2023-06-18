@@ -46,7 +46,7 @@ def Data_Display(file_name):
                 hexes.insert(tk.END, current_data)
                 root.update()
             i+=1
-        hexes['state'] = 'disabled'
+        #hexes['state'] = 'disabled'
 
 
 def Kill():
@@ -67,11 +67,11 @@ def ChangeMode():
 
 root: tk.Tk = tk.Tk()
 root.resizable(False,False)
-window_size = (root.winfo_screenwidth(),root.winfo_screenheight())
+window_size = (root.winfo_screenwidth()/2,root.winfo_screenheight()/2)
 root.geometry('%dx%d' %window_size)
 root.title('explorer')
-root.attributes('-fullscreen', True)
-root.state('zoomed')
+# root.attributes('-fullscreen', True)
+# root.state('zoomed')
 root.configure(background='#101033')
 
 kill_b: tk.Button = tk.Button(root, text="Die", command=Kill)
@@ -85,7 +85,7 @@ modes_button.grid(row=1, column=0)
 
 hexes_width = 150
 hexes_height = 25
-hexes: tk.Text = tk.Text(root, width=hexes_width, height=hexes_height, state='disabled', font=("Fira Code", 12), background="#020111", foreground="#ffffff")
+hexes: tk.Text = tk.Text(root, width=hexes_width, height=hexes_height, state='disabled', font=("Fira Code Mono", 12), background="#020111", foreground="#ffffff")
 hexes.grid(row=1, column=1)
 # The font is Fira Code @  https://fonts.google.com/specimen/Fira+Code?category=Monospace&subset=latin
 root.mainloop()

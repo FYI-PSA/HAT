@@ -1,144 +1,126 @@
 package com.example.versteckt.modules;
 
-import java.lang.Math;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import android.os.Build;
+import androidx.annotation.RequiresApi;
 
-public class BASE16 
+import java.math.BigInteger;
+
+public class BASE16
 {
+    public static final char[] hexadecimalArray = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
-    /* -------------------------------------------------------------------------------------- */
-    /* BASE16-TABLE-------------------------------------------------------------------------- */
-    /* -------------------------------------------------------------------------------------- */
 
-    public static ArrayList<String> allHexadecimalDigits = new ArrayList<String>(Arrays.asList("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"));
-
-    /* -------------------------------------------------------------------------------------- */
-    /* MAIN---------------------------------------------------------------------------------- */
-    /* -------------------------------------------------------------------------------------- */
-
-    public static void main(String[] args) 
+    public static String toHex(int number_int, int digits, boolean prefix)
     {
-        Scanner input = new Scanner(System.in);
-        GENERAL.print("[*] Hexadecimal Converter\n\n");
-        GENERAL.print("[@] Enter 'H' to turn a hexadecimal value into a number\n");
-        GENERAL.print("[@] Enter 'N' to turn a number into a hex byte\n");
-        GENERAL.print("\n[?] > ");
-        char choice = GENERAL.getInput(input).charAt(0);
-        GENERAL.print("\n\n");
-        if (choice == 'H')
+        StringBuilder hex = new StringBuilder("");
+        if (prefix)
         {
-            GENERAL.print("[@] Enter the hex string\n");
-            GENERAL.print("[?] > ");
-            String hexadecimalValue = GENERAL.getInput(input);
-            GENERAL.print("[$] Done.\n\n");
-            GENERAL.print(String.valueOf(hexToDecimal(hexadecimalValue)));
-            GENERAL.print("\n\n[!] Goodbye!\n\n");
+            hex.append("0x");
         }
-        else if (choice == 'N')
+        for (int digit = 1; digit <= digits; digit++)
         {
-            GENERAL.print("[@] Enter the number\n");
-            GENERAL.print("[?] > ");
-            int decimalValue = Integer.parseInt(GENERAL.getInput(input));
-            GENERAL.print("[@] How many digits of hex? (default: 2)\n");
-            GENERAL.print("[@] Leave blank if you don't know\n");
-            GENERAL.print("[?] > ");
-            int hexDigits = 2;
-            String digitInput = GENERAL.getInput(input);
-            if (!(digitInput.equals("")))
+            int importance = digits - digit;
+            int power = (int)Math.pow(16, importance);
+            int value = number_int / power;
+            if (value > 15)
+            { value = 15; }
+            number_int = number_int - (value * power);
+            char hexDigit = hexadecimalArray[value];
+            hex.append(hexDigit);
+        } 
+        return hex.toString();
+    }
+    public static int toInt(String hex)
+    {
+        hex = hex.replaceFirst("^0x", "").toUpperCase();
+        int number = 0;
+        int digits = hex.length();
+        for (int digitIndex = 0; digitIndex < digits; digitIndex++)
+        {
+            char digit = hex.charAt(digitIndex);
+            int digitPower = (new String(hexadecimalArray)).indexOf(digit);
+            int importance = digits - (digitIndex + 1);
+            int digitWorth = ((int)Math.pow(16, importance)) * digitPower;
+            number += digitWorth;
+        }
+        return number;
+    }
+
+
+    public static String autoHex(int number_int)
+    {
+        int digits = DataHandler.autoDigit(number_int, 16);
+        String result = toHex(number_int, digits, false);
+        return result;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public static String autoHex(BigInteger number_bigint)
+    {
+        int digits = DataHandler.autoDigit(number_bigint, 16);
+        String result = toHex(number_bigint, digits, false);
+        return result;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public static int toInt_UNSURE(String hex)
+    {
+        int result;
+        try
+        { result = toBigInteger(hex).intValueExact(); }
+        catch(ArithmeticException e)
+        { result = 0; }
+        return result;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public static String toHex(BigInteger number_bigint, int digits, boolean prefix)
+    {
+        StringBuilder hex = new StringBuilder("");
+        if (prefix)
+        {
+            hex.append("0x");
+        }
+        BigInteger sixteen = big.n(16);
+        for (int digit = 1; digit <= digits; digit++)
+        {
+            int importance = digits - digit;
+            BigInteger power = sixteen.pow(importance);
+            BigInteger bigValue = number_bigint.divide(power);
+            int value = 15;
+            try
             {
-                hexDigits = Integer.parseInt(digitInput);
+                value = bigValue.intValueExact();                
             }
-            String hexadecimalValue = decimalToHex(decimalValue, hexDigits, true);
-            GENERAL.print("[$] Done.\n\n");
-            GENERAL.print(hexadecimalValue);
-            GENERAL.print("\n\n[!] Goodbye!\n\n");
-        }
-        input.close();
-        return;
-    }
-
-    /* -------------------------------------------------------------------------------------- */
-    /* MAIN-BASE16-METHODS------------------------------------------------------------------- */
-    /* -------------------------------------------------------------------------------------- */
-
-
-    public static String decimalToHex(int decimal)
-    {
-        return decimalToHex(decimal, 2, true);
-    }
-    public static String decimalToHex(int decimal, int hexadecimalDigits, boolean prefix)
-    {
-        String hexOutput = "";
-        for (int currentDigitIndex = 0; currentDigitIndex < hexadecimalDigits; currentDigitIndex++)
-        {
-            int currentDigitImportance = hexadecimalDigits - (currentDigitIndex + 1);
-            int currentHexadecimalPower = (int)(Math.pow((double)16, (double)currentDigitImportance));
-            int currentHexadecimalDigitValue = (int)(decimal / currentHexadecimalPower);
-            if (currentHexadecimalDigitValue > 15)
+            catch (ArithmeticException e)
             {
-                currentHexadecimalDigitValue = 15;
+                value = 15;
             }
-            decimal = decimal - (currentHexadecimalDigitValue * currentHexadecimalPower);
-            String currentDigit = allHexadecimalDigits.get(currentHexadecimalDigitValue);
-            hexOutput = hexOutput + currentDigit;
-        }
-        if(prefix)
-        {
-            hexOutput = "0x" + hexOutput;
-        }
-        return hexOutput;
-    }
-    public static int hexToDecimal(String hexadecimal)
-    {
-        hexadecimal = hexadecimal.replaceFirst("^0x", "");
-        int decimalOutput = 0;
-        hexadecimal = hexadecimal.toUpperCase();
-        int hexadecimalDigits = hexadecimal.length();
-        for (int currentDigitIndex = 0; currentDigitIndex < hexadecimalDigits; currentDigitIndex++)
-        {
-            String currentDigit = String.valueOf((hexadecimal.charAt(currentDigitIndex)));
-            int currentDigitValue = allHexadecimalDigits.indexOf(currentDigit);
-            int currentDigitImportance = hexadecimalDigits - (currentDigitIndex + 1);
-            int currentDigitPower = (int)(Math.pow((double)16, (double)currentDigitImportance));
-            int currentDigitWorth = currentDigitValue * currentDigitPower;
-            decimalOutput = decimalOutput + currentDigitWorth;
-        }
-        return decimalOutput;
-    }
-    public static String dataStringToHexadecimalString(String data, boolean prefix, int digits, String separator)
-    {
-        String encrypted = "";
-        int dataLength = data.length();
-        for (int characterIndex = 0; characterIndex < dataLength; characterIndex++)
-        {
-            char currentCharacter = data.charAt(characterIndex);
-            int characterAsciiCode = ((int)currentCharacter);
-            String currentHex = decimalToHex(characterAsciiCode, digits, prefix);
-            encrypted += currentHex;
-            if (characterIndex == (dataLength-1))
+            finally
             {
-                continue;
+                if (value > 15)
+                { 
+                    value = 15; 
+                }
             }
-            encrypted += separator;
-        }
-        return encrypted;
+            number_bigint = number_bigint.subtract(bigValue.multiply(power));
+            char hexDigit = hexadecimalArray[value];
+            hex.append(hexDigit);
+        } 
+        return hex.toString();
     }
-    public static String hexadecimalStringToDataString(String hexadecimalString, String separator)
+    public static BigInteger toBigInteger(String hex)
     {
-        String data = "";
-        String[] hexadecimalArray = hexadecimalString.split(separator);
-        for (String hexadecimalItem : hexadecimalArray)
+        hex = hex.replaceFirst("^0x", "").toLowerCase();
+        BigInteger sixteen = big.n(16);
+        BigInteger number = big.zero;
+        int digits = hex.length();
+        for (int digitIndex = 0; digitIndex < digits; digitIndex++)
         {
-            GENERAL.print(hexadecimalItem);
-            int currentAsciiCode = hexToDecimal(hexadecimalItem);
-            GENERAL.print(currentAsciiCode);
-            char currentCharacter = (char)currentAsciiCode;
-            String current = String.valueOf(currentCharacter);
-            data += current;
+            char digit = hex.charAt(digitIndex);
+            BigInteger digitPower = big.n((new String(hexadecimalArray)).indexOf(digit));
+            int importance = digits - (digitIndex + 1);
+            BigInteger digitWorth = sixteen.pow(importance).multiply(digitPower);
+            number = number.add(digitWorth);
         }
-        return data;
+        return number;
     }
-
 }
