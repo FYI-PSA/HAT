@@ -25,10 +25,8 @@ class SimpleEncryptions : Fragment()
     )
         : View
     {
-
         _binding = SimpleEncryptionsBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     private fun setSimpleEncryptionHeader(newText: String)

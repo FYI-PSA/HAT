@@ -16,6 +16,7 @@ using hat::CreateDirectoryMan;
 using hat::FConfigReader;
 
 #include "Modules/ConfigHelper.h"
+using hat::configReturnType;
 
 using std::cin;
 using std::cout;
@@ -109,14 +110,14 @@ int main (int argc, char** argv)
     {
         cout << "[!] Looking for fconfig files..." << endl << endl;
     }
-    vector<pair<int, vector<string>>> fconfigStatus = FConfigReader(U_HomePath, F_SearchForConfig, F_CustomPath);
-    if (fconfigStatus[9].first == 1)
+    configReturnType fconfigStatus = FConfigReader(U_HomePath, F_SearchForConfig, F_CustomPath);
+    if (fconfigStatus.useConfigs)
     {
         cout << "[$] An fconfig file has been loaded!" << endl;
     
-        if (fconfigStatus[10].first != 0)
+        if (fconfigStatus.usePrefix)
         {
-            D_Prefix = fconfigStatus[10].second[0];
+            D_Prefix = fconfigStatus.prefix;
             D_Prefix_Set = true;
         }
         if (D_Prefix_Set && O_Prefix_Set)
@@ -131,9 +132,9 @@ int main (int argc, char** argv)
             cout << "[$] Prefix is : " + O_Prefix << endl;
         }
 
-        if (fconfigStatus[11].first != 0)
+        if (fconfigStatus.useSuffix)
         {
-            D_Suffix = fconfigStatus[11].second[0];
+            D_Suffix = fconfigStatus.suffix;
             D_Suffix_Set = true;
         }
         if (D_Suffix_Set && O_Suffix_Set)
@@ -148,22 +149,19 @@ int main (int argc, char** argv)
             cout << "[$] Suffix is : " + O_Suffix << endl;
         }
 
-        if (fconfigStatus[0].first != 0)
+        if (fconfigStatus.wordcount > 0)
         {
-            for (int wordIndex = 0 ; wordIndex < fconfigStatus[0].first ; wordIndex++)
-            {
-                L_wordList.push_back(fconfigStatus[0].second[wordIndex]);
-            }
+            L_wordList.insert(L_wordList.end(), fconfigStatus.wordlist.begin(), fconfigStatus.wordlist.end());
         }
         
-        if (fconfigStatus[6].first == 1)
+        if (fconfigStatus.askEntries)
         {
             InputCollector();
         }
         else
         {
             cout << "[!] Loading only words from the fconfig..." << endl;
-            L_wordListSize = L_wordList.size();
+            L_wordListSize = fconfigStatus.wordcount;
         }
 
         cout << "[@] " << L_wordListSize << " words were loaded!" << endl; 
@@ -174,16 +172,16 @@ int main (int argc, char** argv)
     }
     cout << "[$] Done!" << endl << endl
         << "[!] Attempting to create the file..." << endl << endl;
-    if (fconfigStatus[9].first == 1)
+    if (fconfigStatus.useConfigs)
     {
-        if (fconfigStatus[2].first == 1)
+        if (fconfigStatus.useCustomExtension)
         {
-            D_Extension = fconfigStatus[2].second[0];
+            D_Extension = fconfigStatus.extension;
         }
-        if (fconfigStatus[1].first == 1)
+        if (fconfigStatus.useCustomName)
         {
-            D_Name = fconfigStatus[1].second[0];
-            if (fconfigStatus[5].first == 1)
+            D_Name = fconfigStatus.name;
+            if (fconfigStatus.askName)
             {
                 PathFinder();
             }
@@ -203,25 +201,25 @@ int main (int argc, char** argv)
     cout << endl << endl << "[!] Setting options for dictionary..." << endl << endl;  
     
     pair<int,int> chainLs;
-    if (fconfigStatus[9].first == 1)
+    if (fconfigStatus.useConfigs)
     {
         bool ask_mini = true, ask_maxi = true;
 
         // 4 for min, 7 for a_min, 5 for max, 8 for a_max
-        if (fconfigStatus[3].first == 1)
+        if (fconfigStatus.useMinValue)
         {
             try
             {
-                D_MinimumChain = stoi(fconfigStatus[3].second[0]); 
-                if (fconfigStatus[7].first == 0)
-                {
-                    cout << "[!] Will not ask for the minimum chain length value, setting it to " << D_MinimumChain << " immediately." << endl;
-                    ask_mini = false;
-                }
-                else
+                D_MinimumChain = stoi(fconfigStatus.minString); 
+                if (fconfigStatus.askMin)
                 {
                     cout << "[!] Defaulted the minimum chain length value to " << D_MinimumChain << " from the config file!" << endl;
                     ask_mini = true;
+                }
+                else
+                {
+                    cout << "[!] Will not ask for the minimum chain length value, setting it to " << D_MinimumChain << " immediately." << endl;
+                    ask_mini = false;
                 }
             }
             catch (invalid_argument)
@@ -229,20 +227,20 @@ int main (int argc, char** argv)
                 ask_mini = true;
             }
         }
-        if (fconfigStatus[4].first ==  1)
+        if (fconfigStatus.useMaxValue)
         {
             try
             {
-                D_MaximumChain = stoi(fconfigStatus[4].second[0]);
-                if (fconfigStatus[8].first == 0)
-                {
-                    cout << "[!] Will not ask for the maximum chain length value, setting it to " << D_MaximumChain << " immediately." << endl;
-                    ask_maxi = false;
-                }
-                else
+                D_MaximumChain = stoi(fconfigStatus.maxString);
+                if (fconfigStatus.askMax)
                 {
                     cout << "[!] Defaulted the maximum chain length value to " << D_MaximumChain << " from the config file!" << endl;
                     ask_maxi = true;
+                }
+                else
+                    cout << "[!] Will not ask for the maximum chain length value, setting it to " << D_MaximumChain << " immediately." << endl;
+                    ask_maxi = false;
+                {
                 }
             }
             catch (invalid_argument)

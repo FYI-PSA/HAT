@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="rsa_main_fragment_label">RSA Main</string>
-    <string name="rsa_simple_fragment_label">RSA Simple</string>
+    <string name="rsa_keys_fragment_label">RSA Keys</string>
     <string name="simple_encryptions_fragment_label">Simple Encryptions</string>
     <string name="simple_encryption_page_fragment_label">Simple Encryption Page</string>
     <string name="next">Next</string>
@@ -17,9 +17,10 @@
     <string name="simple_encrypt_text">Encrypt</string>
     <string name="simple_decrypt_text">Decrypt</string>
     <string name="back_simple_encryptions_page_button">Back to Encryptions Menu</string>
+    <string name="paste_clipboard_button">Paste</string>
     <string name="copy_contents_button">Copy</string>
     <string name="delete_contents">Clear</string>
-    <string name="copied_label">Copied Versteckt Content</string>
+    <string name="copied_label">Copied Content</string>
     <!-- Simple Encryptions Page -->
     <string name="simple_encryptions_header">Simple Encryptions</string>
     <string name="base2_page_button">Binary</string>
@@ -29,7 +30,13 @@
     <!-- RSA Main Page-->
     <string name="main_rsa_header">RSA</string>
     <string name="rsa_keys_page_button">Keys</string>
-    <string name="rsa_encryption_page_button">Encryption</string>
-    <string name="rsa_decryption_page_button">Decryption</string>
+    <string name="rsa_encrypt_page_button">Encrypt / Decrypt</string>
+    <string name="rsa_sign_page_button">Sign / Verify Signature</string>
     <string name="go_simple_encryptions_page_button">Simpler Encryptions</string>
+    <!-- RSA Keys Page-->
+    <string name="rsa_keys_page_header">Keys</string>
+    <string name="rsa_keys_gen_new">Generate New Keypair</string>
+    <string name="rsa_keys_copy_public">Copy Public Key</string>
+    <string name="rsa_keys_generated_key_toast">Generated a new keypair</string>
+    <string name="rsa_keys_no_keys_toast">You do not have a keypair generated yet</string>
 </resources>

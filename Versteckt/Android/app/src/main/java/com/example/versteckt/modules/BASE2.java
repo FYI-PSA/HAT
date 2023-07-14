@@ -5,7 +5,8 @@ import androidx.annotation.RequiresApi;
 
 import java.math.BigInteger;
 
-public class BASE2 
+@RequiresApi(api = Build.VERSION_CODES.S)
+public class BASE2
 { /* This class only deals with strings. It's currently of no use to me to make functions that use actual byte objects */
     public static String toByte(int number_int) { return toBinary(number_int, 8); }
     public static String toBinary(int number_int, int digits) 
@@ -45,21 +46,18 @@ public class BASE2
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static String autoBinary(int number_int)
     {
         int digits = DataHandler.autoDigit(number_int, 2);
         String result = toBinary(number_int, digits);
         return result;
     }
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static String autoBinary(BigInteger number_bigint)
     {
         int digits = DataHandler.autoDigit(number_bigint, 2);
         String result = toBinary(number_bigint, digits);
         return result;
     }
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static int toInt_UNSURE(String binary)
     {
         int result;

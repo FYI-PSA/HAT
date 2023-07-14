@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RSAKeysPage">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <TextView
+            android:id="@+id/keysPageHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="40dp"
+            android:background="@color/title_bg"
+            android:textColor="@color/title_color"
+            android:text="@string/rsa_keys_page_header"
+            android:textAlignment="center"
+            android:fontFamily="cursive"
+            android:textSize="40sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <Button
+            android:id="@+id/copyPublicKeyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/normal_button_bg"
+            android:textColor="@color/normal_button_color"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/rsa_keys_copy_public"
+            app:layout_constraintTop_toBottomOf="@id/keysPageHeader"
+            app:layout_constraintBottom_toTopOf="@id/generateNewPairButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <Button
+            android:id="@+id/generateNewPairButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/special_button_bg"
+            android:textColor="@color/special_button_colour"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/rsa_keys_gen_new"
+            app:layout_constraintTop_toBottomOf="@id/copyPublicKeyButton"
+            app:layout_constraintBottom_toBottomOf="@id/emptySpace2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <androidx.constraintlayout.widget.Placeholder
+            android:id="@+id/emptySpace2"
+            android:layout_width="1px"
+            android:layout_height="1px"
+            app:layout_constraintTop_toBottomOf="@id/generateNewPairButton"
+            app:layout_constraintBottom_toTopOf="@id/backToRSAButton_FromKeys"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <Button
+            android:id="@+id/backToRSAButton_FromKeys"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/return_button_bg"
+            android:textColor="@color/return_button_color"
+            android:fontFamily="sans-serif"
+            android:text="@string/back_RSA_page_button"
+            app:layout_constraintVertical_bias="0.88"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</RelativeLayout>

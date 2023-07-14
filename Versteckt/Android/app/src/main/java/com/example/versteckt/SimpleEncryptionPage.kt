@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import com.example.versteckt.databinding.SimpleEncryptionPageBinding
@@ -33,7 +34,6 @@ class SimpleEncryptionPage : Fragment()
     {
         _binding = SimpleEncryptionPageBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     private fun getSimpleEncryptionHeader(): String
@@ -46,11 +46,13 @@ class SimpleEncryptionPage : Fragment()
     {
         super.onViewCreated(view, savedInstanceState)
 
-        var headerName = getSimpleEncryptionHeader()
+        val headerName = getSimpleEncryptionHeader()
 
         val binaryText = (getString(R.string.simple_encryption_binary_header)).toString()
         val hexadecimalText = (getString(R.string.simple_encryption_hexadecimal_header)).toString()
         val base64Text = (getString(R.string.simple_encryption_base64_header)).toString()
+
+        val textEnterField = (view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.simpleEncryptTextEnter));
 
         view.findViewById<TextView>(R.id.simpleEncryptionPageHeader)?.text = headerName
         view.findViewById<Button>(R.id.backToSimpleEncryptionsPageButton)?.setOnClickListener()
@@ -60,7 +62,6 @@ class SimpleEncryptionPage : Fragment()
 
         view.findViewById<Button>(R.id.simpleEncryptButton)?.setOnClickListener()
         {
-            val textEnterField = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.simpleEncryptTextEnter)
             val currentData = textEnterField.text.toString()
             var newData = "";
             if (headerName == binaryText)
@@ -73,7 +74,7 @@ class SimpleEncryptionPage : Fragment()
             }
             else if (headerName == base64Text)
             {
-                newData = DataHandler.textToBase64(currentData);
+                newData = DataHandler.textToBase64String(currentData);
             }
             else
             {
@@ -81,23 +82,32 @@ class SimpleEncryptionPage : Fragment()
             }
             textEnterField.setText(newData)
         }
+
+
         view.findViewById<Button>(R.id.deleteContentsButton)?.setOnClickListener()
         {
-            val textEnterField = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.simpleEncryptTextEnter)
             textEnterField.setText("");
         }
         view.findViewById<Button>(R.id.copyContentsButton)?.setOnClickListener()
         {
-            val text = (view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.simpleEncryptTextEnter)).getText()
-            val clipdata = ClipData.newPlainText(getString(R.string.copied_label), text)
-            (activity?.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(clipdata);
-         }
-
+            val text = textEnterField.text.toString()
+            (activity?.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText(getString(R.string.copied_label), text));
+            // Toast.makeText(context, getString(R.string.copied_label), Toast.LENGTH_SHORT).show()
+        }
+        view.findViewById<Button>(R.id.pasteClipboardButton)?.setOnClickListener()
+        {
+            val currentClip: ClipData? = ((activity?.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).primaryClip);
+            var text = "";
+            if (currentClip != null)
+            {
+                text = (currentClip.getItemAt(0).coerceToText(context)).toString();
+            }
+            textEnterField.setText(text);
+        }
 
 
         view.findViewById<Button>(R.id.simpleDecryptButton)?.setOnClickListener()
         {
-            val textEnterField = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.simpleEncryptTextEnter)
             val currentData = textEnterField.text.toString()
             var newData = "";
             if (headerName == (binaryText))
@@ -110,7 +120,7 @@ class SimpleEncryptionPage : Fragment()
             }
             else if (headerName == (base64Text))
             {
-                newData = DataHandler.base64ToText(currentData)
+                newData = DataHandler.stringBase64ToText(currentData)
             }
             else
             {

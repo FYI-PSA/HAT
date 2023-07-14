@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 
 import java.math.BigInteger;
 
+@RequiresApi(api = Build.VERSION_CODES.S)
 public class BASE16
 {
     public static final char[] hexadecimalArray = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
@@ -32,18 +33,20 @@ public class BASE16
     }
     public static int toInt(String hex)
     {
-        hex = hex.replaceFirst("^0x", "").toUpperCase();
+        hex = hex.replaceFirst("^0x", "").toLowerCase();
         int number = 0;
         int digits = hex.length();
+        String hexadecimalString = (new String(hexadecimalArray)).toLowerCase();
         for (int digitIndex = 0; digitIndex < digits; digitIndex++)
         {
             char digit = hex.charAt(digitIndex);
-            int digitPower = (new String(hexadecimalArray)).indexOf(digit);
+            int digitPower = hexadecimalString.indexOf(digit);
             int importance = digits - (digitIndex + 1);
             int digitWorth = ((int)Math.pow(16, importance)) * digitPower;
             number += digitWorth;
         }
-        return number;
+        System.out.println(number);
+        return ((int)number);
     }
 
 
@@ -53,14 +56,12 @@ public class BASE16
         String result = toHex(number_int, digits, false);
         return result;
     }
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static String autoHex(BigInteger number_bigint)
     {
         int digits = DataHandler.autoDigit(number_bigint, 16);
         String result = toHex(number_bigint, digits, false);
         return result;
     }
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static int toInt_UNSURE(String hex)
     {
         int result;
@@ -71,7 +72,6 @@ public class BASE16
         return result;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static String toHex(BigInteger number_bigint, int digits, boolean prefix)
     {
         StringBuilder hex = new StringBuilder("");
@@ -113,10 +113,11 @@ public class BASE16
         BigInteger sixteen = big.n(16);
         BigInteger number = big.zero;
         int digits = hex.length();
+        String hexadecimalString = (new String(hexadecimalArray)).toLowerCase();
         for (int digitIndex = 0; digitIndex < digits; digitIndex++)
         {
             char digit = hex.charAt(digitIndex);
-            BigInteger digitPower = big.n((new String(hexadecimalArray)).indexOf(digit));
+            BigInteger digitPower = big.n(hexadecimalString.indexOf(digit));
             int importance = digits - (digitIndex + 1);
             BigInteger digitWorth = sixteen.pow(importance).multiply(digitPower);
             number = number.add(digitWorth);

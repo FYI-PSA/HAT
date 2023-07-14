@@ -26,49 +26,36 @@ using std::filesystem::path;
 
 namespace hat
 {
-    vector<pair<int, vector<string>>> FConfigReader(string HomePath, bool shouldSearch, string customPath)
+    typedef struct configReturnType
     {
-        vector<string> L_wordList;
-        string D_Prefix;
-        string D_Suffix;
-        string D_Name;
-        string D_Extension;
-        int D_MaximumChain;
-        int D_MinimumChain;
-        bool A_Name;
-        bool A_Entry;
-        bool A_MinimumChain;
-        bool A_MaximumChain;
+        bool askEntries = true;
+        int wordcount = 0;
+        vector<string> wordlist = {};
 
-        string dummy = "-1";
-        vector<pair<int, vector<string>>> baseValue =
-            {
-                {0, {}} // wordlist
-                ,
-                {0, {"dictionary"}} // name
-                ,
-                {0, {".txt"}} // extension
-                ,
-                {0, {"1"}} // min
-                ,
-                {0, {"6"}} // max
-                ,
-                {0, {dummy}} // ask_name
-                ,
-                {0, {dummy}} // ask_entries
-                ,
-                {0, {dummy}} // ask_min
-                ,
-                {0, {dummy}} // ask_max
-                ,
-                {0, {dummy}} // success check
-                ,
-                {0, {dummy}} // prefix
-                ,
-                {0, {dummy}} // suffix
-            };
+        bool useCustomName = false;
+        bool askName = true;
+        string name = "dictionary";
 
-        vector<pair<int, vector<string>>> returnValue = baseValue;
+        bool useCustomExtension = false;
+        string extension = ".txt";
+
+        bool useMinValue = false;
+        bool askMin = true;
+        string minString = "1";
+        int minValue = 1;
+
+        bool useMaxValue = false;
+        bool askMax = true;
+        string maxString = "6";
+        int maxValue = 6;
+
+        bool usePrefix = false;
+        string prefix = "";
+
+        bool useSuffix = false;
+        string suffix = "";
+
+        bool useConfigs = false;
 
         // 0 : first one : int=words , vector<string>=list
 
@@ -82,10 +69,30 @@ namespace hat
         // 7 : eight one : int=0/1 false/true = ask_min , NULL
         // 8 : ninth one : int=0/1 false/true = ask_max , NULL
 
-        // 9 : tenth one: int=0/1 false/true = success , NULL 
+        // 9 : tenth one: int=0/1 false/true = success , NULL
 
         // 10 : tenth one : int=0/1 not/set , string = prefix
         // 11 : eleventh one : 1nt=0/1 not/set , string = suffix
+
+    } configReturnType;
+
+    configReturnType FConfigReader(string HomePath, bool shouldSearch, string customPath)
+    {
+        vector<string> L_wordList;
+        string D_Prefix;
+        string D_Suffix;
+        string D_Name;
+        string D_Extension;
+        int D_MaximumChain;
+        int D_MinimumChain;
+        bool A_Name;
+        bool A_Entry;
+        bool A_MinimumChain;
+        bool A_MaximumChain;
+
+        configReturnType baseValue = configReturnType();
+
+        configReturnType returnValue = baseValue;
 
         if (!shouldSearch)
         {
@@ -404,69 +411,70 @@ namespace hat
                     for (int itemIndex = 0; itemIndex < customEntriesVector.size(); itemIndex++)
                     {
                         L_wordList.push_back(customEntriesVector.at(itemIndex));
-                        returnValue[0].second.push_back(customEntriesVector.at(itemIndex));
-                        returnValue[0].first += 1;
+                        returnValue.wordlist.push_back(customEntriesVector.at(itemIndex));
                     }
+                    returnValue.wordcount = customEntriesVector.size();
                     if (flag_AskEntry)
                     {
                         A_Entry = true;
-                        returnValue[6].first = 1;
+                        returnValue.askEntries = true;
                     }
                     else
                     {
                         A_Entry = false;
-                        returnValue[6].first = 0;
+                        returnValue.askEntries = false;
                     }
                 }
                 if (flag_Prefix && flag_Prefix_DONE)
                 {
                     D_Prefix = customPrefix;
-                    returnValue[10].second[0] = customPrefix;
-                    returnValue[10].first = 1;
+                    returnValue.prefix = customPrefix;
+                    returnValue.usePrefix = 1;
                 }
                 if (flag_Suffix && flag_Suffix_DONE)
                 {
                     D_Suffix = customSuffix;
-                    returnValue[11].second[0] = customSuffix;
-                    returnValue[11].first = 1;
+                    returnValue.suffix = customSuffix;
+                    returnValue.useSuffix = 1;
                 }
                 if (flag_Name && flag_Name_DONE)
                 {
                     D_Name = customName;
-                    returnValue[1].second[0] = customName;
-                    returnValue[1].first = 1;
+                    returnValue.name = customName;
+                    returnValue.useCustomName = true;
                     if (flag_AskName)
                     {
                         A_Name = true;
-                        returnValue[5].first = 1;
+                        returnValue.askName = true;
                     }
                     else
                     {
                         A_Name = false;
-                        returnValue[5].first = 0;
+                        returnValue.askName = false;
                     }
                 }
                 if (flag_Ext && flag_Ext_DONE)
                 {
                     D_Extension = customExt;
-                    returnValue[2].first = 1;
-                    returnValue[2].second[0] = customExt;
+                    returnValue.useCustomExtension = true;
+                    returnValue.extension = customExt;
                 }
                 if (flag_Min && flag_Min_DONE)
                 {
                     try
                     {
                         D_MinimumChain = stoi(customMin);
-                        returnValue[3].first = 1;
-                        returnValue[3].second[0] = customMin;
+                        returnValue.useMinValue = true;
+                        returnValue.minString = customMin;
+                        returnValue.minValue = D_MinimumChain;
                         if (flag_AskMin)
                         {
-                            returnValue[7].first = 1;
+                            returnValue.askMin = true;
                             A_MinimumChain = true;
                         }
                         else
                         {
-                            returnValue[7].first = 0;
+                            returnValue.askMin = false;
                             A_MinimumChain = false;
                         }
                     }
@@ -479,16 +487,17 @@ namespace hat
                     try
                     {
                         D_MaximumChain = stoi(customMax);
-                        returnValue[4].first = 1;
-                        returnValue[4].second[0] = customMax;
+                        returnValue.useMaxValue = 1;
+                        returnValue.maxString = customMax;
+                        returnValue.maxValue = D_MaximumChain;
                         if (flag_AskMax)
                         {
-                            returnValue[8].first = 1;
+                            returnValue.askMax = true;
                             A_MaximumChain = true;
                         }
                         else
                         {
-                            returnValue[8].first = 0;
+                            returnValue.askMax = false;
                             A_MaximumChain = true;
                         }
                     }
@@ -497,33 +506,20 @@ namespace hat
                     }
                 }
             }
-            returnValue[9].first = 1;
+            returnValue.useConfigs = true;
             if (!customFileFound && (customPath != ""))
             {
-                returnValue[9].first = 0;
+                returnValue.useConfigs = false;
                 return baseValue;
             }
             if (!validConfigFound)
             {
-                returnValue[9].first = 0;
-                return baseValue;
-            }
-            bool changedFlag = false;
-            for (int row = 0; row < (returnValue.size() - 1); row++)
-            { // -1 because the last one needs to be ignored
-                if (returnValue[row].first != 0)
-                {
-                    changedFlag = true;
-                }
-            }
-            if (!changedFlag)
-            {
-                returnValue[9].first = 0;
+                returnValue.useConfigs = false;
                 return baseValue;
             }
             return returnValue;
         }
-        returnValue[9].first = 0;
+        returnValue.useConfigs = false;
         cout << "[!] Couldn't load custom file... Skipping configs." << endl
              << endl;
         return baseValue;

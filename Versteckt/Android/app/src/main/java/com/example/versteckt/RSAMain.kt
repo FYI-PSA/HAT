@@ -31,6 +31,10 @@ class RSAMain : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
+        view.findViewById<Button>(R.id.RSAKeysPageButton).setOnClickListener()
+        {
+            findNavController().navigate(R.id.action_RSAMain_to_RSAKeys)
+        }
         view.findViewById<Button>(R.id.goToSimpleEncryptionsButton).setOnClickListener()
         {
             findNavController().navigate(R.id.action_RSAMain_to_SimpleEncryptions)

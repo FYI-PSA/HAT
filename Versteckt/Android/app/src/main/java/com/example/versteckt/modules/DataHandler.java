@@ -5,7 +5,9 @@ import androidx.annotation.RequiresApi;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 
+@RequiresApi(api = Build.VERSION_CODES.S)
 public class DataHandler
 {
     public static int autoDigit(int number, int base)
@@ -35,7 +37,6 @@ public class DataHandler
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static String autoBinary(String numberString)
     {
         BigInteger large = big.n(numberString);
@@ -51,7 +52,6 @@ public class DataHandler
         }
         return result;
     }
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static String autoHex(String numberString)
     {
         BigInteger large = big.n(numberString);
@@ -68,7 +68,6 @@ public class DataHandler
         return result;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static String autoNumString_hex(String hex)
     {
         BigInteger large = BASE16.toBigInteger(hex);
@@ -84,7 +83,6 @@ public class DataHandler
         }
         return result;
     }
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static String autoNumString_bin(String hex)
     {
         BigInteger large = BASE2.toBigInteger(hex);
@@ -149,35 +147,36 @@ public class DataHandler
         String result = binary.toString();
         return result;
     }
-    @RequiresApi(api = Build.VERSION_CODES.S)
-    public static String textToBase64(String inputText)
+    public static byte[] textToBase64(String inputText)
     {
-        return BASE64.encryptData(inputText.getBytes());
+        return BASE64.encryptData(inputText.getBytes(StandardCharsets.UTF_8));
+    }
+    public static String textToBase64String(String inputText)
+    {
+        return (new String(BASE64.encryptData(inputText.getBytes(StandardCharsets.UTF_8))));
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static String binaryToText(String text, String separator)
     {
         String[] bins = text.split(separator);
         char[] characters = new char[bins.length];
         int size = 0;
         for (String bin : bins) { characters[size] = ((char)BASE2.toInt(bin)) ; size++; }
-        String result = String.copyValueOf(characters);
-        return result;
+        return String.copyValueOf(characters);
     }
-    @RequiresApi(api = Build.VERSION_CODES.S)
     public static String hexToText(String text, String separator)
     {
-        String[] bins = text.split(separator);
-        char[] characters = new char[bins.length];
+        String[] hex = text.split(separator);
+        char[] characters = new char[hex.length];
         int size = 0;
-        for (String bin : bins) { characters[size] = ((char)BASE16.toInt(bin)) ; size++; }
-        String result = String.copyValueOf(characters);
-        return result;
+        for (String h : hex) { characters[size] = ((char)BASE16.toInt(h)) ; size++; }
+        return String.copyValueOf(characters);
     }
-    @RequiresApi(api = Build.VERSION_CODES.S)
-    public static String base64ToText(String encryptedText)
+    public static String stringBase64ToText(String encryptedText)
+    {
+        return (new String(BASE64.decryptData(encryptedText.getBytes(StandardCharsets.UTF_8))));
+    }
+    public static String base64ToText(byte[] encryptedText)
     {
         return (new String(BASE64.decryptData(encryptedText)));
     }
