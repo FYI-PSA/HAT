@@ -25,14 +25,13 @@ int __global_hat_mkdir(string dirpath)
     mode_t fullAdminPerm = S_IRWXU | S_IRUSR | S_IWUSR | S_IXUSR;
     mode_t fullGroupPerm = S_IRWXG | S_IRGRP | S_IWGRP | S_IXGRP;
     mode_t fullOtherPerm = S_IRWXO | S_IROTH | S_IWOTH | S_IXOTH;
-    mode_t createFileMode =  fullAdminPerm | fullGroupPerm | fullOtherPerm; 
+    mode_t createFileMode = fullAdminPerm | fullGroupPerm | fullOtherPerm;
     int successValue = mkdir(dirpath.c_str(), createFileMode);
     return successValue;
 }
-#endif 
+#endif
 
-
-// return values : 
+// return values :
 // 0 = directory successfully created
 // 1 = directory was existing found
 // -1 = unidentified edge case
@@ -44,19 +43,19 @@ namespace hat
     {
         int successValue = __global_hat_mkdir(createPath);
         int errors = 6;
-        int errorValues[6] = {EACCES, EEXIST, ENAMETOOLONG, ENOENT, ENOTDIR, EROFS}; 
+        int errorValues[6] = {EACCES, EEXIST, ENAMETOOLONG, ENOENT, ENOTDIR, EROFS};
         if (successValue == -1)
         {
             int errorCode = errno;
             if (giveFeedback)
             {
-                cout << "[!] Couldn't create folder " << createPath << " because of an issue." << 
-                endl << "[!] Trying to solve it..." << endl;
+                cout << "[!] Couldn't create folder " << createPath << " because of an issue." << endl
+                     << "[!] Trying to solve it..." << endl;
             }
             int matchingIndex = -1;
-            for (int i = 0 ; i < errors; i++)
+            for (int i = 0; i < errors; i++)
             {
-                int currentError = errorValues[i]; 
+                int currentError = errorValues[i];
                 if (currentError == errorCode)
                 {
                     matchingIndex = i;
@@ -74,8 +73,8 @@ namespace hat
                 {
                     if (giveFeedback)
                     {
-                        cout << "Access denied." << 
-                        endl << "[@] Try asking a system admin for help or if you own this computer, run this program as administrator." << endl;
+                        cout << "Access denied." << endl
+                             << "[@] Try asking a system admin for help or if you own this computer, run this program as administrator." << endl;
                         exit(1);
                     }
                     return 3;
@@ -84,7 +83,8 @@ namespace hat
                 {
                     if (giveFeedback)
                     {
-                        cout << endl << "[$] Located pre existing folder!" << endl;
+                        cout << endl
+                             << "[$] Located pre existing folder!" << endl;
                     }
                     return 1;
                 }
@@ -101,8 +101,8 @@ namespace hat
                 {
                     if (giveFeedback)
                     {
-                        cout << "A parent folder is missing." <<
-                        endl << "[!] Attempting to create missing parent folder..." << endl ;
+                        cout << "A parent folder is missing." << endl
+                             << "[!] Attempting to create missing parent folder..." << endl;
                     }
                     path currentPath = createPath;
                     path parentPath = currentPath.parent_path();
@@ -110,8 +110,8 @@ namespace hat
                     CreateDirectoryMan(parentDir, giveFeedback);
                     if (giveFeedback)
                     {
-                        cout << "[$] Parent folder successfully created!" << 
-                        endl <<"[!] Trying to create self again..." << endl;
+                        cout << "[$] Parent folder successfully created!" << endl
+                             << "[!] Trying to create self again..." << endl;
                     }
                     CreateDirectoryMan(createPath, giveFeedback);
                     return 0;
@@ -138,7 +138,8 @@ namespace hat
                 {
                     if (giveFeedback)
                     {
-                        cout << endl << "[!] Unidentified error!" << endl;
+                        cout << endl
+                             << "[!] Unidentified error!" << endl;
                         exit(1);
                     }
                     return -1;
@@ -148,7 +149,8 @@ namespace hat
             {
                 if (giveFeedback)
                 {
-                    cout << endl << "[!] Unidentified error!" << endl;
+                    cout << endl
+                         << "[!] Unidentified error!" << endl;
                     exit(1);
                 }
                 return -1;

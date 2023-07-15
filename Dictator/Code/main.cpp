@@ -1,8 +1,3 @@
-/* "Github.com/Funtime-UwU/Hat" */
-// #define _CRT_SECURE_NO_WARNINGS
-
-
-// #include <time.h>
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -28,22 +23,22 @@ using std::ofstream;
 
 using std::getline;
 
-using std::vector;
 using std::pair;
+using std::vector;
 
+using std::invalid_argument;
 using std::stoi;
 using std::string;
 using std::to_string;
-using std::invalid_argument;
 
-vector<string> HandleLaunchParams(int argumentC, char** argumentV);
+vector<string> HandleLaunchParams(int argumentC, char **argumentV);
 
 void PathFinder(void);
 
 void NewFileCreator(void);
 
 void Unchained(void);
-pair<int,int> LengthGet(bool ask_min, bool ask_max);
+pair<int, int> LengthGet(bool ask_min, bool ask_max);
 
 void InputCollector(void);
 void WordListCreation(string baseString, int lengthVar, vector<int> ignoreIndexes);
@@ -88,33 +83,39 @@ bool A_MaximumChain = true;
 bool F_SearchForConfig = true;
 string F_CustomPath = "";
 
-string O_Prefix = ""; bool O_Prefix_Set = false;
-string O_Suffix = ""; bool O_Suffix_Set = false;
-string D_Prefix = ""; bool D_Prefix_Set = false;
-string D_Suffix = ""; bool D_Suffix_Set = false;
+string O_Prefix = "";
+bool O_Prefix_Set = false;
+string O_Suffix = "";
+bool O_Suffix_Set = false;
+string D_Prefix = "";
+bool D_Prefix_Set = false;
+string D_Suffix = "";
+bool D_Suffix_Set = false;
 
 /*
 TODO:
-- Rewrite sub modules of header files for linux 
+- Rewrite sub modules of header files for linux
 */
 
-int main (int argc, char** argv)
+int main(int argc, char **argv)
 {
-    cout << "[*] Dictator V2.1" << endl << endl;
-    
+    cout << "[*] Dictator V2.1" << endl
+         << endl;
+
     U_HomePath = homePathCreator();
 
     HandleLaunchParams(argc, argv);
 
     if (F_SearchForConfig)
     {
-        cout << "[!] Looking for fconfig files..." << endl << endl;
+        cout << "[!] Looking for fconfig files..." << endl
+             << endl;
     }
     configReturnType fconfigStatus = FConfigReader(U_HomePath, F_SearchForConfig, F_CustomPath);
     if (fconfigStatus.useConfigs)
     {
         cout << "[$] An fconfig file has been loaded!" << endl;
-    
+
         if (fconfigStatus.usePrefix)
         {
             D_Prefix = fconfigStatus.prefix;
@@ -122,9 +123,10 @@ int main (int argc, char** argv)
         }
         if (D_Prefix_Set && O_Prefix_Set)
         {
-            cout << "[!] Confict in prefix options detected, setting to launch paramater as it has a higher priority"
-            << endl << "[$] Prefix is : " + O_Prefix 
-            << endl;
+            cout << "[!] Confict in prefix options detected, setting to launch "
+                    "paramater as it has a higher priority"
+                 << endl
+                 << "[$] Prefix is : " + O_Prefix << endl;
         }
         if (D_Prefix_Set && !O_Prefix_Set)
         {
@@ -139,9 +141,10 @@ int main (int argc, char** argv)
         }
         if (D_Suffix_Set && O_Suffix_Set)
         {
-            cout << "[!] Conflict in suffix options detected, setting to launch paramater as it has a higher priority"
-            << endl << "[$] Suffix is : " + O_Suffix
-            << endl;
+            cout << "[!] Conflict in suffix options detected, setting to launch "
+                    "paramater as it has a higher priority"
+                 << endl
+                 << "[$] Suffix is : " + O_Suffix << endl;
         }
         if (D_Suffix_Set && !O_Suffix_Set)
         {
@@ -153,7 +156,7 @@ int main (int argc, char** argv)
         {
             L_wordList.insert(L_wordList.end(), fconfigStatus.wordlist.begin(), fconfigStatus.wordlist.end());
         }
-        
+
         if (fconfigStatus.askEntries)
         {
             InputCollector();
@@ -164,14 +167,16 @@ int main (int argc, char** argv)
             L_wordListSize = fconfigStatus.wordcount;
         }
 
-        cout << "[@] " << L_wordListSize << " words were loaded!" << endl; 
+        cout << "[@] " << L_wordListSize << " words were loaded!" << endl;
     }
     else
     {
         InputCollector();
     }
-    cout << "[$] Done!" << endl << endl
-        << "[!] Attempting to create the file..." << endl << endl;
+    cout << "[$] Done!" << endl
+         << endl
+         << "[!] Attempting to create the file..." << endl
+         << endl;
     if (fconfigStatus.useConfigs)
     {
         if (fconfigStatus.useCustomExtension)
@@ -187,7 +192,9 @@ int main (int argc, char** argv)
             }
             else
             {
-                cout << "[!] File name and path has been loaded from the config file and will no longer be asked." << endl;
+                cout << "[!] File name and path has been loaded from the config "
+                        "file and will no longer be asked."
+                     << endl;
                 L_filePath = U_HomePath + "Dictionaries/" + D_Name + D_Extension;
                 cout << "[%] File Path : " << L_filePath << endl;
                 NewFileCreator();
@@ -198,9 +205,12 @@ int main (int argc, char** argv)
     {
         PathFinder();
     }
-    cout << endl << endl << "[!] Setting options for dictionary..." << endl << endl;  
-    
-    pair<int,int> chainLs;
+    cout << endl
+         << endl
+         << "[!] Setting options for dictionary..." << endl
+         << endl;
+
+    pair<int, int> chainLs;
     if (fconfigStatus.useConfigs)
     {
         bool ask_mini = true, ask_maxi = true;
@@ -210,15 +220,18 @@ int main (int argc, char** argv)
         {
             try
             {
-                D_MinimumChain = stoi(fconfigStatus.minString); 
+                D_MinimumChain = stoi(fconfigStatus.minString);
                 if (fconfigStatus.askMin)
                 {
-                    cout << "[!] Defaulted the minimum chain length value to " << D_MinimumChain << " from the config file!" << endl;
+                    cout << "[!] Defaulted the minimum chain length value to " << D_MinimumChain
+                         << " from the config file!" << endl;
                     ask_mini = true;
                 }
                 else
                 {
-                    cout << "[!] Will not ask for the minimum chain length value, setting it to " << D_MinimumChain << " immediately." << endl;
+                    cout << "[!] Will not ask for the minimum chain length "
+                            "value, setting it to "
+                         << D_MinimumChain << " immediately." << endl;
                     ask_mini = false;
                 }
             }
@@ -234,12 +247,15 @@ int main (int argc, char** argv)
                 D_MaximumChain = stoi(fconfigStatus.maxString);
                 if (fconfigStatus.askMax)
                 {
-                    cout << "[!] Defaulted the maximum chain length value to " << D_MaximumChain << " from the config file!" << endl;
+                    cout << "[!] Defaulted the maximum chain length value to " << D_MaximumChain
+                         << " from the config file!" << endl;
                     ask_maxi = true;
                 }
                 else
-                    cout << "[!] Will not ask for the maximum chain length value, setting it to " << D_MaximumChain << " immediately." << endl;
-                    ask_maxi = false;
+                    cout << "[!] Will not ask for the maximum chain length value, "
+                            "setting it to "
+                         << D_MaximumChain << " immediately." << endl;
+                ask_maxi = false;
                 {
                 }
             }
@@ -253,23 +269,30 @@ int main (int argc, char** argv)
     }
     else
     {
-        chainLs = LengthGet(true, true); 
+        chainLs = LengthGet(true, true);
     }
     uint32_t creationStart = std::time(NULL);
-    cout << endl << endl << "[!] Creating dictionary..." << endl << endl;
+    cout << endl
+         << endl
+         << "[!] Creating dictionary..." << endl
+         << endl;
     L_fileObj.open(L_filePath);
     Unchained();
     L_fileObj.close();
     uint32_t creationStop = std::time(NULL);
     uint32_t deltaCTime = creationStop - creationStart;
     float minuteDCT = (static_cast<double>(deltaCTime)) / 60;
-    cout << endl << endl << "[$] Done!"
-    << endl << "[$] It took " << std::setprecision(3) << std::fixed << minuteDCT << " minutes"
-    << endl << "[$] The dictionary is saved at '" << L_filePath << "' "
-    << endl << endl << "[$] Goodbye!" << endl << endl;
+    cout << endl
+         << endl
+         << "[$] Done!" << endl
+         << "[$] It took " << std::setprecision(3) << std::fixed << minuteDCT << " minutes" << endl
+         << "[$] The dictionary is saved at '" << L_filePath << "' " << endl
+         << endl
+         << "[$] Goodbye!" << endl
+         << endl;
 }
 
-vector<string> HandleLaunchParams(int argCount, char** argArr)
+vector<string> HandleLaunchParams(int argCount, char **argArr)
 {
     vector<string> launchParams = {};
     for (int argumentIndex = 0; argumentIndex < argCount; argumentIndex++)
@@ -281,40 +304,54 @@ vector<string> HandleLaunchParams(int argCount, char** argArr)
     bool hasCustomConfig = false;
     bool hasSuffix = false;
     bool hasPrefix = false;
-    for (auto& paramater : launchParams)
+    for (auto &paramater : launchParams)
     {
         if (paramater == "-h" || paramater == "-help" || paramater == "--help")
         {
             paramDetected = true;
-            cout
-            << endl << "[@] Use '--prefix <output prefix>' to set a prefix at the start of each output in the dictionary file"
-            << endl << "[@] There is no prefix by default, unless specified in a custom config file"
-            << endl;
-            cout
-            << endl << "[@] Use '--suffix <output suffix>' to set a suffix at the end of each output in the dictionary file"
-            << endl << "[@] There is no suffix by default, unless specified in a custom config file"
-            << endl;
-            cout
-            << endl << "[@] Use '--conf-help' for help about how config files work."
-            << endl;
-            cout
-            << endl << "[@] Use '--conf-file <config file path>' to load a custom config file"
-            << endl << "[@] By default the first valid file in an alphabetical order is loaded from the default configs folder"
-            << endl << "[%] Default Location: " + U_HomePath + "PreConfigs"
-            << endl;
-            cout
-            << endl << "[@] Use '--ignore-conf' to ignore all configuration files"
-            << endl << "[@] (If used with '--conf-file' it will still ignore all configurations)"
-            << endl;
-            cout
-            << endl << endl;
+            cout << endl
+                 << "[@] Use '--prefix <output prefix>' to set a prefix at the "
+                    "start of each output in the dictionary "
+                    "file"
+                 << endl
+                 << "[@] There is no prefix by default, unless specified in a "
+                    "custom config file"
+                 << endl;
+            cout << endl
+                 << "[@] Use '--suffix <output suffix>' to set a suffix at the "
+                    "end of each output in the dictionary file"
+                 << endl
+                 << "[@] There is no suffix by default, unless specified in a "
+                    "custom config file"
+                 << endl;
+            cout << endl
+                 << "[@] Use '--conf-help' for help about how config files work." << endl;
+            cout << endl
+                 << "[@] Use '--conf-file <config file path>' to load a custom "
+                    "config file"
+                 << endl
+                 << "[@] By default the first valid file in an alphabetical "
+                    "order is loaded from the default configs "
+                    "folder"
+                 << endl
+                 << "[%] Default Location: " + U_HomePath + "PreConfigs" << endl;
+            cout << endl
+                 << "[@] Use '--ignore-conf' to ignore all configuration files" << endl
+                 << "[@] (If used with '--conf-file' it will still ignore all "
+                    "configurations)"
+                 << endl;
+            cout << endl
+                 << endl;
             exit(0);
         }
         if (paramater == "--conf-help")
         {
             paramDetected = true;
             string config_help = hat::configHelpData();
-            cout << endl << endl << config_help << endl << endl;
+            cout << endl
+                 << endl
+                 << config_help << endl
+                 << endl;
             exit(0);
         }
         if (paramater == "--ignore-conf")
@@ -361,29 +398,37 @@ vector<string> HandleLaunchParams(int argCount, char** argArr)
     }
     if (hasCustomConfig)
     {
-        cout << "[#] Custom config file :  !!ERR {No file specified, flag will be ignored.}!!" << endl;
+        cout << "[#] Custom config file :  !!ERR {No file specified, flag will "
+                "be ignored.}!!"
+             << endl;
     }
     if (!paramDetected && (argCount > 1))
     {
-        cout << endl << "[#] Incorrect launch paramaters, run with '--help' to see all valid flags." << endl << endl;
+        cout << endl
+             << "[#] Incorrect launch paramaters, run with '--help' to see all "
+                "valid flags."
+             << endl
+             << endl;
         exit(0);
     }
     return launchParams;
 }
 
-
 void InputCollector(void)
 {
-    cout << "[!] Getting inputs for dictionary..." << endl << endl;
-    cout << "[@] Enter the first entry to the word list."
-    << endl << "[@] When you're done, just leave the input blank and hit enter again."
-    << endl << "[+] First entry: " ;
+    cout << "[!] Getting inputs for dictionary..." << endl
+         << endl;
+    cout << "[@] Enter the first entry to the word list." << endl
+         << "[@] When you're done, just leave the input blank and hit enter "
+            "again."
+         << endl
+         << "[+] First entry: ";
     string inputVar;
-    while(getline(cin,inputVar) && inputVar != "")
+    while (getline(cin, inputVar) && inputVar != "")
     {
         L_wordList.push_back(inputVar);
-        cout << "[@] Successfully added " + inputVar + " to input list!"
-        << endl << "[+] Next entry : " ;
+        cout << "[@] Successfully added " + inputVar + " to input list!" << endl
+             << "[+] Next entry : ";
         inputVar = "";
     }
     cout << "[/] Stopped adding entries to list." << endl;
@@ -403,23 +448,27 @@ void PathFinder(void)
     string dictionaryPath = U_HomePath + "Dictionaries/";
     string fileName;
     string inputName;
-    cout << "[@] Name the file to save your dictionary as"
-    << endl << "[!] (Files will be saved at '" + dictionaryPath + "' as a '" + D_Extension + "' file )"
-    << endl << "[@] Leave field blank to save your file name as the default dictionary.txt"
-    << endl << "[@] If the file already exists, new data will be added to the beginning leaving old data untouched."
-    << endl << "[?] File name : ";
-    getline(cin,inputName);
+    cout << "[@] Name the file to save your dictionary as" << endl
+         << "[!] (Files will be saved at '" + dictionaryPath + "' as a '" + D_Extension + "' file )" << endl
+         << "[@] Leave field blank to save your file name as the default "
+            "dictionary.txt"
+         << endl
+         << "[@] If the file already exists, new data will be added to the "
+            "beginning leaving old data untouched."
+         << endl
+         << "[?] File name : ";
+    getline(cin, inputName);
     if (inputName == "")
     {
         fileName = D_Name + D_Extension;
     }
     else
     {
-        fileName = inputName+D_Extension;
+        fileName = inputName + D_Extension;
     }
-    
+
     L_filePath = dictionaryPath + fileName;
-    
+
     CreateDirectoryMan(dictionaryPath);
     NewFileCreator();
 }
@@ -429,11 +478,13 @@ pair<int, int> LengthGet(bool min_ask, bool max_ask)
     if (min_ask)
     {
         string minInput;
-        cout << "[?] Minimum value for the amount of values chanied together in a single possible combination?"
-        << endl << "[@] (Example : 2 -> firstSecond, 3 -> firstSecondThird)"
-        << endl << "[@] Will default to " + to_string(D_MinimumChain) + " in case of undefined input!"
-        << endl << "[?] Minimum chain length value: ";
-        getline(cin,minInput);
+        cout << "[?] Minimum value for the amount of values chanied together in "
+                "a single possible combination?"
+             << endl
+             << "[@] (Example : 2 -> firstSecond, 3 -> firstSecondThird)" << endl
+             << "[@] Will default to " + to_string(D_MinimumChain) + " in case of undefined input!" << endl
+             << "[?] Minimum chain length value: ";
+        getline(cin, minInput);
         int minLength;
         try
         {
@@ -442,7 +493,8 @@ pair<int, int> LengthGet(bool min_ask, bool max_ask)
         }
         catch (invalid_argument)
         {
-            cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MinimumChain) + " for minimum value" << endl;
+            cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MinimumChain) + " for minimum value"
+                 << endl;
             minLength = D_MinimumChain;
         }
         L_minChainLen = minLength;
@@ -454,10 +506,13 @@ pair<int, int> LengthGet(bool min_ask, bool max_ask)
     if (max_ask)
     {
         string maxInput;
-        cout << endl << "[?] Maximum value for the amount of values chanied together in a single possible combination?"
-        << endl << "[@] Will default to " + to_string(D_MaximumChain) + " in case of undefined input!"
-        << endl << "[?] Maximum chain length value: ";
-        getline(cin,maxInput);
+        cout << endl
+             << "[?] Maximum value for the amount of values chanied together in "
+                "a single possible combination?"
+             << endl
+             << "[@] Will default to " + to_string(D_MaximumChain) + " in case of undefined input!" << endl
+             << "[?] Maximum chain length value: ";
+        getline(cin, maxInput);
         int maxLength;
         try
         {
@@ -466,7 +521,8 @@ pair<int, int> LengthGet(bool min_ask, bool max_ask)
         }
         catch (invalid_argument)
         {
-            cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MaximumChain) + " for maximum value" << endl;
+            cout << "[!] Couldn't understand input, defaulting to " + to_string(D_MaximumChain) + " for maximum value"
+                 << endl;
             maxLength = D_MaximumChain;
         }
         L_maxChainLen = maxLength;
@@ -477,17 +533,21 @@ pair<int, int> LengthGet(bool min_ask, bool max_ask)
     }
     if (L_maxChainLen > L_wordListSize)
     {
-        cout << endl << "[!] ERR : Minimum length longer than all words, shortening max to count of words.";
+        cout << endl
+             << "[!] ERR : Minimum length longer than all words, shortening max "
+                "to count of words.";
         L_maxChainLen = L_wordListSize;
-        cout << endl << "[@] Maximum value is now " << L_maxChainLen << endl;
+        cout << endl
+             << "[@] Maximum value is now " << L_maxChainLen << endl;
     }
     if (L_minChainLen > L_maxChainLen)
     {
-        cout << endl << "[!] ERR : Minimum value larger than maximum value."
-        << endl << "[!] Exiting program..." << endl;
+        cout << endl
+             << "[!] ERR : Minimum value larger than maximum value." << endl
+             << "[!] Exiting program..." << endl;
         exit(1);
     }
-    pair<int,int> chainReturn = {L_minChainLen, L_maxChainLen};
+    pair<int, int> chainReturn = {L_minChainLen, L_maxChainLen};
     return chainReturn;
 }
 
@@ -521,18 +581,6 @@ void Unchained(void)
     }
 }
 
-/*
-
-solution:
-- LIST_IDS : make an ARRAY the length of all words, assign each one an ID by index [so dupes dont get confused]
-- USED_IDS : make an empty VECTOR
-- each time a word is used, append to the end of vector
-- check all of the vector with variable LISTINDEX signifying the current id in the wordlist
-- if it matches
-- vector needs to be local and passed through so that if it's used in one iteration it doesn't count for another iteration
-
-
-*/
 void WordListCreation(string baseString, int lengthVar, vector<int> usedIndexes)
 {
     bool lengthFlag = false;
@@ -547,7 +595,7 @@ void WordListCreation(string baseString, int lengthVar, vector<int> usedIndexes)
         }
 
         bool canCreate = true;
-        for (auto& usedIndex : usedIndexes)
+        for (auto &usedIndex : usedIndexes)
         {
             if (listIndex == usedIndex)
             {
@@ -558,7 +606,7 @@ void WordListCreation(string baseString, int lengthVar, vector<int> usedIndexes)
         if (!indexUsedFlag)
         {
             usedIndexes.push_back(listIndex);
-            //indexUsedFlag = true;
+            // indexUsedFlag = true;
         }
 
         if (canCreate)

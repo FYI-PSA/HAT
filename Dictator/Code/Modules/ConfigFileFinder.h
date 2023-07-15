@@ -56,24 +56,6 @@ namespace hat
         string suffix = "";
 
         bool useConfigs = false;
-
-        // 0 : first one : int=words , vector<string>=list
-
-        // 1 : second one : int=0/1 not/set , vector<string>[0] = d_name
-        // 2 : third one : int=0/1 not/set , vector<string>[0] = d_ext
-        // 3 : fourth one : int=0/1 not/set , vector<string>[0] = string(d_min)
-        // 4 : fifth one : int=0/1 not/set , vector<string>[0] = string(d_max)
-
-        // 5 : sixth one : int=0/1 false/true = ask_name , NULL
-        // 6 : seventh one : int=0/1 false/true = ask_entries , NULL
-        // 7 : eight one : int=0/1 false/true = ask_min , NULL
-        // 8 : ninth one : int=0/1 false/true = ask_max , NULL
-
-        // 9 : tenth one: int=0/1 false/true = success , NULL
-
-        // 10 : tenth one : int=0/1 not/set , string = prefix
-        // 11 : eleventh one : 1nt=0/1 not/set , string = suffix
-
     } configReturnType;
 
     configReturnType FConfigReader(string HomePath, bool shouldSearch, string customPath)
@@ -525,6 +507,6 @@ namespace hat
         return baseValue;
     }
 
-}
+} // namespace hat
 
 #endif
