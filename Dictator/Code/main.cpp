@@ -304,7 +304,7 @@ vector<string> HandleLaunchParams(int argCount, char **argArr)
     bool hasCustomConfig = false;
     bool hasSuffix = false;
     bool hasPrefix = false;
-    for (auto &paramater : launchParams)
+    for (string &paramater : launchParams)
     {
         if (paramater == "-h" || paramater == "-help" || paramater == "--help")
         {
@@ -595,33 +595,34 @@ void WordListCreation(string baseString, int lengthVar, vector<int> usedIndexes)
         }
 
         bool canCreate = true;
-        for (auto &usedIndex : usedIndexes)
+        for (int &usedIndex : usedIndexes)
         {
             if (listIndex == usedIndex)
             {
                 canCreate = false;
-                break;
+                goto itemAlreadyUsed;
             }
         }
+        
         if (!indexUsedFlag)
         {
             usedIndexes.push_back(listIndex);
             // indexUsedFlag = true;
         }
 
-        if (canCreate)
+        newString = baseString + L_wordList.at(listIndex);
+        if (lengthVar > 0)
         {
-            newString = baseString + L_wordList.at(listIndex);
-            if (lengthVar > 0)
-            {
-                WordListCreation(newString, lengthVar, usedIndexes);
-                usedIndexes.pop_back();
-            }
-            else
-            {
-                string resultString = O_Prefix + newString + O_Suffix + "\n";
-                L_fileObj << resultString;
-            }
+            WordListCreation(newString, lengthVar, usedIndexes);
+            usedIndexes.pop_back();
         }
+        else
+        {
+            string resultString = O_Prefix + newString + O_Suffix + "\n";
+            L_fileObj << resultString;
+        }
+
+        itemAlreadyUsed:
+
     }
 }
