@@ -3,11 +3,11 @@ ________________
 ## Install
 
   * ### _Windows:_
-    - Download the [latest release of dictator for Windows](https://GitHub.com/Funtime-UwU/Hat/releases/latest)
+    - Download the [latest release of dictator for Windows](https://Github.com/FYI-PSA/Hat/releases/latest)
     - Simply launch the executable from CMD or PowerShell  
 
   * ### _Linux/Mac:_
-    - Download the [latest release of dictator for Linux/Mac](https://GitHub.com/Funtime-UwU/Hat/releases/latest)
+    - Download the [latest release of dictator for Linux/Mac](https://Github.com/FYI-PSA/Hat/releases/latest)
     - Run the following command in the same folder as your downloaded executable:
     
     > (Replace {FILE} with the name of the file you just downloaded)
