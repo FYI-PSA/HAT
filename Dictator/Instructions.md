@@ -17,10 +17,9 @@ ________________
 
 ________________
 
-## Compiling from source
-  * Dictator does not have many dependencies, you can compile it by navigating to /Dictator/ in the sourc folders and then entering:
-  
-  * `mkdir Compiled; g++ Code/main.cpp -o Compiled/dictator --std=c++20`
+## Compiling from source:
+
+  * `git clone https://github.com/FYI-PSA/HAT.git; cd ./HAT/Dictator; mkdir Compiled; g++ Code/main.cpp -o Compiled/dictator --std=c++20; echo DONE;`
 
 ________________
 
