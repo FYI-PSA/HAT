@@ -25,7 +25,7 @@ ________
   * Accepts all media forms and files, and normal plaintext!
   * This tool is mostly a method of bypassing content checks, cencorship or filtering. (Please still be careful and don't be illegal!)
   * [Will have Android, Windows, Linux and Mac support]
-  * _[In development...](/Versteckt/)_
+  * _In development... (Current in the Live-Development branch)_
 
 ________
 
